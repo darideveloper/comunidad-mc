@@ -1,5 +1,5 @@
 """
-WSGI config for twitch_time_x_time project.
+WSGI config for comunidad_mc project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'twitch_time_x_time.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 
 application = get_wsgi_application()

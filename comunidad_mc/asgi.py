@@ -1,5 +1,5 @@
 """
-ASGI config for twitch_time_x_time project.
+ASGI config for comunidad_mc project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'twitch_time_x_time.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 
 application = get_asgi_application()
