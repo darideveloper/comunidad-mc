@@ -5,7 +5,6 @@ temp.*
 *.log*
 *.zip
 venv
-.env
 debug.*
 db.*
 *.sqlite3
