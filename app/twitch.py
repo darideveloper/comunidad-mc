@@ -25,6 +25,7 @@ def get_tokens (client_id:str, client_secret:str, login_code:str, direct_url:str
      }
      res = requests.post (token_url, data=params)
      json_data = json.loads (res.content)
+     print (json_data)
      
      # Extract variables
      access_token = json_data.get("access_token", "")

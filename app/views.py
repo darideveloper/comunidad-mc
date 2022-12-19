@@ -19,14 +19,17 @@ def login (request):
     
     # Try to get login code from twitch, after login
     login_code = request.GET.get("code", "")    
+    print (login_code)
     
     # Detect error in login
     if login_code:
         # Get twitch token for get user data
         user_token, refresh_token = twitch.get_tokens(TWITCH_CLIENT_ID, TWITCH_SECRET, login_code, current_path)
-            
+        print (user_token, refresh_token)
+        
         # Get user data
         user_id, user_email, user_picture, user_name = twitch.get_user_info(user_token) 
+        print (user_id, user_email, user_picture, user_name)
     
         # Validate user data
         if user_id and user_email and user_picture and user_name:
@@ -46,10 +49,12 @@ def login (request):
         else:
             # Araise error when user data is not valid
             error = True
+            print ("Error al obtener datos de usuario")
         
     else:
         # Araise error where there it nor a login code
         error = True        
+        print ("Error al obtener codigo de login")
     
     if error:
         # Save login error in session
