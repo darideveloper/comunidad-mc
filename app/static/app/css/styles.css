@@ -104,20 +104,28 @@ h1, h2, h3, h4, h5, h6, .title {
 .btn.cta .content span {
   line-height: 20px;
   display: inline-block;
+  font-weight: bold;
 }
-.btn.cta.dark .content {
-  background-color: #0e1119;
-  border-color: #0e1119;
-}
-.btn:hover .content {
+.btn.cta:hover .content {
   background-color: rgba(122, 112, 179, 0.1);
   gap: 0px;
 }
-.btn:hover .content svg {
+.btn.cta:hover .content svg {
   width: 0px;
 }
-.btn:active .content {
+.btn.cta:active .content {
   background-color: rgba(122, 112, 179, 0.4);
+}
+.btn.dark .content {
+  background-color: #0e1119;
+  border-color: #0e1119;
+}
+.btn.dark:hover .content {
+  background-color: rgba(14, 17, 25, 0.1);
+  color: #0e1119;
+}
+.btn.dark:active .content {
+  background-color: rgba(14, 17, 25, 0.8);
 }
 
 ::-webkit-scrollbar {
@@ -236,7 +244,7 @@ h1, h2, h3, h4, h5, h6, .title {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 100px;
+  gap: 80px;
   background-color: #7a70b3;
   margin-top: 150px;
 }
