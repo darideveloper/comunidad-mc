@@ -149,7 +149,7 @@ h1, h2, h3, h4, h5, h6, .title {
   width: 500px;
 }
 #hero > .content .text p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 #hero > .content .text h1 {
   font-size: 1.6rem;
@@ -179,6 +179,33 @@ h1, h2, h3, h4, h5, h6, .title {
 }
 #about h2, #about p {
   text-align: center;
+}
+
+#rules .paralax {
+  height: 200px;
+  text-align: center;
+  font-size: 2rem;
+  background-image: url("../imgs/rules.webp");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#rules .cards {
+  width: 100%;
+  max-width: 600px;
+}
+#rules .cards .card {
+  text-align: center;
+  margin: 80px 0;
+}
+#rules .cards .card:first-child {
+  margin-top: 40px;
+}
+#rules .cards .card:last-child {
+  margin-bottom: 40px;
+}
+#rules .cards .card img {
+  width: 100px;
 }
 
 /*# sourceMappingURL=styles.css.map */
