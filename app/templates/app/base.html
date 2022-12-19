@@ -29,9 +29,15 @@
             </span>
         </small>
     </footer>    
+
+    <!-- Get js variables from django -->
+    <script>
+        const error = "{{ error }}";
+        console.log (error)
+    </script>
+    
+    <!-- Alerts imports -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+    <script src="{% static 'app/code/alerts.js' %}" type="module"></script>
 </body>
 </html>
-
-<header>
-
-</header>
