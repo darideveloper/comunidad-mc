@@ -53,7 +53,7 @@ def login (request):
     
     if error:
         # Save login error in session
-        request.session["error"] = "Error in login with twitch. Try again later."
+        request.session["error"] = "Error al iniciar sesión con twitch. Intente de nuevo mas tarde."
         
     # Redirect to home page
     return redirect('home')
