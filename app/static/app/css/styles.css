@@ -44,10 +44,10 @@ a {
 }
 
 .regular-width {
-  max-width: 1250px;
+  max-width: 1100px;
   margin: 0 auto;
 }
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1150px) {
   .regular-width {
     padding: 0 5%;
     width: 90%;
@@ -62,6 +62,7 @@ a {
 h1, h2, h3, h4, h5, h6, .title {
   font-family: "Lato", cursive;
   color: #cfd5dc;
+  font-weight: normal;
 }
 
 *:focus {
@@ -152,7 +153,6 @@ h1, h2, h3, h4, h5, h6, .title {
 }
 #hero > .content .text h1 {
   font-size: 1.6rem;
-  font-weight: normal;
 }
 #hero > .content .text span {
   display: block;
@@ -164,7 +164,21 @@ h1, h2, h3, h4, h5, h6, .title {
 }
 
 #about {
-  height: 1000px;
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 20px;
+}
+#about .logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+}
+#about h2 {
+  font-size: 1.4rem;
+}
+#about h2, #about p {
+  text-align: center;
 }
 
 /*# sourceMappingURL=styles.css.map */
