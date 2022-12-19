@@ -1,0 +1,50 @@
+#hero
+    padding: 80px 0
+    background-image: url('../imgs/hero.webp')
+
+    > .content
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 100px
+
+        .logo
+            width: 300px
+
+        .text
+            width: 500px
+
+            p
+                font-size: 1.1rem
+
+            h1
+                font-size: 1.6rem
+
+            span
+                display: block
+
+    .btn.cta
+        margin: 0 auto
+        margin-top: 20px
+        display: table
+
+    @media screen and (max-width: 800px)
+        > .content
+            gap: 50px
+
+    @media screen and (max-width: 650px)
+        > .content
+            flex-direction: column
+            gap: 0
+
+            .logo
+                width: 150px
+
+            .text
+                text-align: center
+                width: 100%
+            
+            .btn.cta
+                margin-top: 50px
+
+        

@@ -1,0 +1,32 @@
+#rules
+
+    .paralax
+        height: 200px
+        text-align: center
+        font-size: 2rem
+        background-image: url('../imgs/rules.webp')
+        display: flex
+        align-items: center
+        justify-content: center
+
+    .cards
+        width: 600px
+        margin: 0 auto
+
+        .card
+            text-align: center
+            margin: 80px 0
+
+            &:first-child
+                margin-top: 40px
+
+            &:last-child
+                margin-bottom: 40px
+
+            img
+                width: 100px
+
+    @media screen and (max-width: 650px)
+        .cards
+            width: 90%
+        
