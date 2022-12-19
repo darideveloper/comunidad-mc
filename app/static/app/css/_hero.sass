@@ -22,12 +22,29 @@
 
             span
                 display: block
-    
 
     .btn.cta
         margin: 0 auto
         margin-top: 20px
         display: table
 
-    // @media screen and (max-width: $regular-width-media-query)
+    @media screen and (max-width: 800px)
+        > .content
+            gap: 50px
+
+    @media screen and (max-width: 650px)
+        > .content
+            flex-direction: column
+            gap: 0
+
+            .logo
+                width: 150px
+
+            .text
+                text-align: center
+                width: 100%
+            
+            .btn.cta
+                margin-top: 50px
+
         

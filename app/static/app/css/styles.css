@@ -4,6 +4,11 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
 }
+@media screen and (max-width: 700px) {
+  html {
+    font-size: 14px;
+  }
+}
 
 body {
   margin: 0;
@@ -174,6 +179,27 @@ h1, h2, h3, h4, h5, h6, .title {
   margin-top: 20px;
   display: table;
 }
+@media screen and (max-width: 800px) {
+  #hero > .content {
+    gap: 50px;
+  }
+}
+@media screen and (max-width: 650px) {
+  #hero > .content {
+    flex-direction: column;
+    gap: 0;
+  }
+  #hero > .content .logo {
+    width: 150px;
+  }
+  #hero > .content .text {
+    text-align: center;
+    width: 100%;
+  }
+  #hero > .content .btn.cta {
+    margin-top: 50px;
+  }
+}
 
 #about {
   position: relative;
@@ -192,6 +218,14 @@ h1, h2, h3, h4, h5, h6, .title {
 #about h2, #about p {
   text-align: center;
 }
+@media screen and (max-width: 600px) {
+  #about {
+    padding-top: 40px;
+  }
+  #about .logo {
+    display: none;
+  }
+}
 
 #rules .paralax {
   height: 200px;
@@ -203,8 +237,8 @@ h1, h2, h3, h4, h5, h6, .title {
   justify-content: center;
 }
 #rules .cards {
-  width: 100%;
-  max-width: 600px;
+  width: 600px;
+  margin: 0 auto;
 }
 #rules .cards .card {
   text-align: center;
@@ -218,6 +252,11 @@ h1, h2, h3, h4, h5, h6, .title {
 }
 #rules .cards .card img {
   width: 100px;
+}
+@media screen and (max-width: 650px) {
+  #rules .cards {
+    width: 90%;
+  }
 }
 
 #first-steps {
@@ -239,14 +278,41 @@ h1, h2, h3, h4, h5, h6, .title {
   margin-top: -20px;
   margin-bottom: -20px;
 }
+@media screen and (max-width: 950px) {
+  #first-steps .content {
+    flex-direction: column;
+  }
+  #first-steps .content .text, #first-steps .content iframe {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+  #first-steps .content .text {
+    margin-top: 50px;
+  }
+  #first-steps .content iframe {
+    height: 56.25vw;
+    margin-bottom: 50px;
+  }
+}
 
 #banner-cta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 80px;
+  gap: 50px;
   background-color: #7a70b3;
-  margin-top: 150px;
+  margin-top: 100px;
+}
+@media screen and (max-width: 600px) {
+  #banner-cta {
+    flex-direction: column;
+    gap: 0;
+    padding: 20px 0;
+  }
+  #banner-cta h2 {
+    margin-top: 0;
+  }
 }
 
 #footer {
