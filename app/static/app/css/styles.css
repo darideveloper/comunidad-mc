@@ -249,4 +249,16 @@ h1, h2, h3, h4, h5, h6, .title {
   margin-top: 150px;
 }
 
+#footer {
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #cfd5dc;
+  font-size: 0.8rem;
+}
+#footer a {
+  color: #cfd5dc;
+}
+
 /*# sourceMappingURL=styles.css.map */
