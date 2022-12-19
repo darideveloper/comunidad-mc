@@ -74,7 +74,6 @@ def home (request):
         
         # Get user data from cookies
         user = request.session["user"]
-        print (user)
         
         # Render page with user data
         return render (request, 'app/home.html', user)

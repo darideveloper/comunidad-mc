@@ -47,7 +47,6 @@ def get_user_info (user_token:str):
      
      res = requests.get ("https://id.twitch.tv/oauth2/userinfo", headers=headers)
      json_data = json.loads (res.content)
-     print (json_data)
      user_id = json_data.get ("sub", "")
      user_email = json_data.get ("email", "")
      user_picture = json_data.get ("picture", "")
