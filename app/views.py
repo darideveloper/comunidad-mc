@@ -56,24 +56,41 @@ def login (request):
         request.session["error"] = "Error in login with twitch. Try again later."
         
     # Redirect to home page
-    return redirect('index')
+    return redirect('home')
     
-def index (request):
+def home (request):
     """ Home page wqith link for login with twitch """
     
-    # Get error from session
     error = ""
+    
     if "error" in request.session:
+        # Get error from session
         error = request.session["error"]
         del request.session["error"]
-    
-    redirect_path = f"{HOST}/login/"
-    
-    # Generate tiwtch login url
-    twitch_link = twitch.get_twitch_login_link(TWITCH_CLIENT_ID, redirect_path)
             
-    return render (request, 'app/index.html', {
-        "twitch_link":  twitch_link,
-        "error": error
-    })
     
+    if "user" in request.session:
+        # Home page after login
+        
+        # Get user data from cookies
+        user = request.session["user"]
+        print (user)
+        
+        # Render page with user data
+        return render (request, 'app/home.html', user)
+        
+    else:
+        # Landing page before login
+        
+        # Redirect path for login botton
+        redirect_path = f"{HOST}/login/"
+        
+        # Generate tiwtch login url
+        twitch_link = twitch.get_twitch_login_link(TWITCH_CLIENT_ID, redirect_path)
+        
+        # Render page with twitch link and error message (is exist)
+        return render (request, 'app/landing.html', {
+            "twitch_link":  twitch_link,
+            "error": error
+        })
+        
