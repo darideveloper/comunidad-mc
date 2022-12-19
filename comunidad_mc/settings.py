@@ -1,5 +1,5 @@
 """
-Django settings for comunidadmc project on Heroku. For more info, see:
+Django settings for comunidad_mc project on Heroku. For more info, see:
 https://github.com/heroku/heroku-django-template
 For more information on this file, see
 https://docs.djangoproject.com/en/2.0/topics/settings/
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'comunidadmc.urls'
+ROOT_URLCONF = 'comunidad_mc.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'comunidadmc.wsgi.application'
+WSGI_APPLICATION = 'comunidad_mc.wsgi.application'
 
 
 # Database
@@ -79,9 +79,13 @@ WSGI_APPLICATION = 'comunidadmc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'comunidad_mc',
+        'USER': 'daridev',
+        'PASSWORD': '2nMIe8McUCcbDhPPGUCNpJC2iNgKDtP5',
+        'HOST': 'dpg-cef3eqsgqg4b3haa6eq0-a.ohio-postgres.render.com',
+        'PORT': '5432',
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [

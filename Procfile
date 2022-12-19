@@ -1,1 +1,1 @@
-web: gunicorn comunidadmc.wsgi
+web: gunicorn comunidad_mc.wsgi
