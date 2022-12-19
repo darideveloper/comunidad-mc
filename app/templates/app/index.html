@@ -1,7 +1,48 @@
 {% extends "app/base.html" %}
+{% load static %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Home{% endblock %}
+
+{% block main_class %}home{% endblock %}
 
 {% block main %}
-<h1>Home</h1>
+<section class="hero paralax full-width" id="hero">
+  <div class="content regular-width">
+
+    <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco" class="logo">
+    <div class="text">
+      <h1>¡Se bienvenido!</h1>
+      <p>
+        <span>
+          Nosotros somos Comunidad MC.
+        </span>
+        <span>
+          Sambemos lo dificil que es crecer como creador de contenido, y es por ello que creamos esta herramienta
+          exclusivamente para ti. Tan simple como registrarte y hacer crecer tu comunidad.
+        </span>
+      </p>
+    </div>
+  </div>
+  <a class="btn cta" href="">
+    <div class="content">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path
+          d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z"
+          fill-rule="evenodd" clip-rule="evenodd" />
+      </svg>
+      <span>
+        Inicia sesión con twitch
+      </span>
+    </div>
+  </a>
+</section>
+
+<section class="about" id="about">
+</section>
+
+<section class="rules hide" id="rules">
+</section>
+
+<section class="login hide" id="login">
+</section>
 {% endblock %}

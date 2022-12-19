@@ -1,0 +1,170 @@
+html {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0e1119;
+  font-family: "Lato", sans-serif;
+}
+
+.wrapper-img {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper-img img {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+p {
+  font-size: 1rem;
+  color: #cfd5dc;
+}
+p.small {
+  font-size: 0.8rem;
+}
+
+.hide {
+  display: none !important;
+}
+
+a {
+  text-decoration: none;
+  color: #7a70b3;
+}
+
+.regular-width {
+  max-width: 1250px;
+  margin: 0 auto;
+}
+@media screen and (max-width: 1300px) {
+  .regular-width {
+    padding: 0 5%;
+    width: 90%;
+  }
+}
+
+.full-width {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6, .title {
+  font-family: "Lato", cursive;
+  color: #cfd5dc;
+}
+
+*:focus {
+  outline: none;
+}
+
+.paralax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.shadow {
+  box-shadow: 4px 4px 30px -15px #7a70b3;
+}
+
+.btn {
+  display: inline-block;
+}
+.btn.cta .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background-color: #7a70b3;
+  color: #cfd5dc;
+  border-radius: 100px;
+  transition-duration: 0.3s;
+  border: 4px solid #7a70b3;
+}
+.btn.cta .content svg {
+  fill: #cfd5dc;
+  width: 20px;
+  height: 20px;
+  transition-duration: 0.3s;
+}
+.btn.cta .content span {
+  line-height: 20px;
+  display: inline-block;
+}
+.btn:hover .content {
+  background-color: rgba(122, 112, 179, 0.1);
+  gap: 0px;
+}
+.btn:hover .content svg {
+  width: 0px;
+}
+.btn:active .content {
+  background-color: rgba(122, 112, 179, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e1119;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7a70b3;
+  margin-top: -5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cfd5dc;
+}
+
+#hero {
+  padding: 80px 0;
+  background-image: url("../imgs/hero.webp");
+}
+#hero > .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+}
+#hero > .content .logo {
+  width: 300px;
+}
+#hero > .content .text {
+  width: 500px;
+}
+#hero > .content .text p {
+  font-size: 1.2rem;
+}
+#hero > .content .text h1 {
+  font-size: 1.6rem;
+  font-weight: normal;
+}
+#hero > .content .text span {
+  display: block;
+}
+#hero .btn.cta {
+  margin: 0 auto;
+  margin-top: 20px;
+  display: table;
+}
+
+#about {
+  height: 1000px;
+}
+
+/*# sourceMappingURL=styles.css.map */
