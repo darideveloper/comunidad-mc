@@ -1,5 +1,5 @@
 """
-ASGI config for comunidad_mc project.
+ASGI config for comunidadmc project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidadmc.settings')
 
 application = get_asgi_application()
