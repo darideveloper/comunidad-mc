@@ -13,4 +13,4 @@ class User (models.Model):
     
     def __str__(self):
         email = self.email if self.email else "no email"
-        return f"{self.name} ({email} - {self.id})"
+        return f"{self.id} - {self.name} - {email}"
