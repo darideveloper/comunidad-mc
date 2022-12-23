@@ -95,7 +95,7 @@ def home (request):
         user = models.User.objects.filter(id=user_id).first()
         
         # Validate if user data is completed
-        if user.first_name:
+        if user.first_name and user.first_name.strip() != "":
             # Render home page with user data
             return render (request, 'app/home.html', {
                 "name": user.user_name,
@@ -140,7 +140,7 @@ def register (request):
         last_name = request.POST.get ("last-name", "")
         country = request.POST.get ("country", "")
         time_zone = request.POST.get ("time-zone", "")
-        phone = request.POST.get ("phone", "")
+        phone = request.POST.get ("full-phone", "")
         
         if not first_name or not last_name or not country or not time_zone or not phone:
             # Show error if data is not valid
