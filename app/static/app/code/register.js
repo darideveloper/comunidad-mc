@@ -750,7 +750,7 @@ document.querySelector("#time-zone option[value='America/Mexico_City']").selecte
 // Update country code when the country changes
 document.querySelector("#country").addEventListener("change", e => {
   const code = countries_codes.find(c => c[0] === e.target.value)[1]
-  document.querySelector("#country-code").innerHTML = code
+  document.querySelector("#country-code").innerHTML = "+" + code
 })
 
 // Update full number when the country code or number changes
