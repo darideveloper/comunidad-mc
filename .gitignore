@@ -8,6 +8,5 @@ venv
 debug.*
 db.*
 *.sqlite3
-*/static
-*/staticfiles
+/staticfiles
 .env
