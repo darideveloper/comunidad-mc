@@ -1,14 +1,16 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from dotenv import load_dotenv, dotenv_values
+import os
 from . import twitch
 from . import models
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from dotenv import load_dotenv
+
+load_dotenv ()
 
 # Get credentials
-config = dotenv_values(".env")
-TWITCH_CLIENT_ID = config["TWITCH_CLIENT_ID"]
-TWITCH_SECRET = config["TWITCH_SECRET"]
-HOST = config["HOST"]
+TWITCH_CLIENT_ID = os.environ.get("TWITCH_CLIENT_ID")
+TWITCH_SECRET = os.environ.get("TWITCH_SECRET")
+HOST = os.environ.get("HOST")
 
 # Create your views here.
 def login (request):
@@ -19,8 +21,7 @@ def login (request):
     
     # Try to get login code from twitch, after login
     login_code = request.GET.get("code", "")    
-    print (login_code)
-    
+        
     # Detect error in login
     if login_code:
         # Get twitch token for get user data
@@ -39,12 +40,7 @@ def login (request):
             new_user.save ()
             
             # Save user data in session
-            request.session["user"] = {
-                "id": new_user.id,
-                "email": new_user.email,
-                "picture": new_user.picture,
-                "name": new_user.name,
-            }
+            request.session["user_id"] = new_user.id
             
         else:
             # Araise error when user data is not valid
@@ -74,17 +70,26 @@ def home (request):
         del request.session["error"]
             
     
-    if "user" in request.session:
-        # Home page after login
+    # Show home or register page after login
+    if "user_id" in request.session:
         
         # Get user data from cookies
-        user = request.session["user"]
+        user_id = request.session["user_id"]
         
-        # Render page with user data
-        return render (request, 'app/home.html', user)
+        # Validate if user data is completed
+        user = models.User.objects.filter(id=user_id).first()
+        print (user)
         
+        print (user)        
+        if user.first_name:
+            # Render home page with user data
+            return render (request, 'app/home.html', user)
+        else:
+            # Redirect to register page
+            return redirect ('register')
+        
+    # Show fanding if user if not logger
     else:
-        # Landing page before login
         
         # Redirect path for login botton
         redirect_path = f"{HOST}/login/"
@@ -97,4 +102,7 @@ def home (request):
             "twitch_link":  twitch_link,
             "error": error
         })
+        
+def register (request):
+    return HttpResponse("Register page")
         
