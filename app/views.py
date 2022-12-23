@@ -124,7 +124,7 @@ def register (request):
     user = models.User.objects.filter(id=user_id).first()
         
     # Redirect to home if user id is not valid
-    if not user: 
+    if not user or (user.first_name and user.first_name.strip() != ""): 
         return redirect ("home")
     
     # Retrurn template in get method with user data
