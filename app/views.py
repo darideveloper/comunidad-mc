@@ -94,6 +94,11 @@ def home (request):
         user_id = request.session["user_id"]
         user = models.User.objects.filter(id=user_id).first()
         
+        # Return to landing page if user id not exist in database
+        if not user:
+            del request.session["user_id"]
+            return redirect ('landing')
+        
         # Validate if user data is completed
         if user.first_name and user.first_name.strip() != "":
             # Render home page with user data
