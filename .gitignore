@@ -7,6 +7,7 @@ temp.*
 venv
 debug.*
 db.*
+.env
 *.sqlite3
 */static
-*/staticfiles
+/staticfiles
