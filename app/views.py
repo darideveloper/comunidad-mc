@@ -58,16 +58,34 @@ def login (request):
         
     # Redirect to home page
     return redirect('home')
-    
-def home (request):
-    """ Home page wqith link for login with twitch """
-    
-    error = ""
-    
-    if "error" in request.session:
-        # Get error from session
-        error = request.session["error"]
+
+def landing (request):
+    """ landing page, for not logged users """
+        
+    # Get error from session
+    error = request.session.get ("error", "")
+    if error:
         del request.session["error"]
+    
+    # Redirect path for login botton
+    redirect_path = f"{HOST}/login/"
+    
+    # Generate tiwtch login url
+    twitch_link = twitch.get_twitch_login_link(TWITCH_CLIENT_ID, redirect_path)
+    
+    # Render page with twitch link and error message (is exist)
+    return render (request, 'app/landing.html', {
+        "twitch_link":  twitch_link,
+        "error": error
+    })
+
+def home (request):
+    """ Home page with link for login with twitch """
+    
+    # Get message from cookies
+    message = request.session.get("message", "")
+    if message:
+        del request.session["message"]
     
     # Show home or register page after login
     if "user_id" in request.session:
@@ -79,27 +97,20 @@ def home (request):
         # Validate if user data is completed
         if user.first_name:
             # Render home page with user data
-            return render (request, 'app/home.html', user)
+            return render (request, 'app/home.html', {
+                "name": user.user_name,
+                "message": message
+            })
         else:
             # Redirect to register page
             return redirect ('register')
         
     # Show fanding if user if not logger
     else:
-        
-        # Redirect path for login botton
-        redirect_path = f"{HOST}/login/"
-        
-        # Generate tiwtch login url
-        twitch_link = twitch.get_twitch_login_link(TWITCH_CLIENT_ID, redirect_path)
-        
-        # Render page with twitch link and error message (is exist)
-        return render (request, 'app/landing.html', {
-            "twitch_link":  twitch_link,
-            "error": error
-        })
+        return redirect ('landing')
         
 def register (request):
+    """ Page for complete register, after login with twitcyh the first time """
         
     # Redirect to home if user it not in session
     if not "user_id" in request.session:
@@ -113,11 +124,44 @@ def register (request):
     if not user: 
         return redirect ("home")
     
-    #  Return template with user data
-    return render (request, 'app/register.html', {
-        "id": user.id,
-        "email": user.email,
-        "picture": user.picture,
-        "user_name": user.user_name
-    })
+    # Retrurn template in get method with user data
+    if request.method == "GET":
+        return render (request, 'app/register.html', {
+            "id": user.id,
+            "email": user.email,
+            "picture": user.picture,
+            "user_name": user.user_name,
+        })
+        
+    elif request.method == "POST":
+        
+        # Get user data from form
+        first_name = request.POST.get ("first-name", "")
+        last_name = request.POST.get ("last-name", "")
+        country = request.POST.get ("country", "")
+        time_zone = request.POST.get ("time-zone", "")
+        phone = request.POST.get ("phone", "")
+        
+        if not first_name or not last_name or not country or not time_zone or not phone:
+            # Show error if data is not valid
+            return render (request, 'app/register.html', {
+            "id": user.id,
+            "email": user.email,
+            "picture": user.picture,
+            "user_name": user.user_name,
+            "error": "Algo salió mal, intente de nuevo"
+        })
+        
+        # Updsate user data
+        user.first_name = first_name
+        user.last_name = last_name
+        user.country = country
+        user.time_zone = time_zone
+        user.phone = phone
+        user.save ()
+        
+        # Save message for show in home page
+        request.session["message"] = "Registro completado con éxito"
+        
+        return redirect ("home")
         

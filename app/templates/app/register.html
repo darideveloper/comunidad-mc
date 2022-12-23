@@ -14,11 +14,10 @@
   </div>
   <div class="right">
     <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco" class="logo">
+    <h1>COMPLE TA TU REGISTRO</h1>
     <img src="{{picture}}" alt="imagen de perfil del usuario, obtenida de twitch" class="profile">
-    <h1>COMPLETA TU REGISTRO</h1>
     <form action="." method="POST">
       {% csrf_token %}
-
 
       <label class="id">
         <span>Twitch ID</span>
@@ -64,6 +63,7 @@
         <div class="input-wrapper">
           <span class="country-code" id="country-code">+52</span>
           <input type="number" name="phone" id="phone" placeholder="55 1234 5678" required>
+          <!-- <input type="hidden" name="full-phone" id="full-phone"> -->
         </div>
       </label>
       

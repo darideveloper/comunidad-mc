@@ -364,7 +364,7 @@ main.register .content .right img.logo {
 }
 main.register .content .right img.profile {
   border-radius: 50px;
-  margin-top: 50px;
+  margin-top: 20px;
   width: 50px;
 }
 main.register .content .right h1 {
@@ -428,7 +428,7 @@ main.register .content .right form label.btn.cta .content {
   margin-right: auto;
 }
 main.register .content .right form label.btn.cta .content span {
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 main.register .content .right form label.phone .input-wrapper {
   display: flex;
