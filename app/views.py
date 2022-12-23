@@ -26,11 +26,9 @@ def login (request):
     if login_code:
         # Get twitch token for get user data
         user_token, refresh_token = twitch.get_tokens(TWITCH_CLIENT_ID, TWITCH_SECRET, login_code, current_path)
-        print (user_token, refresh_token)
         
         # Get user data
         user_id, user_email, user_picture, user_name = twitch.get_user_info(user_token) 
-        print (user_id, user_email, user_picture, user_name)
     
         # Validate user data
         if user_id and user_email and user_picture and user_name:
@@ -124,7 +122,7 @@ def register (request):
     # Get user from cookie id
     user_id = request.session["user_id"]        
     user = models.User.objects.filter(id=user_id).first()
-    
+        
     # Redirect to home if user id is not valid
     if not user: 
         return redirect ("home")
