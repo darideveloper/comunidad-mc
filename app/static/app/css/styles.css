@@ -357,14 +357,20 @@ main.register .content .right {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 100px 0;
+  margin-bottom: 100px;
 }
-main.register .content .right img {
-  width: 100px;
+main.register .content .right img.logo {
+  width: 150px;
+}
+main.register .content .right img.profile {
+  border-radius: 50px;
+  margin-top: 50px;
+  width: 50px;
 }
 main.register .content .right h1 {
   font-weight: bold;
   font-size: 2rem;
+  margin-bottom: 0;
 }
 main.register .content .right form {
   display: flex;
@@ -391,6 +397,10 @@ main.register .content .right form label span {
 }
 main.register .content .right form label input.text {
   width: calc(100% - 50px - 8px);
+}
+main.register .content .right form label input.text:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 main.register .content .right form label select {
   width: 100%;
@@ -424,7 +434,8 @@ main.register .content .right form label.phone .input-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
+  font-size: 1.2rem;
 }
 main.register .content .right form label.phone .input-wrapper span {
   display: inline-block;

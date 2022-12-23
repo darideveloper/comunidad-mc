@@ -13,9 +13,28 @@
     <img src="{% static 'app/imgs/icon4.png' %}" alt="icono de formulario de resgistro">
   </div>
   <div class="right">
-    <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco">
+    <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco" class="logo">
+    <img src="{{picture}}" alt="imagen de perfil del usuario, obtenida de twitch" class="profile">
     <h1>COMPLETA TU REGISTRO</h1>
     <form action="." method="POST">
+      {% csrf_token %}
+
+
+      <label class="id">
+        <span>Twitch ID</span>
+        <input type="text" name="id" id="id" class="text" value="{{id}}" disabled>
+      </label>
+
+      <label class="email">
+        <span>Email</span>
+        <input type="email" name="email" id="email" class="text" value="{{email}}" disabled>
+      </label>
+
+      <label class="user-name">
+        <span>Usuario</span>
+        <input type="text" name="user-name" id="user-name" class="text" value="{{user_name}}" disabled>
+      </label>
+
       <label class="first-name">
         <span>Nombre</span>
         <input type="text" name="first-name" id="first-name" placeholder="John" class="text" required>

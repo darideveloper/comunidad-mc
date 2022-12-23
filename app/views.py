@@ -68,19 +68,15 @@ def home (request):
         # Get error from session
         error = request.session["error"]
         del request.session["error"]
-            
     
     # Show home or register page after login
     if "user_id" in request.session:
         
         # Get user data from cookies
         user_id = request.session["user_id"]
+        user = models.User.objects.filter(id=user_id).first()
         
         # Validate if user data is completed
-        user = models.User.objects.filter(id=user_id).first()
-        print (user)
-        
-        print (user)        
         if user.first_name:
             # Render home page with user data
             return render (request, 'app/home.html', user)
@@ -104,5 +100,24 @@ def home (request):
         })
         
 def register (request):
-    return render (request, 'app/register.html')
+        
+    # Redirect to home if user it not in session
+    if not "user_id" in request.session:
+        return redirect ("home")
+       
+    # Get user from cookie id
+    user_id = request.session["user_id"]        
+    user = models.User.objects.filter(id=user_id).first()
+    
+    # Redirect to home if user id is not valid
+    if not user: 
+        return redirect ("home")
+    
+    #  Return template with user data
+    return render (request, 'app/register.html', {
+        "id": user.id,
+        "email": user.email,
+        "picture": user.picture,
+        "user_name": user.user_name
+    })
         
