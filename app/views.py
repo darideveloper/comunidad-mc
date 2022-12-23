@@ -164,4 +164,6 @@ def register (request):
         request.session["message"] = "Registro completado con éxito"
         
         return redirect ("home")
-        
+
+def error404 (request, exception):
+    return render (request, 'app/404.html')

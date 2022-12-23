@@ -139,7 +139,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -443,6 +443,18 @@ main.register .content .right form label.phone .input-wrapper span {
 }
 main.register .content .right form label.phone .input-wrapper input {
   width: calc(100% - 30px);
+}
+
+main.error404 .content {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+main.error404 .content .icon {
+  font-size: 4rem;
 }
 
 #footer {
