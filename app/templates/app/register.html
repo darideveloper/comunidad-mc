@@ -17,10 +17,35 @@
     <h1>COMPLETA TU REGISTRO</h1>
     <form action="." method="POST">
       <label class="first-name">
-        <input type="text" name="first-name" id="first-name" placeholder="Nombre" required>
+        <span>Nombre</span>
+        <input type="text" name="first-name" id="first-name" placeholder="John" class="text" required>
       </label>
+
       <label class="last-name">
-        <input type="text" name="last-name" id="last-name" placeholder="Apellido" required>
+        <span>Apellido</span>
+        <input type="text" name="last-name" id="last-name" placeholder="Smith" class="text" required>
+      </label>
+
+      <label class="country">
+        <span>País</span>
+        <select name="country" id="country">
+          <option value=""></option>
+        </select>
+      </label>
+
+      <label class="time-zone">
+        <span>Zona horaria</span>
+        <select name="time-zone" id="time-zone">
+          <option value=""></option>
+        </select>
+      </label>
+
+      <label class="phone">
+        <span>Teléfono</span>
+        <div class="input-wrapper">
+          <span class="country-code" id="country-code">+52</span>
+          <input type="number" name="phone" id="phone" placeholder="55 1234 5678" required>
+        </div>
       </label>
       
       <label class="btn cta" href="{{twitch_link}}">
@@ -39,3 +64,7 @@
   </div>
 </div>
 {% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/register.js' %}"></script>
+{% endblock %} 

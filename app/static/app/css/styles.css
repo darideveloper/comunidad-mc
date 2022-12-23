@@ -85,6 +85,11 @@ h1, h2, h3, h4, h5, h6, .title {
   box-shadow: 0px 0px 23px -15px #7a70b3;
 }
 
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .btn {
   display: inline-block;
 }
@@ -372,8 +377,25 @@ main.register .content .right form label {
   width: 80%;
   margin-top: 20px;
 }
+main.register .content .right form label:hover span {
+  opacity: 1;
+}
+main.register .content .right form label span {
+  font-size: 0.9rem;
+  color: #cfd5dc;
+  margin: 10px 0;
+  display: inline-block;
+  margin-left: 10px;
+  opacity: 0.7;
+  transition-duration: 0.3s;
+}
+main.register .content .right form label input.text {
+  width: calc(100% - 50px - 8px);
+}
+main.register .content .right form label select {
+  width: 100%;
+}
 main.register .content .right form label input, main.register .content .right form label select {
-  width: calc(100% - 50px);
   border: none;
   background: #17181D;
   padding: 8px 25px;
@@ -394,6 +416,22 @@ main.register .content .right form label.btn.cta .content {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+}
+main.register .content .right form label.btn.cta .content span {
+  font-size: 1rem;
+}
+main.register .content .right form label.phone .input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+main.register .content .right form label.phone .input-wrapper span {
+  display: inline-block;
+  width: 30px;
+}
+main.register .content .right form label.phone .input-wrapper input {
+  width: calc(100% - 30px);
 }
 
 #footer {
