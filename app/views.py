@@ -104,5 +104,5 @@ def home (request):
         })
         
 def register (request):
-    return HttpResponse("Register page")
+    return render (request, 'app/register.html')
         
