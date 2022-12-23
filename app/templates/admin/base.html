@@ -1,0 +1,18 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  :root {
+    --primary: #7a70b3;
+    --secondary: #17181D;
+    --link-fg: #afa7da;
+    --link-selected-fg: #F3EFE0;
+    --accent: #F3EFE0;
+  }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+<link rel="shortcut icon" href="{% static 'store/imgs/favicon.png' %}" type="image/x-icon">
+{% endblock %}

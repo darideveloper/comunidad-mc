@@ -1,6 +1,12 @@
 # mysite/urls.py
-from django.urls import include, path
 from . import views
+from django.contrib import admin
+from django.urls import include, path
+
+admin.site.site_header = "Comunidad MC"
+admin.site.site_title = 'Comunidad MC'
+admin.site.site_url = '/'
+admin.site.index_title = "Admin"
 
 urlpatterns = [
     path('', views.home, name='home'),
