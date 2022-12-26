@@ -25,6 +25,19 @@ export function show_error (error) {
     })
 }
 
+export function show_message (message) {
+    // Create alert
+    Swal.fire({
+      icon: 'success',
+      title: 'Listo',
+      text: message,
+    })
+}
+
 if (error) {
     show_error(error)
+}
+
+if (message) {
+  show_message(message)
 }

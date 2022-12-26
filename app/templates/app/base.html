@@ -24,8 +24,22 @@
     <link rel="stylesheet" href="{% static 'app/css/styles.css' %}">
 </head>
 <body>
-    <header>
+    <header id="header" class="full-width">
+        <nav class="regular-width">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'app/imgs/logo_white.png' %}" alt="Comunidad MC">
+            </a>
+            <div class="menu">
+                <ul>
+                    <li><a href="{% url 'home' %}">Inicio</a></li>
 
+                    <!-- Render logout button only if user its logged -->
+                    {% if request.session.user_id %}
+                        <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
     </header>
     <main class="{% block main_class %}{% endblock %}">
         {% block main %}{% endblock %}
@@ -41,11 +55,14 @@
     <!-- Get js variables from django -->
     <script>
         const error = "{{ error }}";
-        console.log (error)
+        const message = "{{ message }}";
+        console.log ({error, message})
     </script>
     
     <!-- Alerts imports -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
     <script src="{% static 'app/code/alerts.js' %}" type="module"></script>
+
+    {% block js %}{% endblock %}
 </body>
 </html>

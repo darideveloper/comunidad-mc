@@ -1,0 +1,89 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Registro{% endblock %}
+
+{% block main_class %}register{% endblock %}
+
+{% block main %}
+<img src="{% static 'app/imgs/border-top-left.png' %}" alt="borde de decoración" class="decoration top-left">
+<img src="{% static 'app/imgs/border-bottom-right.png' %}" alt="borde de decoración" class="decoration bottom-right">
+<div class="content regular-width">
+  <div class="left">
+    <img src="{% static 'app/imgs/icon4.png' %}" alt="icono de formulario de resgistro">
+  </div>
+  <div class="right">
+    <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco" class="logo">
+    <h1>COMPLE TA TU REGISTRO</h1>
+    <img src="{{picture}}" alt="imagen de perfil del usuario, obtenida de twitch" class="profile">
+    <form action="." method="POST">
+      {% csrf_token %}
+
+      <label class="id">
+        <span>Twitch ID</span>
+        <input type="text" name="id" id="id" class="text" value="{{id}}" disabled>
+      </label>
+
+      <label class="email">
+        <span>Email</span>
+        <input type="email" name="email" id="email" class="text" value="{{email}}" disabled>
+      </label>
+
+      <label class="user-name">
+        <span>Usuario</span>
+        <input type="text" name="user-name" id="user-name" class="text" value="{{user_name}}" disabled>
+      </label>
+
+      <label class="first-name">
+        <span>Nombre</span>
+        <input type="text" name="first-name" id="first-name" placeholder="John" class="text" required>
+      </label>
+
+      <label class="last-name">
+        <span>Apellido</span>
+        <input type="text" name="last-name" id="last-name" placeholder="Smith" class="text" required>
+      </label>
+
+      <label class="country">
+        <span>País</span>
+        <select name="country" id="country">
+          <option value=""></option>
+        </select>
+      </label>
+
+      <label class="time-zone">
+        <span>Zona horaria</span>
+        <select name="time-zone" id="time-zone">
+          <option value=""></option>
+        </select>
+      </label>
+
+      <label class="phone">
+        <span>Teléfono</span>
+        <div class="input-wrapper">
+          <span class="country-code" id="country-code">+52</span>
+          <input type="number" name="phone" id="phone" placeholder="55 1234 5678" required>
+          <input type="hidden" name="full-phone" id="full-phone">
+        </div>
+      </label>
+      
+      <label class="btn cta" href="{{twitch_link}}">
+        <div class="content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/>
+          </svg>
+          <span>
+            Enviar
+          </span>
+          <input type="submit" value="Enviar" class="btn cta hide">
+        </div>
+      </label>
+
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/register.js' %}"></script>
+{% endblock %} 

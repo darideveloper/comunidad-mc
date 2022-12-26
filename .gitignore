@@ -9,5 +9,5 @@ debug.*
 db.*
 .env
 *.sqlite3
-*/static
 /staticfiles
+.env
