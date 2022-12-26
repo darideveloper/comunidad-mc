@@ -1,7 +1,8 @@
 import os
 from . import twitch
 from . import models
-from django.http import HttpResponse
+from . import decorators
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from dotenv import load_dotenv
 
@@ -33,11 +34,15 @@ def login (request):
         # Validate user data
         if user_id and user_email and user_picture and user_name:
             
-            # Save user data in database
-            new_user = models.User(user_id, user_email, user_picture, user_name, user_token, refresh_token)
-            new_user.save ()
+            # Validate if user exist in database
+            new_user = models.User.objects.filter(id=user_id).first()
+            if not new_user:
+                
+                # Save new user data in database
+                new_user = models.User(user_id, user_email, user_picture, user_name, user_token, refresh_token)
+                new_user.save ()
             
-            # Save user data in session
+            # Save user id in session
             request.session["user_id"] = new_user.id
             
         else:
@@ -77,6 +82,7 @@ def landing (request):
         "error": error
     })
 
+@decorators.validate_login
 def home (request):
     """ Home page with link for login with twitch """
     
@@ -84,40 +90,30 @@ def home (request):
     message = request.session.get("message", "")
     if message:
         del request.session["message"]
+        
+    # Get user data from cookies
+    user_id = request.session["user_id"]
+    user = models.User.objects.filter(id=user_id).first()
     
-    # Show home or register page after login
-    if "user_id" in request.session:
-        
-        # Get user data from cookies
-        user_id = request.session["user_id"]
-        user = models.User.objects.filter(id=user_id).first()
-        
-        # Return to landing page if user id not exist in database
-        if not user:
-            del request.session["user_id"]
-            return redirect ('landing')
-        
-        # Validate if user data is completed
-        if user.first_name and user.first_name.strip() != "":
-            # Render home page with user data
-            return render (request, 'app/home.html', {
-                "name": user.user_name,
-                "message": message
-            })
-        else:
-            # Redirect to register page
-            return redirect ('register')
-        
-    # Show fanding if user if not logger
-    else:
+    # Return to landing page if user id not exist in database
+    if not user:
+        del request.session["user_id"]
         return redirect ('landing')
-        
+    
+    # Validate if user data is completed
+    if user.first_name and user.first_name.strip() != "":
+        # Render home page with user data
+        return render (request, 'app/home.html', {
+            "name": user.user_name,
+            "message": message
+        })
+    else:
+        # Redirect to register page
+        return redirect ('register')
+
+@decorators.validate_login
 def register (request):
     """ Page for complete register, after login with twitcyh the first time """
-        
-    # Redirect to home if user it not in session
-    if not "user_id" in request.session:
-        return redirect ("home")
        
     # Get user from cookie id
     user_id = request.session["user_id"]        
@@ -148,12 +144,12 @@ def register (request):
         if not first_name or not last_name or not country or not time_zone or not phone:
             # Show error if data is not valid
             return render (request, 'app/register.html', {
-            "id": user.id,
-            "email": user.email,
-            "picture": user.picture,
-            "user_name": user.user_name,
-            "error": "Algo salió mal, intente de nuevo"
-        })
+                "id": user.id,
+                "email": user.email,
+                "picture": user.picture,
+                "user_name": user.user_name,
+                "error": "Algo salió mal, intente de nuevo"
+            })
         
         # Updsate user data
         user.first_name = first_name
