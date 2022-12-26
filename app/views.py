@@ -2,6 +2,7 @@ import os
 from . import twitch
 from . import models
 from . import decorators
+from .logs import logger
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from dotenv import load_dotenv
@@ -48,12 +49,12 @@ def login (request):
         else:
             # Araise error when user data is not valid
             error = True
-            print ("Error al obtener datos de usuario")
+            logger.error ("Error al obtener datos de usuario")
         
     else:
         # Araise error where there it nor a login code
         error = True        
-        print ("Error al obtener codigo de login")
+        logger.error ("Error al obtener codigo de login")
     
     if error:
         # Save login error in session

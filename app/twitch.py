@@ -1,5 +1,6 @@
 import json
 import requests
+from .logs import logger
 
 
 def get_tokens(client_id: str, client_secret: str, login_code: str, direct_url: str):
@@ -26,11 +27,12 @@ def get_tokens(client_id: str, client_secret: str, login_code: str, direct_url: 
     }
     res = requests.post(token_url, data=params)
     json_data = json.loads(res.content)
-    print(json_data)
+    logger.debug (str(json_data))
 
     # Extract variables
     access_token = json_data.get("access_token", "")
     refresh_token = json_data.get("refresh_token", "")
+    logger.debug (f"{access_token}, {refresh_token}")
     return (access_token, refresh_token)
 
 
