@@ -35,7 +35,7 @@
 
                     <!-- Render logout button only if user its logged -->
                     {% if request.session.user_id %}
-                        <li><a href="{% url 'home' %}">Cerrar sesión</a></li>
+                        <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
                     {% endif %}
                 </ul>
             </div>

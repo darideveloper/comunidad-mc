@@ -170,3 +170,13 @@ def register (request):
 
 def error404 (request, exception):
     return render (request, 'app/404.html')
+
+def logout (request):
+    """ Logout user """
+    
+    # Delete user id from cookies
+    if "user_id" in request.session:
+        del request.session["user_id"]
+        
+    # Redirect to home
+    return redirect ("home")
