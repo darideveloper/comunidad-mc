@@ -101,17 +101,19 @@ def home (request):
         del request.session["user_id"]
         return redirect ('landing')
     
-    # Validate if user data is completed
-    if user.first_name and user.first_name.strip() != "":
-        # Render home page with user data
-        return render (request, 'app/home.html', {
-            "name": user.user_name,
-            "message": message
-        })
-    else:
-        # Redirect to register page
+    # Send user to register page if user data is not complete
+    if not user.first_name or user.first_name.strip() == "":
         return redirect ('register')
+    
+    # Show to user to whastapp page if user is not active
+    if not user.is_active:
+        return render (request, 'app/whatsapp.html')
 
+    # Render home page with user data
+    return render (request, 'app/home.html', {
+        "name": user.user_name,
+        "message": message
+    })
 @decorators.validate_login
 def register (request):
     """ Page for complete register, after login with twitcyh the first time """

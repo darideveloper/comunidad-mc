@@ -1,0 +1,66 @@
+.whatsapp
+    > .content 
+        text-align: center
+        min-height: calc(100vh - 80px)
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        position: relative
+
+        h1
+            font-weight: bold
+
+        h2
+            margin: 40px 0
+
+        .cta
+            margin: 60px 0
+
+        .video-cta-wrapper
+            display: flex
+            align-items: center
+            justify-content: center
+            padding-bottom: 50px
+            position: absolute
+            right: 0
+            bottom: 0
+
+ 
+            a
+                display: inline-block
+                display: flex
+                align-items: center
+                justify-content: flex-end
+                flex-direction: column
+
+                &:hover
+                    img
+                        opacity: 1
+
+                    span
+                        background-color: rgba($color-primary, 0.8)
+
+                img
+                    width: 50px
+                    transition-duration: $transition-duration
+                    opacity: 0.5
+                    margin-bottom: 10px
+
+                span
+                    color: $color-text
+                    font-weight: bold
+                    background-color: rgba($color-primary, 0.3)
+                    padding: 5px 10px
+                    border-radius: 30px
+                    transition-duration: $transition-duration
+                    font-size: 0.8rem
+
+        @media screen and (max-width: 1150px)
+            .video-cta-wrapper
+                right: 5%
+
+        @media screen and (max-width: 750px)
+            .video-cta-wrapper
+                position: initial
+            

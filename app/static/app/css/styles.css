@@ -137,6 +137,22 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .btn.cta.dark:active .content {
   background-color: rgba(14, 17, 25, 0.8);
 }
+.btn.cta.green .content {
+  background-color: #499c7d;
+  border-color: #499c7d;
+}
+.btn.cta.green:hover .content {
+  background-color: rgba(73, 156, 125, 0.1);
+  color: #499c7d;
+}
+.btn.cta.green:active .content {
+  background-color: rgba(73, 156, 125, 0.8);
+}
+.btn.cta.green svg {
+  fill: #cfd5dc;
+  width: 30px;
+  height: 30px;
+}
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -518,6 +534,72 @@ main.error404 .content {
 }
 main.error404 .content .icon {
   font-size: 4rem;
+}
+
+.whatsapp > .content {
+  text-align: center;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+.whatsapp > .content h1 {
+  font-weight: bold;
+}
+.whatsapp > .content h2 {
+  margin: 40px 0;
+}
+.whatsapp > .content .cta {
+  margin: 60px 0;
+}
+.whatsapp > .content .video-cta-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 50px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.whatsapp > .content .video-cta-wrapper a {
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.whatsapp > .content .video-cta-wrapper a:hover img {
+  opacity: 1;
+}
+.whatsapp > .content .video-cta-wrapper a:hover span {
+  background-color: rgba(122, 112, 179, 0.8);
+}
+.whatsapp > .content .video-cta-wrapper a img {
+  width: 50px;
+  transition-duration: 0.3s;
+  opacity: 0.5;
+  margin-bottom: 10px;
+}
+.whatsapp > .content .video-cta-wrapper a span {
+  color: #cfd5dc;
+  font-weight: bold;
+  background-color: rgba(122, 112, 179, 0.3);
+  padding: 5px 10px;
+  border-radius: 30px;
+  transition-duration: 0.3s;
+  font-size: 0.8rem;
+}
+@media screen and (max-width: 1150px) {
+  .whatsapp > .content .video-cta-wrapper {
+    right: 5%;
+  }
+}
+@media screen and (max-width: 750px) {
+  .whatsapp > .content .video-cta-wrapper {
+    position: initial;
+  }
 }
 
 #footer {
