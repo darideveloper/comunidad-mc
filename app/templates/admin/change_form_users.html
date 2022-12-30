@@ -15,7 +15,7 @@
 
   for (selector of selectors_disbaled) {
     const element = document.querySelector(selector)
-    element.disabled = true
+    element.readOnly = true
   }
 
   // Create image preview
@@ -27,7 +27,7 @@
 
 <style>
   /* Custom styles for disabled inputs */
-  input[disabled] {
+  input[readOnly] {
     border: none;
     opacity: 0.6;
   }
