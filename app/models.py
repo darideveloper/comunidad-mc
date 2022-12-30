@@ -14,7 +14,7 @@ class User (models.Model):
     country = models.CharField(name='country', verbose_name="país", help_text="país de residencia", null=True, blank=True, max_length=100)
     phone = models.CharField(name='phone', verbose_name="teléfono", help_text="teléfono con código de país", null=True, blank=True, max_length=20)
     time_zone = models.CharField(name='time_zone', verbose_name="zona horaria", help_text="zona horaria de residencia", null=True, blank=True, max_length=100)
-    is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario está activo", default=False)
+    is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
     
     def __str__(self):
         email = self.email if self.email else "no email"
