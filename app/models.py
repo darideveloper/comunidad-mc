@@ -11,11 +11,37 @@ class User (models.Model):
     last_login = models.DateTimeField(name='last_login', verbose_name="últimos login", help_text="fecha de último inicio de sesión", default=timezone.now)
     first_name = models.CharField(name='first_name', verbose_name="nombre", help_text="nombre real del usuario", null=True, blank=True, max_length=100)
     last_name = models.CharField(name='last_name', verbose_name="apellido", help_text="apellido real del usuario", null=True, blank=True, max_length=100)
-    country = models.CharField(name='country', verbose_name="país", help_text="país de residencia", null=True, blank=True, max_length=100)
+    country = models.ForeignKey('Country', on_delete=models.CASCADE, name='country', verbose_name="país", help_text="país de residencia", null=True, blank=True)
     phone = models.CharField(name='phone', verbose_name="teléfono", help_text="teléfono con código de país", null=True, blank=True, max_length=20)
-    time_zone = models.CharField(name='time_zone', verbose_name="zona horaria", help_text="zona horaria de residencia", null=True, blank=True, max_length=100)
+    time_zone = models.ForeignKey('TimeZone', on_delete=models.CASCADE, name='time_zone', verbose_name="zona horaria", help_text="zona horaria", null=True, blank=True)
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
-    
+
     def __str__(self):
         email = self.email if self.email else "no email"
         return f"{self.id} - {self.user_name} - {email}"
+    
+    class Meta:
+        verbose_name = "Usuario"
+        verbose_name_plural = "Usuarios"
+    
+class TimeZone (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de la zona horaria", null=False, blank=False, editable=False)
+    time_zone = models.CharField(name='time_zone', verbose_name="zona horaria", help_text="zona horaria", null=False, blank=False, max_length=100)
+
+    def __str__(self):
+        return self.time_zone
+    
+    class Meta:
+        verbose_name = "Zona Horaria"
+        verbose_name_plural = "Zonas Horarias"
+
+class Country (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del país", null=False, blank=False, editable=False)
+    country = models.CharField(name='country', verbose_name="país", help_text="país de residencia", null=False, blank=False, max_length=100)
+
+    def __str__(self):
+        return self.country
+    
+    class Meta:
+        verbose_name = "País"
+        verbose_name_plural = "Países"

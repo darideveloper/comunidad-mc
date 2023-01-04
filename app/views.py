@@ -153,12 +153,23 @@ def register (request):
                 "user_name": user.user_name,
                 "error": "Algo salió mal, intente de nuevo"
             })
+            
         
-        # Updsate user data
+        # Create country and time zone objects
+        country_obj = models.Country.objects.filter(country=country).first()
+        time_zone_obj = models.TimeZone.objects.filter(time_zone=time_zone).first()
+        if not country_obj:
+            country_obj = models.Country(country=country)
+            country_obj.save()
+        if not time_zone_obj:
+            time_zone_obj = models.TimeZone(time_zone=time_zone)
+            time_zone_obj.save()
+        
+        # Update user data
         user.first_name = first_name
         user.last_name = last_name
-        user.country = country
-        user.time_zone = time_zone
+        user.country = country_obj
+        user.time_zone = time_zone_obj
         user.phone = phone
         user.save ()
         

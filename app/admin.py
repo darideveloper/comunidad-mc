@@ -11,4 +11,15 @@ class AdminUser (admin.ModelAdmin):
     ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
+
+@admin.register (models.Country)
+class AdminCountry (admin.ModelAdmin):
     
+    list_display = ('id', 'country')
+    search_fields = ('country', )
+    
+@admin.register (models.TimeZone)
+class AdminTimeZone (admin.ModelAdmin):
+    
+    list_display = ('id', 'time_zone')
+    search_fields = ('time_zone', )
