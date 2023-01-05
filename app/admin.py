@@ -16,10 +16,29 @@ class AdminUser (admin.ModelAdmin):
 class AdminCountry (admin.ModelAdmin):
     
     list_display = ('id', 'country')
+    ordering = ('id', 'country')
     search_fields = ('country', )
     
 @admin.register (models.TimeZone)
 class AdminTimeZone (admin.ModelAdmin):
     
     list_display = ('id', 'time_zone')
+    ordering = ('id', 'time_zone')
     search_fields = ('time_zone', )
+    
+@admin.register (models.Stream)
+class AdminStream (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'datetime')
+    ordering = ('id', 'user', 'datetime')
+    list_filter = ('user', 'datetime')
+    search_fields = ('user', )
+    
+@admin.register (models.Comment)
+class AdminComment (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'stream', 'datetime')
+    ordering = ('id', 'user', 'stream', 'datetime')
+    list_filter = ('user', 'stream', 'datetime')
+    search_fields = ('user', 'stream')
+    

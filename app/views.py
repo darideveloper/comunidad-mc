@@ -1,11 +1,17 @@
 import os
+import json
+import datetime
+import requests as req
 from . import twitch
 from . import models
 from . import decorators
 from .logs import logger
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
 from dotenv import load_dotenv
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.views.generic import View
+from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv ()
 
@@ -13,6 +19,7 @@ load_dotenv ()
 TWITCH_CLIENT_ID = os.environ.get("TWITCH_CLIENT_ID")
 TWITCH_SECRET = os.environ.get("TWITCH_SECRET")
 HOST = os.environ.get("HOST")
+NODE_API = os.environ.get("NODE_API")
 
 # Create your views here.
 def login (request):
@@ -190,3 +197,72 @@ def logout (request):
         
     # Redirect to home
     return redirect ("home")
+
+def apoyar (request):
+    """ Get data of the stream that is currently being broadcast, for node.js api"""
+    
+    # Get date ranges
+    now = timezone.now()
+    start_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+    end_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 59, 59, tzinfo=timezone.utc)
+        
+    # Get current stream
+    streams_data = {
+        "streams": []
+    }
+    current_streams = models.Stream.objects.filter(datetime__range=[start_datetime, end_datetime]).all()
+    for stream in current_streams:
+        # Get and stremer data
+        streams_data["streams"].append ({
+            "access_token": stream.user.access_token,
+            "user_name": stream.user.user_name,
+            "stream_id": stream.id,
+        })    
+
+    # Send data to node.js api for start readding comments, and catch errors
+    error = False
+    try:
+        res = req.post(NODE_API, json=streams_data)
+    except:
+        error = True
+    else: 
+        if res.status_code != 200:
+            error = True
+    
+    # Render template with error message if node.js api is not available
+    if error:
+        return render (request, 'app/apoyar.html', {
+            "error": "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
+        })
+    else: 
+        return render (request, 'app/apoyar.html', {})
+
+@csrf_exempt
+def add_comment (request):
+    """ Add comment to stream """
+    
+    # Get data from request
+    json_data = json.loads(request.body)
+    stream_id = json_data.get("stream_id", "")
+    user_id = json_data.get("user_id", "")
+    comment = json_data.get("comment", "")
+    
+    if not user_id or not stream_id or not comment:
+        return HttpResponseBadRequest("stream_id, user_id and comment are required")
+    
+    # Get stream
+    stream = models.Stream.objects.filter(id=stream_id).first()
+    
+    # Get user
+    user = models.User.objects.filter(id=user_id).first()
+    
+    if not user or not stream:
+        return HttpResponseBadRequest("stream id or user id is not valid")
+    
+    # Create comment
+    comment_obj = models.Comment(stream=stream, comment=comment, user=user)
+    comment_obj.save()
+        
+    return JsonResponse ({
+        "success": True
+    })

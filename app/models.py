@@ -18,7 +18,7 @@ class User (models.Model):
 
     def __str__(self):
         email = self.email if self.email else "no email"
-        return f"{self.id} - {self.user_name} - {email}"
+        return f"({self.id}) {self.user_name}"
     
     class Meta:
         verbose_name = "Usuario"
@@ -45,3 +45,29 @@ class Country (models.Model):
     class Meta:
         verbose_name = "País"
         verbose_name_plural = "Países"
+        
+class Stream (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que está transmitiendo", null=False, blank=False)
+    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.user}: {self.datetime}"
+    
+    class Meta:
+        verbose_name = "Stream"
+        verbose_name_plural = "Streams"
+        
+class Comment (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del comentario", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el comentario", null=False, blank=False)
+    stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el comentario", null=False, blank=False)
+    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del comentario", null=False, blank=False, default=timezone.now)
+    comment = models.TextField(name='comment', verbose_name="comentario", help_text="comentario", null=False, blank=False)
+    
+    def __str__(self):
+        return f"{self.user}: {self.comment}"
+    
+    class Meta:
+        verbose_name = "Comentario"
+        verbose_name_plural = "Comentarios"
