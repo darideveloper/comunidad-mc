@@ -77,7 +77,7 @@ def get_twitch_login_link(client_id: str, redirect_url: str):
         "redirect_uri": redirect_url,
         "response_type": "code",
         "force_verify": "true",
-        "scope": "openid user:read:email",
+        "scope": "openid user:read:email moderation:read moderator:read:chatters moderator:read:chat_settings chat:read",
         "state": "sample_string",
         "claims": '{"userinfo":{"picture":null, "email":null, "name":null, "user": null, "preferred_username": null}}'
     }
@@ -86,3 +86,29 @@ def get_twitch_login_link(client_id: str, redirect_url: str):
     twitch_link = f"https://id.twitch.tv/oauth2/authorize?{encoded_params}"
 
     return twitch_link
+
+def get_users_in_chat (user_id: int, user_token: str, client_id: str):
+    """ Get list of users in chat of a stream
+
+    Args:
+        user_id (int): user if of streamer
+        user_token (str): user token of the streamer
+        client_id (str): client id of the app
+
+    Returns:
+        list: id of users in chat
+    """
+    
+    url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
+    headers = {
+        "Authorization": f"Bearer {user_token}",
+        "Client-Id": client_id
+    }
+    res = requests.get(url, headers=headers)
+    json_data = res.json()
+    
+    if not json_data:
+        return False
+    
+    users_active = list(map(lambda user: user["user_id"], json_data["data"]))
+    return users_active
