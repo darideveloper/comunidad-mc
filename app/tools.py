@@ -58,3 +58,22 @@ def submit_streams_node (node_api:str):
         node_error = True
         
     return node_error
+
+def is_node_working (node_api:str):
+    """ Submit a basic request to node.js api to check if is working
+
+    Args:
+        node_api (str): url of node.js api
+
+    Returns:
+        bool: True if node.js api is working, False if not
+    """
+    
+    logger.info ("Checking if node.js api is working")
+    try:
+        res = requests.post(node_api)
+    except Exception as e:
+        logger.error (f"Error checking if node.js api is working: {e}")
+        return False
+    else:
+        return True
