@@ -18,7 +18,7 @@ class User (models.Model):
 
     def __str__(self):
         email = self.email if self.email else "no email"
-        return f"({self.id}) {self.user_name}"
+        return f"{self.user_name}"
     
     class Meta:
         verbose_name = "Usuario"
