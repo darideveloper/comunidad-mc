@@ -3,6 +3,7 @@ import threading
 from django.utils import timezone
 import requests
 from . import models
+from .logs import logger
 
 def submit_streams_node_bg (node_api:str): 
     """ run funtion "submit_streams_node" in background with threads
@@ -12,6 +13,7 @@ def submit_streams_node_bg (node_api:str):
     """
     
     # Create thread and start it
+    logger.info ("Starting thread for submit streams to node.js api")
     thread_obj = threading.Thread(target=submit_streams_node, args=(node_api,))
     thread_obj.start()
 
@@ -28,6 +30,7 @@ def submit_streams_node (node_api:str):
     node_error = False
     
     # Get date ranges
+    logger.info ("Getting streams for submit to node.js api")
     now = timezone.now()
     start_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
     end_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 59, 59, tzinfo=timezone.utc)
@@ -47,9 +50,11 @@ def submit_streams_node (node_api:str):
         
     # Send data to node.js api for start readding comments, and catch errors
     try:
+        logger.info ("Sending streams to node.js api")
         res = requests.post(node_api, json=streams_data)
         res.raise_for_status()
-    except:        
+    except Exception as e:
+        logger.error (f"Error sending streams to node.js api: {e}")        
         node_error = True
         
     return node_error
