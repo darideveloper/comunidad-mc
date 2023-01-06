@@ -2,6 +2,14 @@ import json
 import requests
 from .logs import logger
 
+TWITCH_SCOPE = [
+    "openid",
+    "user:read:email", 
+    "moderation:read", 
+    "moderator:read:chatters", 
+    "moderator:read:chat_settings",
+    "chat:read"
+]
 
 def get_tokens(client_id: str, client_secret: str, login_code: str, direct_url: str):
     """ Get tokens from twitch api, at the endpoint: https://id.twitch.tv/oauth2/token
@@ -77,7 +85,7 @@ def get_twitch_login_link(client_id: str, redirect_url: str):
         "redirect_uri": redirect_url,
         "response_type": "code",
         "force_verify": "true",
-        "scope": "openid user:read:email moderation:read moderator:read:chatters moderator:read:chat_settings chat:read",
+        "scope": " ".join(TWITCH_SCOPE),
         "state": "sample_string",
         "claims": '{"userinfo":{"picture":null, "email":null, "name":null, "user": null, "preferred_username": null}}'
     }
@@ -112,3 +120,36 @@ def get_users_in_chat (user_id: int, user_token: str, client_id: str):
     
     users_active = list(map(lambda user: user["user_id"], json_data["data"]))
     return users_active
+
+def get_new_user_token (client_id: str, client_secret: str, refresh_token: str):
+    """ Update user token
+
+    Args:
+        client_id (str): client id of the app
+        client_secret (str): client secret of the app
+        refresh_token (str): refresh token of the userç
+        
+    Returns: 
+        str: new access token
+    """
+    
+    # Get new token
+    url = "https://id.twitch.tv/oauth2/token"
+    params = {
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "refresh_token": refresh_token,
+        "grant_type": "refresh_token"
+    }
+    res = requests.post(url, data=params)
+    if res.status_code != 200:
+        logger.error (f"Error updating user refresh_token: ({res.status_code}) refresh_token")
+        return ""
+        
+    json_data = res.json()
+    access_token = json_data.get("access_token", "")
+    if not access_token:
+        logger.error (f"Error updating user refresh_token: ({res.status_code}) refresh_token")
+        return ""
+    
+    return access_token

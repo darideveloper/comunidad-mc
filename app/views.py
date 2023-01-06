@@ -5,6 +5,7 @@ import requests as req
 from . import twitch
 from . import models
 from . import decorators
+from . import tools
 from .logs import logger
 from dotenv import load_dotenv
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
@@ -200,37 +201,11 @@ def logout (request):
 
 def apoyar (request):
     """ Get data of the stream that is currently being broadcast, for node.js api"""
-    
-    # Get date ranges
-    now = timezone.now()
-    start_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
-    end_datetime = datetime.datetime(now.year, now.month, now.day, now.hour, 59, 59, tzinfo=timezone.utc)
-        
-    # Get current stream
-    streams_data = {
-        "streams": []
-    }
-    current_streams = models.Stream.objects.filter(datetime__range=[start_datetime, end_datetime]).all()
-    for stream in current_streams:
-        # Get and stremer data
-        streams_data["streams"].append ({
-            "access_token": stream.user.access_token,
-            "user_name": stream.user.user_name,
-            "stream_id": stream.id,
-        })    
 
-    # Send data to node.js api for start readding comments, and catch errors
-    error = False
-    try:
-        res = req.post(NODE_API, json=streams_data)
-    except:
-        error = True
-    else: 
-        if res.status_code != 200:
-            error = True
-    
+    node_error = tools.submit_streams_node(NODE_API)
+
     # Render template with error message if node.js api is not available
-    if error:
+    if node_error:
         return render (request, 'app/apoyar.html', {
             "error": "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
         })
@@ -263,6 +238,37 @@ def add_comment (request):
     comment_obj = models.Comment(stream=stream, comment=comment, user=user)
     comment_obj.save()
         
+    return JsonResponse ({
+        "success": True
+    })
+
+@csrf_exempt
+def refresh_token (request):
+    """ Update access token of user, from node.js api """
+    
+    # Get data from request
+    json_data = json.loads(request.body)
+    expired_token = json_data.get("expired_token", "")
+    
+    if not expired_token:
+        return HttpResponseBadRequest("expired_token is required")
+    
+    # Find user with expired token
+    find_user = models.User.objects.filter(access_token=expired_token).first()
+    if not find_user:
+        return HttpResponseBadRequest("expired_token is not valid")
+    
+    new_access_token = twitch.get_new_user_token (TWITCH_CLIENT_ID, TWITCH_SECRET, find_user.refresh_token)
+    if not new_access_token:
+        return HttpResponseBadRequest("error generating new token")
+    
+    # Update user token
+    find_user.access_token = new_access_token
+    find_user.save ()
+    
+    # Submit again data to node.js api
+    tools.submit_streams_node_bg (NODE_API)    
+    
     return JsonResponse ({
         "success": True
     })

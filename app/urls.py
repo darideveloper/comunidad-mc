@@ -17,4 +17,5 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('add-comment/', views.add_comment, name='add-comment'),
     path('apoyar/', views.apoyar, name='apoyar'),
+    path('refresh-token/', views.refresh_token, name='refresh-token'),
 ]
