@@ -1,11 +1,12 @@
+import os
 import json
 import requests
-from .logs import logger
 import datetime
 import threading
-from django.utils import timezone
 from . import models
+from .logs import logger
 from dotenv import load_dotenv
+from django.utils import timezone
 
 class TwitchApi:
 
@@ -62,7 +63,8 @@ class TwitchApi:
         """
 
         node_error = False
-        current_streams = get_current_streams()
+        current_streams = self.get_current_streams()
+        streams_data = {}
         for stream in current_streams:
             # Get and stremer data
             streams_data["streams"].append({

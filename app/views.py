@@ -2,10 +2,9 @@ import os
 import json
 import datetime
 import requests as req
-from . import twitch
+from .twitch import TwitchApi
 from . import models
 from . import decorators
-from . import tools
 from .logs import logger
 from dotenv import load_dotenv
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
@@ -14,13 +13,12 @@ from django.utils import timezone
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 
-load_dotenv()
-
 # Get credentials
-TWITCH_CLIENT_ID = os.environ.get("TWITCH_CLIENT_ID")
-TWITCH_SECRET = os.environ.get("TWITCH_SECRET")
+load_dotenv()
 HOST = os.environ.get("HOST")
-NODE_API = os.environ.get("NODE_API")
+
+# Twitch instance
+twitch = TwitchApi ()
 
 # Create your views here.
 def login(request):
@@ -35,12 +33,10 @@ def login(request):
     # Detect error in login
     if login_code:
         # Get twitch token for get user data
-        user_token, refresh_token = twitch.get_tokens(
-            TWITCH_CLIENT_ID, TWITCH_SECRET, login_code, current_path)
+        user_token, refresh_token = twitch.get_tokens(login_code, current_path)
 
         # Get user data
-        user_id, user_email, user_picture, user_name = twitch.get_user_info(
-            user_token)
+        user_id, user_email, user_picture, user_name = twitch.get_user_info(user_token)
 
         # Validate user data
         if user_id and user_email and user_picture and user_name:
@@ -87,7 +83,7 @@ def landing(request):
     redirect_path = f"{HOST}/login/"
 
     # Generate tiwtch login url
-    twitch_link = twitch.get_twitch_login_link(TWITCH_CLIENT_ID, redirect_path)
+    twitch_link = twitch.get_twitch_login_link(redirect_path)
 
     # Render page with twitch link and error message (is exist)
     return render(request, 'app/landing.html', {
@@ -213,7 +209,7 @@ def apoyar(request):
     """ Get data of the stream that is currently being broadcast, for node.js api"""
 
     # TODO: Validate if node server its running
-    is_node_working = tools.is_node_working(NODE_API)
+    is_node_working = twitch.is_node_working(NODE_API)
 
     # Render template with error message if node.js api is not working
     if is_node_working:
@@ -271,8 +267,7 @@ def refresh_token(request):
     if not find_user:
         return HttpResponseBadRequest("expired_token is not valid")
 
-    new_access_token = twitch.get_new_user_token(
-        TWITCH_CLIENT_ID, TWITCH_SECRET, find_user.refresh_token)
+    new_access_token = twitch.get_new_user_token(find_user.refresh_token)
     if not new_access_token:
         return HttpResponseBadRequest("error generating new token")
 
@@ -281,7 +276,7 @@ def refresh_token(request):
     find_user.save()
 
     # Submit again data to node.js api
-    tools.submit_streams_node_bg(NODE_API)
+    twitch.submit_streams_node_bg(NODE_API)
 
     return JsonResponse({
         "success": True
