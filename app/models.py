@@ -18,7 +18,7 @@ class User (models.Model):
 
     def __str__(self):
         email = self.email if self.email else "no email"
-        return f"{self.user_name}"
+        return f"({self.id}) {self.user_name}"
     
     class Meta:
         verbose_name = "Usuario"
@@ -52,7 +52,7 @@ class Stream (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
     
     def __str__(self):
-        return f"{self.user}: {self.datetime}"
+        return f"{self.user.user_name}: {self.datetime}"
     
     class Meta:
         verbose_name = "Stream"
@@ -66,8 +66,21 @@ class Comment (models.Model):
     comment = models.TextField(name='comment', verbose_name="comentario", help_text="comentario", null=False, blank=False)
     
     def __str__(self):
-        return f"{self.user}: {self.comment}"
+        return f"{self.user}: {self.comment} - {self.stream.user.user_name}"
     
     class Meta:
         verbose_name = "Comentario"
         verbose_name_plural = "Comentarios"
+        
+class WhatchCheck (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del check", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que asistió al stream", null=False, blank=False)
+    stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el check", null=False, blank=False)
+    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del check", null=False, blank=False, default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.user}: {self.datetime} - {self.stream.user.user_name}"
+    
+    class Meta:
+        verbose_name = "Check"
+        verbose_name_plural = "Checks"

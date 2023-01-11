@@ -23,8 +23,6 @@ HOST = os.environ.get("HOST")
 NODE_API = os.environ.get("NODE_API")
 
 # Create your views here.
-
-
 def login(request):
     """ Manage login with twitch """
 
