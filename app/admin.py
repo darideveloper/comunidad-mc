@@ -36,9 +36,9 @@ class AdminStream (admin.ModelAdmin):
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'stream', 'comment')
-    ordering = ('id', 'user', 'stream', 'datetime')
-    list_filter = ('user', 'datetime', 'stream')
+    list_display = ('id', 'user', 'stream', 'comment', 'datetime')
+    ordering = ('id', 'user', 'stream', 'datetime', 'datetime')
+    list_filter = ('user', 'datetime')
     search_fields = ('user', 'stream', 'comment')
     
 @admin.register (models.WhatchCheck)

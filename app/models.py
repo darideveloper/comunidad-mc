@@ -52,7 +52,7 @@ class Stream (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
     
     def __str__(self):
-        return f"{self.user.user_name}: {self.datetime}"
+        return f"{self.user.user_name}"
     
     class Meta:
         verbose_name = "Stream"
