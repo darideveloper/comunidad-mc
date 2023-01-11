@@ -25,7 +25,7 @@ class TwitchApi:
         """
 
         # Get date ranges
-        logger.info("Getting streams for submit to node.js api")
+        logger.info("Getting streams from database for current hour")
         now = timezone.now()
         start_datetime = datetime.datetime(
             now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
@@ -64,7 +64,7 @@ class TwitchApi:
 
         node_error = False
         current_streams = self.get_current_streams()
-        streams_data = {}
+        streams_data = {"streams": []}
         for stream in current_streams:
             # Get and stremer data
             streams_data["streams"].append({
@@ -72,6 +72,11 @@ class TwitchApi:
                 "user_name": stream.user.user_name,
                 "stream_id": stream.id,
             })
+            
+        if not streams_data:
+            message = "No streams to submit"
+            logger.info (message)
+            return message
 
         # Send data to node.js api for start readding comments, and catch errors
         try:

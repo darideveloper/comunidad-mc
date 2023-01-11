@@ -9,12 +9,8 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
-from app.tools import submit_streams_node
-from dotenv import load_dotenv
-
-# Load and get credentials
-load_dotenv ()
-NODE_API = os.environ.get("NODE_API")
+from app.twitch import TwitchApi
 
 # Submit data to nodejs api, for start reading chat
-submit_streams_node(NODE_API)
+twitch = TwitchApi ()
+twitch.submit_streams_node()
