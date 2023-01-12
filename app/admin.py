@@ -46,5 +46,5 @@ class AdminWhatchCheck (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'datetime')
     ordering = ('id', 'user', 'stream', 'datetime')
-    list_filter = ('user', 'datetime', 'stream')
+    list_filter = ('user', 'datetime')
     search_fields = ('user', 'stream')
