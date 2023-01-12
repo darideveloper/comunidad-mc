@@ -267,17 +267,12 @@ def refresh_token(request):
     if not find_user:
         return HttpResponseBadRequest("expired_token is not valid")
 
-    new_access_token = twitch.get_new_user_token(find_user.refresh_token)
-    if not new_access_token:
-        return HttpResponseBadRequest("error generating new token")
-
-    # Update user token
-    find_user.access_token = new_access_token
-    find_user.save()
+    token_updated = twitch.update_token(find_user)
+    if not token_update:
+        return HttpResponseBadRequest("error updated token")
 
     # Submit again data to node.js api
-    twitch.submit_streams_node_bg(NODE_API)
-
+    twitch.submit_streams_node_bg(NODE_API)    
     return JsonResponse({
         "success": True
     })

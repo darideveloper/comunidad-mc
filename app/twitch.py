@@ -35,6 +35,11 @@ class TwitchApi:
         # Get current streams
         current_streams = models.Stream.objects.filter(
             datetime__range=[start_datetime, end_datetime]).all()
+        
+        if not current_streams:
+            logger.info("No streams found")
+            return None
+        
         return current_streams
     
 
@@ -74,9 +79,7 @@ class TwitchApi:
             })
             
         if not streams_data:
-            message = "No streams to submit"
-            logger.info (message)
-            return message
+            return None
 
         # Send data to node.js api for start readding comments, and catch errors
         try:
@@ -204,36 +207,56 @@ class TwitchApi:
     def check_users_in_chat(self):
         """ Get list of users in chat of the current streams and save in databse """
         
-        # Get current streams and users
-        current_streams = get_current_streams ()
-        current_users = map(lambda stream: stream.user ,current_streams)
-        
-        # Get users in chat for each streamer
-        for user in users: 
+        # Get current streams and loop  
+        current_streams = self.get_current_streams ()
+        for stream in current_streams:
             
-            # Request data
-            user_id = user.id
-            user_token = user.access_token
+            # Loopf ror get data and update token
+            while True:
+                
+                # Get current stream
+                streamer = stream.user
+                    
+                # Request data
+                user_id = streamer.id
+                user_token = streamer.access_token
+                url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
+                headers = {
+                    "Authorization": f"Bearer {user_token}",
+                    "Client-Id": self.twitch_client_id
+                }
+                res = requests.get(url, headers=headers)
+                json_data = res.json()
 
-            url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
-            headers = {
-                "Authorization": f"Bearer {user_token}",
-                "Client-Id": self.twitch_client_id
-            }
-            res = requests.get(url, headers=headers)
-            json_data = res.json()
-
-            if not json_data:
-                continue
+                if not json_data:
+                    continue
+                
+                # Validate if token is expired and retry
+                if "error" in json_data:
+                    self.update_token(streamer)         
+                    continue
+                else:
+                    break       
 
             # Get users in chat
-            users_active = list(
-                map(lambda user: user["user_id"], json_data["data"]))
-            return users_active
+            users_active = list(map(lambda user: user["user_id"], json_data.get("data", [])))
         
-            # TODO: Filter user
+            # Filter only user who exist in database
+            valid_users = models.User.objects.filter(id__in=users_active)
+            if len(valid_users) == 1:
+                logger.info (f"No users in stream: {stream}")
             
-            # TODO: Save in database
+            # Save in each watch in database
+            for user in valid_users:
+                
+                # Skip if user is the streamer
+                if user.id == streamer.id:
+                    continue
+                
+                # Save check in database
+                new_check = models.WhatchCheck(stream=stream, user=user)
+                new_check.save ()
+                logger.info (f"Check saved. User: {user}, Stream: {stream}")
 
 
     def get_new_user_token(self, refresh_token: str):
@@ -268,3 +291,25 @@ class TwitchApi:
             return ""
 
         return access_token
+    
+    def update_token (self, user: models.User):
+        """ Update user token and save in database
+
+        Args:
+            user (models.User): user instance
+
+        Returns: 
+            bool: True if token updated, False if error
+        """
+            
+        # Get new access token using refresh token  
+        new_access_token = self.get_new_user_token(user.refresh_token)
+        if not new_access_token:
+            logger.error (f"Error generating new token for user: {user}")
+            return False
+
+        # Update user token
+        user.access_token = new_access_token
+        user.save()
+        logger.info (f"User token updated: {user}")
+        return True
