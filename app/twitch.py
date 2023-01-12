@@ -53,7 +53,7 @@ class TwitchApi:
         # Create thread and start it
         logger.info("Starting thread for submit streams to node.js api")
         thread_obj = threading.Thread(
-            target=submit_streams_node, args=(self.node_api,))
+            target=self.submit_streams_node)
         thread_obj.start()
 
 

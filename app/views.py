@@ -230,6 +230,8 @@ def add_comment(request):
     user_id = json_data.get("user_id", "")
     comment = json_data.get("comment", "")
 
+    print (comment)
+
     if not user_id or not stream_id or not comment:
         return HttpResponseBadRequest("stream_id, user_id and comment are required")
 
@@ -257,22 +259,22 @@ def refresh_token(request):
 
     # Get data from request
     json_data = json.loads(request.body)
-    expired_token = json_data.get("expired_token", "")
-
-    if not expired_token:
-        return HttpResponseBadRequest("expired_token is required")
+    stream_id = json_data.get("stream_id", "")
+    if not stream_id:
+        return HttpResponseBadRequest("stream_id is required")
 
     # Find user with expired token
-    find_user = models.User.objects.filter(access_token=expired_token).first()
-    if not find_user:
-        return HttpResponseBadRequest("expired_token is not valid")
+    find_stream = models.Stream.objects.filter(id=stream_id).first()
+    if not find_stream:
+        return HttpResponseBadRequest("stream_id is not valid")
+    find_user = id=find_stream.user
 
     token_updated = twitch.update_token(find_user)
-    if not token_update:
-        return HttpResponseBadRequest("error updated token")
+    if not token_updated:
+        return HttpResponseBadRequest("error updateding token")
 
     # Submit again data to node.js api
-    twitch.submit_streams_node_bg(NODE_API)    
+    twitch.submit_streams_node_bg()    
     return JsonResponse({
         "success": True
     })
