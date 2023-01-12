@@ -69,6 +69,9 @@ class TwitchApi:
 
         node_error = False
         current_streams = self.get_current_streams()
+        if not current_streams:
+            return None
+        
         streams_data = {"streams": []}
         for stream in current_streams:
             # Get and stremer data
@@ -209,6 +212,9 @@ class TwitchApi:
         
         # Get current streams and loop  
         current_streams = self.get_current_streams ()
+        if not current_streams:
+            return None
+        
         for stream in current_streams:
             
             # Loopf ror get data and update token
