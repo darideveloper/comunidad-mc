@@ -176,7 +176,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   justify-content: space-between;
 }
 #header nav .logo img {
-  height: 50px;
+  height: 30px;
+  margin: 10px 0;
 }
 #header nav .menu ul {
   margin: 0;
@@ -207,7 +208,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   justify-content: space-between;
 }
 #header nav .logo img {
-  height: 50px;
+  height: 30px;
+  margin: 10px 0;
 }
 #header nav .menu ul {
   margin: 0;
@@ -286,7 +288,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 #about {
   position: relative;
-  padding-top: 80px;
+  padding-top: 30px;
   padding-bottom: 20px;
 }
 #about .logo {
@@ -303,7 +305,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 @media screen and (max-width: 600px) {
   #about {
-    padding-top: 40px;
+    padding-top: 20px;
   }
   #about .logo {
     display: none;
