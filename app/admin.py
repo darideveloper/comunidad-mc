@@ -48,3 +48,11 @@ class AdminWhatchCheck (admin.ModelAdmin):
     ordering = ('id', 'user', 'stream', 'datetime')
     list_filter = ('user', 'datetime')
     search_fields = ('user', 'stream')
+    
+@admin.register (models.Status)
+class AdminStatus (admin.ModelAdmin):
+    
+    list_display = ('id', 'name',)
+    ordering = ('id', 'name',)
+    list_filter = ('name',)
+    search_fields = ('name',)
