@@ -8,7 +8,7 @@
             height: 30px
             margin: 10px 0
 
-        .menu
+        .menu-wrapper
             ul
                 margin: 0 
                 padding: 0
@@ -20,10 +20,21 @@
                     list-style: none
                     padding: 0 20px
 
-                    &:hover
+                    &.active 
+                        a
+                            color: $color-green
+                            cursor: default
+
+                        &:hover
+                            border: none
+
+                    &:hover:not(.active)
                         a
                             color: $color-text
                             border-bottom: 2px solid rgba($color-text, 1)
+
+                    &:last-child
+                        opacity: 0.5
 
                     a
                         padding: 10px

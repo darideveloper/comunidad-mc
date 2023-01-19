@@ -2,40 +2,57 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'app/imgs/favicon.png' %}">
 
     <!-- Metadata -->
     <title>{% block title %}{% endblock %} | Comunidad MC</title>
-    <meta name="description" content="{% block description %}Comunidad MC premia a las personas que dan el apoyo que todos buscamos y merecemos, no somos una comunidad follow por follow, y mucho menos te obligamos a seguir a las personas dentro de la Comunidad MC. Lo que buscamos con esta página es que impulses tu PROPIA comunidad haciendo que el algoritmo de Twitch te promocione en el apartado 'CANALES RECOMENDADOS' y poder hacer una mejor exposicion de tu canal y contenido.{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}comunidad, mc, twitch, follow, canales recomendados, canal, crecer{% endblock %}">
+    <meta name="description"
+        content="{% block description %}Comunidad MC premia a las personas que dan el apoyo que todos buscamos y merecemos, no somos una comunidad follow por follow, y mucho menos te obligamos a seguir a las personas dentro de la Comunidad MC. Lo que buscamos con esta página es que impulses tu PROPIA comunidad haciendo que el algoritmo de Twitch te promocione en el apartado 'CANALES RECOMENDADOS' y poder hacer una mejor exposicion de tu canal y contenido.{% endblock %}">
+    <meta name="keywords"
+        content="{% block keywords %}comunidad, mc, twitch, follow, canales recomendados, canal, crecer{% endblock %}">
     <meta name="author" content="{% block author %}Comunidad MC{% endblock %}">
 
     <!-- Google fornts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;700&family=Lato:wght@400;700&display=swap"
+        rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="{% static 'app/css/styles.css' %}">
 </head>
+
 <body>
     <header id="header" class="full-width">
         <nav class="regular-width">
             <a href="{% url 'landing' %}" class="logo">
                 <img src="{% static 'app/imgs/logo_clean.png' %}" alt="Comunidad MC">
             </a>
-            <div class="menu">
-                <ul>
-                    <!-- Render logout button only if user its logged -->
-                    {% if request.session.user_id %}
-                        <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
-                    {% endif %}
+            <div class="menu-wrapper">
+                {% if request.session.user_id %}
+                <ul class="menu">
+                    <li class="points"><a href="{% url 'points' %}">Puntos</a></li>
+                    <li class="schedule"><a href="{% url 'schedule' %}">Horarios</a></li>
+                    <li class="support"><a href="{% url 'support' %}">Apoyar</a></li>
+                    <li class="ranking"><a href="{% url 'ranking' %}">Ranking</a></li>
+                    <li class="profile"><a href="{% url 'profile' %}">Perfil</a></li>
+                    <li class="wallet"><a href="{% url 'wallet' %}">Wallet</a></li>
+                    <li class="logout"><a href="{% url 'logout' %}">Cerrar sesión</a></li>
                 </ul>
+                {% else %}
+                <ul>
+                    <li><a href="{{twitch_link}}">Iniciar</a></li>
+                    <!-- Render main header button only if user its logged -->
+                </ul>
+                {% endif %}
             </div>
         </nav>
     </header>
@@ -45,22 +62,32 @@
     <footer id="footer">
         <small>
             <span>
-                © 2023 comunidadmc.com Todos los derechos reservados. Powered by <a href="mailto:darideveloper@gmail.com">Dari Developer</a>
+                © 2023 comunidadmc.com Todos los derechos reservados. Powered by <a
+                    href="mailto:darideveloper@gmail.com">Dari Developer</a>
             </span>
         </small>
-    </footer>    
+    </footer>
 
     <!-- Get js variables from django -->
     <script>
-        const error = "{{ error }}";
-        const message = "{{ message }}";
-        console.log ({error, message})
-    </script>
-    
-    <!-- Alerts imports -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
-    <script src="{% static 'app/code/alerts.js' %}" type="module"></script>
+        // Save errors and messages as js variables
+        const error = "{{ error }}"
+        const message = "{{ message }}"
+        console.log({ error, message })
 
-    {% block js %}{% endblock %}
+        // Save current page as jss variable
+        const current_page = "{{current_page}}"
+        console.log ({current_page})
+    </script>
+
+    <!-- JS imports -->
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+    <script src="{% static 'app/code/alerts.js' %}" type="module"></script>
+    <script src="{% static 'app/code/header.js' %}" type="module"></script>
+
+    {% block js %}
+    {% endblock %}
 </body>
+
 </html>

@@ -6,6 +6,7 @@ from .twitch import TwitchApi
 from . import models
 from . import decorators
 from .logs import logger
+from .tools import get_user_message_cookies
 from dotenv import load_dotenv
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -96,14 +97,7 @@ def landing(request):
 def home(request):
     """ Home page with link for login with twitch """
 
-    # Get message from cookies
-    message = request.session.get("message", "")
-    if message:
-        del request.session["message"]
-
-    # Get user data from cookies
-    user_id = request.session["user_id"]
-    user = models.User.objects.filter(id=user_id).first()
+    user, message = get_user_message_cookies(request)
 
     # Return to landing page if user id not exist in database
     if not user:
@@ -118,20 +112,15 @@ def home(request):
     if not user.is_active:
         return render(request, 'app/whatsapp.html')
 
-    # Render home page with user data
-    return render(request, 'app/home.html', {
-        "name": user.user_name,
-        "message": message
-    })
-
+    # Redirect to Apoyar page
+    return redirect("support")
 
 @decorators.validate_login
 def register(request):
     """ Page for complete register, after login with twitcyh the first time """
 
-    # Get user from cookie id
-    user_id = request.session["user_id"]
-    user = models.User.objects.filter(id=user_id).first()
+    # Get user from cookies
+    user, _ = get_user_message_cookies(request)
 
     # Redirect to home if user id is not valid
     if not user or (user.first_name and user.first_name.strip() != ""):
@@ -279,4 +268,82 @@ def refresh_token(request):
     twitch.submit_streams_node_bg()    
     return JsonResponse({
         "success": True
+    })
+    
+@decorators.validate_login
+def points(request):
+    """ Page for show the points of the user """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/points.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "points"
+    })
+
+@decorators.validate_login
+def schedule(request):
+    """ Page for schedule stream """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/schedule.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "schedule"
+    })
+    
+@decorators.validate_login
+def support(request):
+    """ Page for show live streamers and copy link to stream """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/support.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "support"
+    })
+    
+@decorators.validate_login
+def ranking(request):
+    """ Page for show the live ranking of the users based in points """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/ranking.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "ranking"
+    })
+    
+@decorators.validate_login
+def profile(request):
+    """ Page for show and update the user data """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/profile.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "profile"
+    })
+    
+@decorators.validate_login
+def wallet(request):
+    """ Page for withdraw bits to wallet """
+    
+    user, message = get_user_message_cookies(request)
+
+    # Render page
+    return render(request, 'app/wallet.html', {
+        "name": user.user_name,
+        "message": message,
+        "current_page": "wallet"
     })

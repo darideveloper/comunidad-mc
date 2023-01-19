@@ -16,6 +16,11 @@ urlpatterns = [
     path('404/', views.error404, name='404'),
     path('logout/', views.logout, name='logout'),
     path('add-comment/', views.add_comment, name='add-comment'),
-    path('apoyar/', views.apoyar, name='apoyar'),
     path('refresh-token/', views.refresh_token, name='refresh-token'),
+    path('points/', views.points, name='points'),
+    path('schedule/', views.schedule, name='schedule'),
+    path('support/', views.support, name='support'),
+    path('ranking/', views.ranking, name='ranking'),
+    path('profile/', views.profile, name='profile'),
+    path('wallet/', views.wallet, name='wallet'),
 ]

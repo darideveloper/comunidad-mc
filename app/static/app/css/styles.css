@@ -179,22 +179,32 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   height: 30px;
   margin: 10px 0;
 }
-#header nav .menu ul {
+#header nav .menu-wrapper ul {
   margin: 0;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-#header nav .menu ul li {
+#header nav .menu-wrapper ul li {
   list-style: none;
   padding: 0 20px;
 }
-#header nav .menu ul li:hover a {
+#header nav .menu-wrapper ul li.active a {
+  color: #499c7d;
+  cursor: default;
+}
+#header nav .menu-wrapper ul li.active:hover {
+  border: none;
+}
+#header nav .menu-wrapper ul li:hover:not(.active) a {
   color: #cfd5dc;
   border-bottom: 2px solid #cfd5dc;
 }
-#header nav .menu ul li a {
+#header nav .menu-wrapper ul li:last-child {
+  opacity: 0.5;
+}
+#header nav .menu-wrapper ul li a {
   padding: 10px;
   display: inline-block;
   border-bottom: 2px solid rgba(207, 213, 220, 0);
@@ -211,22 +221,32 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   height: 30px;
   margin: 10px 0;
 }
-#header nav .menu ul {
+#header nav .menu-wrapper ul {
   margin: 0;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-#header nav .menu ul li {
+#header nav .menu-wrapper ul li {
   list-style: none;
   padding: 0 20px;
 }
-#header nav .menu ul li:hover a {
+#header nav .menu-wrapper ul li.active a {
+  color: #499c7d;
+  cursor: default;
+}
+#header nav .menu-wrapper ul li.active:hover {
+  border: none;
+}
+#header nav .menu-wrapper ul li:hover:not(.active) a {
   color: #cfd5dc;
   border-bottom: 2px solid #cfd5dc;
 }
-#header nav .menu ul li a {
+#header nav .menu-wrapper ul li:last-child {
+  opacity: 0.5;
+}
+#header nav .menu-wrapper ul li a {
   padding: 10px;
   display: inline-block;
   border-bottom: 2px solid rgba(207, 213, 220, 0);
