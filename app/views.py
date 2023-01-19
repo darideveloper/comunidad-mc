@@ -230,8 +230,6 @@ def add_comment(request):
     user_id = json_data.get("user_id", "")
     comment = json_data.get("comment", "")
 
-    print (comment)
-
     if not user_id or not stream_id or not comment:
         return HttpResponseBadRequest("stream_id, user_id and comment are required")
 
@@ -247,6 +245,10 @@ def add_comment(request):
     # Create comment
     comment_obj = models.Comment(stream=stream, comment=comment, user=user)
     comment_obj.save()
+    logger.info (f"Comment added: {comment_obj.id}")
+    
+    # Try to add point to user
+    twitch.add_point(user)
 
     return JsonResponse({
         "success": True

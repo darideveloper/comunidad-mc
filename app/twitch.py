@@ -16,6 +16,8 @@ class TwitchApi:
         self.node_api = os.environ.get("NODE_API")
         self.twitch_client_id = os.getenv("TWITCH_CLIENT_ID")
         self.twitch_secret = os.getenv("TWITCH_SECRET")
+        self.min_checks = int(os.getenv("MIN_CHECKS"))
+        self.min_comments = int(os.getenv("MIN_COMMENTS"))
 
     def get_current_streams(self):
         """ Get the current live streams from databse
@@ -25,7 +27,7 @@ class TwitchApi:
         """
 
         # Get date ranges
-        logger.info("Getting streams from database for current hour")
+        logger.debug ("Getting streams from database for current hour")
         now = timezone.now()
         start_datetime = datetime.datetime(
             now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
@@ -263,6 +265,9 @@ class TwitchApi:
                 new_check = models.WhatchCheck(stream=stream, user=user)
                 new_check.save ()
                 logger.info (f"Check saved. User: {user}, Stream: {stream}")
+                
+                # Try to add point to user
+                self.add_point(user, stream)
 
 
     def get_new_user_token(self, refresh_token: str):
@@ -319,3 +324,43 @@ class TwitchApi:
         user.save()
         logger.info (f"User token updated: {user}")
         return True
+
+    def add_point (self, user: models.User, stream: models.Stream = None):
+        """ Add point to user after watch stream and comment in chat
+
+        Args:
+            user (models.User): user instance
+            stream (models.Stream, optional): stream instance. Defaults to None.           
+        """
+
+        # Get live streams where no stream spificied
+        current_streams = [stream]
+        if not stream: 
+            current_streams = self.get_current_streams ()
+        
+        # Loop for ech stream
+        for stream in current_streams:
+
+            # Get users whatch checks
+            user_checks = models.WhatchCheck.objects.filter(user=user, stream=stream, status=1)
+            
+            # Get users comments
+            user_comments = models.Comment.objects.filter(user=user, stream=stream, status=1)
+            
+            # Validate min number of checks and comments
+            if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
+                # Save point
+                new_point = models.Point(user=user, stream=stream)
+                new_point.save ()
+                
+                # Set done status to comments and checks
+                done_status = models.Status.objects.get(id=2)
+                for check in user_checks:
+                    check.status = done_status
+                    check.save ()
+                    
+                for comment in user_comments:
+                    comment.status = done_status
+                    comment.save ()
+                
+                logger.info(f"Adding point to user: {user}")

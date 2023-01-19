@@ -36,23 +36,31 @@ class AdminStream (admin.ModelAdmin):
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'stream', 'comment', 'datetime')
-    ordering = ('id', 'user', 'stream', 'datetime', 'datetime')
-    list_filter = ('user', 'datetime')
+    list_display = ('id', 'user', 'stream', 'comment', 'datetime', 'status')
+    ordering = ('id', 'user', 'stream', 'datetime', 'datetime', 'status')
+    list_filter = ('user', 'datetime', 'status')
     search_fields = ('user', 'stream', 'comment')
     
 @admin.register (models.WhatchCheck)
 class AdminWhatchCheck (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'stream', 'datetime')
-    ordering = ('id', 'user', 'stream', 'datetime')
-    list_filter = ('user', 'datetime')
+    list_display = ('id', 'user', 'stream', 'datetime', 'status')
+    ordering = ('id', 'user', 'stream', 'datetime', 'status')
+    list_filter = ('user', 'datetime', 'status')
     search_fields = ('user', 'stream')
     
 @admin.register (models.Status)
 class AdminStatus (admin.ModelAdmin):
     
-    list_display = ('id', 'name',)
-    ordering = ('id', 'name',)
+    list_display = ('id', 'name')
+    ordering = ('id', 'name')
     list_filter = ('name',)
     search_fields = ('name',)
+    
+@admin.register (models.Point)
+class AdminPoint (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'stream', 'datetime')
+    ordering = ('id', 'user', 'stream', 'datetime')
+    list_filter = ('user', 'stream', 'datetime')
+    search_fields = ('user', 'stream')
