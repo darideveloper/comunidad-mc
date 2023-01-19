@@ -5,6 +5,10 @@
 
 {% block main_class %}register{% endblock %}
 
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'app/css/register.css' %}">
+{% endblock %}
+
 {% block main %}
 <img src="{% static 'app/imgs/border-top-left.png' %}" alt="borde de decoración" class="decoration top-left">
 <img src="{% static 'app/imgs/border-bottom-right.png' %}" alt="borde de decoración" class="decoration bottom-right">
