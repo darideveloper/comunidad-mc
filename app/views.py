@@ -275,13 +275,28 @@ def refresh_token(request):
 def points(request):
     """ Page for show the points of the user """
     
+    # Get user data
     user, message = get_user_message_cookies(request)
+    profile_image = user.picture
+    print (user)
+    
+    # Calculate points
+    points = models.Point.objects.filter(user=user)
+    print (points)
+    general_points_num = points.count()
+    today_points = points.filter(datetime__date=datetime.date.today())
+    today_points_num = today_points.count() if today_points.count() < 10 else 10
 
     # Render page
     return render(request, 'app/points.html', {
         "name": user.user_name,
         "message": message,
-        "current_page": "points"
+        "current_page": "points",
+        "profile_image": profile_image,
+        "points": points,
+        "general_points_num": general_points_num,
+        "today_points_num": today_points_num,
+        "rango": "no"
     })
 
 @decorators.validate_login
