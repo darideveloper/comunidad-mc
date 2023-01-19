@@ -12,3 +12,4 @@ db.*
 /staticfiles
 .env
 *.pdf
+*.css.map
