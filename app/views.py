@@ -89,7 +89,8 @@ def landing(request):
     # Render page with twitch link and error message (is exist)
     return render(request, 'app/landing.html', {
         "twitch_link":  twitch_link,
-        "error": error
+        "error": error,
+        "current_page": "landing"
     })
 
 

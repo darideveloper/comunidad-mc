@@ -1,8 +1,10 @@
 .btn
-    display: inline-block
+    cursor: pointer
 
     // regular cta styles
     &.cta 
+        display: inline-block
+
         .content
             display: flex
             align-items: center
@@ -67,4 +69,17 @@
                 width: 30px
                 height: 30px
 
-        
+    // Header menu buttons
+    &.menu
+        border: none
+        background-color: transparent
+        width: 60px
+        height: 60px
+
+        &.close
+            opacity: 0.5
+
+        svg
+            fill: $color-text
+            width: 40px
+            height: 40px

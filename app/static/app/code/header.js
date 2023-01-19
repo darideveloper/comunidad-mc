@@ -1,11 +1,12 @@
 
-// const header_btn = document.querySelector ("#header .btn.display")
-// const header = document.querySelector('#header')
+const header_btns = document.querySelectorAll ("#header .btn.menu")
+const menu_wrapper = document.querySelector('#header .menu-wrapper')
 
-// header_btn.addEventListener ("click", function (e) {
-//     header.classList.toggle ("clossed")
-//     console.log ("click")
-// })
+for (const header_btn of header_btns) {
+  header_btn.addEventListener ("click", function (e) {
+    menu_wrapper.classList.toggle ("open")
+  })
+}
 
 // // Update header when scroll
 // window.addEventListener ("scroll", function (e) {

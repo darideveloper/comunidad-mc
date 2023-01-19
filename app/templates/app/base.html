@@ -32,13 +32,19 @@
 
 <body>
     <header id="header" class="full-width">
-        <nav class="regular-width">
+        <nav class="regular-width {% if current_page == 'landing' %}landing{% endif %}">
             <a href="{% url 'landing' %}" class="logo">
                 <img src="{% static 'app/imgs/logo_clean.png' %}" alt="Comunidad MC">
             </a>
+            <button class="btn menu open">
+                <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm4.998 13.245c0-.414-.336-.75-.75-.75h-8.5c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75zm0-3.248c0-.414-.336-.75-.75-.75h-8.5c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75zm0-3.252c0-.414-.336-.75-.75-.75h-8.5c-.414 0-.75.336-.75.75s.336.75.75.75h8.5c.414 0 .75-.336.75-.75z" fill-rule="nonzero"/></svg>
+            </button>
             <div class="menu-wrapper">
                 {% if request.session.user_id %}
                 <ul class="menu">
+                    <button class="btn menu close">
+                        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 8.933-2.721-2.722c-.146-.146-.339-.219-.531-.219-.404 0-.75.324-.75.749 0 .193.073.384.219.531l2.722 2.722-2.728 2.728c-.147.147-.22.34-.22.531 0 .427.35.75.751.75.192 0 .384-.073.53-.219l2.728-2.728 2.729 2.728c.146.146.338.219.53.219.401 0 .75-.323.75-.75 0-.191-.073-.384-.22-.531l-2.727-2.728 2.717-2.717c.146-.147.219-.338.219-.531 0-.425-.346-.75-.75-.75-.192 0-.385.073-.531.22z" fill-rule="nonzero"/></svg>
+                    </button>
                     <li class="points"><a href="{% url 'points' %}">Puntos</a></li>
                     <li class="schedule"><a href="{% url 'schedule' %}">Horarios</a></li>
                     <li class="support"><a href="{% url 'support' %}">Apoyar</a></li>
@@ -59,7 +65,7 @@
     <main class="{% block main_class %}{% endblock %}">
         {% block main %}{% endblock %}
     </main>
-    <footer id="footer">
+    <footer id="footer" class="regular-width">
         <small>
             <span>
                 © 2023 comunidadmc.com Todos los derechos reservados. Powered by <a
