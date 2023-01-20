@@ -278,14 +278,29 @@ def points(request):
     # Get user data
     user, message = get_user_message_cookies(request)
     profile_image = user.picture
-    print (user)
     
     # Calculate points
     points = models.Point.objects.filter(user=user)
-    print (points)
     general_points_num = points.count()
     today_points = points.filter(datetime__date=datetime.date.today())
     today_points_num = today_points.count() if today_points.count() < 10 else 10
+    
+    # Format points
+    points_data = []
+    current_points = 0
+    for point in points:
+        date = point.datetime.strftime("%d/%m/%Y")
+        time = point.datetime.strftime("%H:%M")
+        current_points += 1
+        channel = point.stream.user.user_name
+        
+        points_data.append ({
+            "date": date,
+            "time": time,
+            "my_points": current_points,
+            "channel": channel
+        })
+        
 
     # Render page
     return render(request, 'app/points.html', {
@@ -293,7 +308,7 @@ def points(request):
         "message": message,
         "current_page": "points",
         "profile_image": profile_image,
-        "points": points,
+        "points": points_data,
         "general_points_num": general_points_num,
         "today_points_num": today_points_num,
         "rango": "no"

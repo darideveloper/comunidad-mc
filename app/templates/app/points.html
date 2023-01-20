@@ -3,17 +3,18 @@
 
 {% block title %}Puntos{% endblock %}
 
-{% block main_class %}points{% endblock %}
+{% block main_class %}points app-screen{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="{% static 'app/css/points.css' %}">
+<link rel="stylesheet" href="{% static 'app/css/points.css' %}">
 {% endblock %}
 
 {% block main %}
-<div class="regular-width">
-  <section class="points-card">
+<div class="content regular-width">
+  <section class="profile-card">
     <div class="profile">
-      <img  src="{% static 'app/imgs/icon_diamante.png' %}" alt="icono de rango: diamante" title="rango diamante" class="ranking">
+      <img src="{% static 'app/imgs/icon_diamante.png' %}" alt="icono de rango: diamante" title="rango diamante"
+        class="ranking">
       <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image">
     </div>
     <div class="title">
@@ -28,7 +29,7 @@
     <p class="points">{{today_points_num}} / 10</p>
     <div class="bg"></div>
   </section>
-  <section class="points">
+  <section class="points-table">
     <h1>Puntos obtenidos</h1>
     <table>
       <thead>
@@ -44,7 +45,7 @@
         <tr>
           <td>{{point.date}}</td>
           <td>{{point.time}}</td>
-          <td>{{point.points}}</td>
+          <td>{{point.my_points}}</td>
           <td>{{point.channel}}</td>
         </tr>
         {% endfor %}

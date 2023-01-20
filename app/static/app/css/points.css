@@ -167,7 +167,7 @@
 
 #footer {
   text-align: center;
-  margin-top: 5px;
+  margin-top: 15px;
   margin-bottom: 5px;
   color: #cfd5dc;
   font-size: 0.8rem;
@@ -270,40 +270,44 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-.points-card {
+.app-screen .content {
+  min-height: calc(100vh - 53px - 35px);
+}
+
+.profile-card {
   width: 250px;
   text-align: center;
-  margin-top: 15px;
+  margin-top: -60px;
   padding-bottom: 10px;
   position: relative;
 }
-.points-card .profile {
+.profile-card .profile {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-.points-card .profile img.ranking {
+.profile-card .profile img.ranking {
   width: 80px;
   margin: 0 auto;
   margin-bottom: -9px;
   margin-left: 35px;
   transform: rotate(-27deg);
 }
-.points-card .profile img.profile-image {
+.profile-card .profile img.profile-image {
   width: 150px;
   border-radius: 50%;
   margin: 0 auto;
   margin-bottom: 10px;
 }
-.points-card h1, .points-card h2 {
+.profile-card h1, .profile-card h2 {
   text-transform: uppercase;
 }
-.points-card .title {
+.profile-card .title {
   position: relative;
   height: 60px;
 }
-.points-card .title h2 {
+.profile-card .title h2 {
   font-size: 1.2rem;
   color: #cfd5dc;
   font-weight: bold;
@@ -312,7 +316,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin-left: -20px;
   z-index: 1;
 }
-.points-card .title h2::after {
+.profile-card .title h2::after {
   position: absolute;
   content: "";
   width: calc(100% - 20px);
@@ -322,7 +326,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   left: 0;
   z-index: -1;
 }
-.points-card .title .decorator {
+.profile-card .title .decorator {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -330,7 +334,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   top: 0;
   left: 0;
 }
-.points-card .title .decorator::after {
+.profile-card .title .decorator::after {
   position: absolute;
   content: "";
   width: 50px;
@@ -341,7 +345,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   z-index: -2;
   transform: rotate(45deg);
 }
-.points-card .title .decorator::before {
+.profile-card .title .decorator::before {
   position: absolute;
   content: "";
   width: 59px;
@@ -351,13 +355,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   left: 0px;
   z-index: -1;
 }
-.points-card p {
+.profile-card p {
   font-size: 1.7rem;
   font-weight: bold;
   padding: 10px 0;
   margin: 0;
 }
-.points-card .bg {
+.profile-card .bg {
   position: absolute;
   width: 100%;
   height: calc(100% - 100px);
@@ -366,6 +370,46 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   left: 0;
   background-color: #17181D;
   border-radius: 10px;
+}
+
+main.points .content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+main.points .content .points-table {
+  width: calc(100% - 300px);
+}
+main.points .content .points-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+main.points .content .points-table table td, main.points .content .points-table table th {
+  text-align: center;
+  color: #cfd5dc;
+  padding: 10px 0;
+}
+main.points .content .points-table table th {
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(122, 112, 179, 0.5);
+}
+main.points .content .points-table table tr {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+main.points .content .points-table table tr:nth-child(even) {
+  background-color: #17181D;
+}
+main.points .content .points-table table tbody {
+  display: block;
+  height: 500px;
+  overflow-y: scroll;
+  background-color: #0e1119;
+}
+main.points .content .points-table table thead {
+  background-color: #17181D;
 }
 
 /*# sourceMappingURL=points.css.map */
