@@ -81,6 +81,7 @@
 
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -270,14 +271,16 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.app-screen {
+  width: 100%;
+}
 .app-screen .content {
-  min-height: calc(100vh - 53px - 35px);
+  min-height: calc(100vh - 53px - 36px);
 }
 
 .profile-card {
   width: 250px;
   text-align: center;
-  margin-top: -60px;
   padding-bottom: 10px;
   position: relative;
 }
@@ -376,7 +379,6 @@ main.points .content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 }
 main.points .content .points-table {
   width: calc(100% - 300px);
@@ -410,6 +412,21 @@ main.points .content .points-table table tbody {
 }
 main.points .content .points-table table thead {
   background-color: #17181D;
+}
+main.points .content .profile-card {
+  margin-top: -60px;
+}
+@media screen and (max-width: 850px) {
+  main.points .content {
+    flex-direction: column;
+  }
+  main.points .content .profile-card {
+    margin-top: 0;
+  }
+  main.points .content .points-table {
+    width: 100%;
+    margin-top: 50px;
+  }
 }
 
 /*# sourceMappingURL=points.css.map */
