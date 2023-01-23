@@ -16,6 +16,8 @@ class User (models.Model):
     phone = models.CharField(name='phone', verbose_name="teléfono", help_text="teléfono con código de país", null=True, blank=True, max_length=20)
     time_zone = models.ForeignKey('TimeZone', on_delete=models.CASCADE, name='time_zone', verbose_name="zona horaria", help_text="zona horaria", null=True, blank=True)
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
+    is_admin = models.BooleanField(name='is_admin', verbose_name="administrador", help_text="indica si el usuario es administrador", default=False)
+    ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
 
     def __str__(self):
         email = self.email if self.email else "no email"
@@ -112,3 +114,16 @@ class Point (models.Model):
     class Meta:
         verbose_name = "Punto"
         verbose_name_plural = "Puntos"
+        
+class Ranking (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
+    points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
+    
+    def __str__(self):
+        return f"{self.name} ({self.points})"
+    
+    class Meta:
+        verbose_name = "Ranking"
+        verbose_name_plural = "Rankings"
+        

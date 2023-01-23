@@ -54,7 +54,6 @@ class AdminStatus (admin.ModelAdmin):
     
     list_display = ('id', 'name')
     ordering = ('id', 'name')
-    list_filter = ('name',)
     search_fields = ('name',)
     
 @admin.register (models.Point)
@@ -64,3 +63,11 @@ class AdminPoint (admin.ModelAdmin):
     ordering = ('id', 'user', 'stream', 'datetime')
     list_filter = ('user', 'stream', 'datetime')
     search_fields = ('user', 'stream')
+    
+@admin.register (models.Ranking)
+class AdminRanking (admin.ModelAdmin):
+    
+    list_display = ('id', 'name', 'points')
+    ordering = ('id', 'name', 'points')
+    search_fields = ('name',)
+    
