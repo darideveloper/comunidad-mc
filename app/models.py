@@ -18,6 +18,8 @@ class User (models.Model):
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
     is_admin = models.BooleanField(name='is_admin', verbose_name="administrador", help_text="indica si el usuario es administrador", default=False)
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
+    week_points = models.IntegerField(name='week_points', verbose_name="puntos semana", help_text="puntos de la semana", default=0)
+    total_points = models.IntegerField(name='total_points', verbose_name="puntos totales", help_text="puntos totales", default=0)
 
     def __str__(self):
         email = self.email if self.email else "no email"
