@@ -13,8 +13,10 @@
 <div class="content regular-width">
   <section class="profile-card">
     <div class="profile">
-      <img src="{% static 'app/imgs/icon_diamante.png' %}" alt="icono de rango: diamante" title="rango diamante"
+      {% with 'app/imgs/icon_'|add:ranking|add:'.png' as ranking_image %}
+        <img src="{% static ranking_image %}" alt="icono de rango: {{ranking}}" title="rango {{ranking}}"
         class="ranking">
+      {% endwith %}
       <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image" title="usuario {{name}}">
     </div>
 

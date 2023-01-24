@@ -324,7 +324,7 @@ def points(request):
         "general_points_num": general_points.count(),
         "weekly_points_num": weekly_points.count(),
         "daily_points_num": daily_points.count(),
-        "rango": "no"
+        "ranking": user.ranking.name
     })
 
 @decorators.validate_login
