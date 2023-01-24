@@ -356,7 +356,7 @@ class TwitchApi:
                 new_general_point.save ()
                 
                 # Get current number or daily points
-                current_daily_points = models.DailyPoint.objects.filter(general_point__datetime__date=datetime.date.today()).count()
+                current_daily_points = models.DailyPoint.objects.filter(general_point__user=user).count()
                 if current_daily_points < self.max_daily_points:
                     
                     # Save daily point
@@ -369,12 +369,12 @@ class TwitchApi:
                 
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)
-                # for check in user_checks:
-                #     check.status = done_status
-                #     check.save ()
+                for check in user_checks:
+                    check.status = done_status
+                    check.save ()
                     
-                # for comment in user_comments:
-                #     comment.status = done_status
-                #     comment.save ()
+                for comment in user_comments:
+                    comment.status = done_status
+                    comment.save ()
                 
                 logger.info(f"Adding point to user: {user}")
