@@ -16,11 +16,11 @@ from app import models
 
 # Load environment variables
 load_dotenv ()
-week_points = int(os.getenv('SCRIPTS_WEEK_POINTS'))
-user_name = os.getenv('SCRIPTS_USER_NAME')
+WEEK_POINTS = int(os.getenv('SCRIPTS_WEEK_POINTS'))
+USER_NAME = os.getenv('SCRIPTS_USER_NAME')
 
 # Get user instance and last stream
-user = models.User.objects.filter(user_name=user_name).first()
+user = models.User.objects.filter(user_name=USER_NAME).first()
 stream = models.Stream.objects.all().order_by('datetime').last()
 
 # Delete old points
@@ -31,7 +31,7 @@ models.GeneralPoint.objects.filter (user=user).delete()
 for back_days in range (7):
     
     # Loop for save each user point
-    for _ in range (week_points):
+    for _ in range (WEEK_POINTS):
     
         # Calculate back date
         back_date = timezone.now() - timezone.timedelta(days=back_days)
