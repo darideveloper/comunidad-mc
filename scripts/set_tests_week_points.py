@@ -42,7 +42,7 @@ for back_days in range (7):
         
         # Save daily points
         current_daily_points = models.DailyPoint.objects.filter(general_point__user=user).count()
-        if current_daily_points < 10:            
+        if current_daily_points < 10 and back_days == 6:            
             new_daily_point = models.DailyPoint (general_point=new_general_point)
             new_daily_point.save()
     
