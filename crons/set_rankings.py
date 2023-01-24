@@ -9,8 +9,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
-from app.models import User, Ranking
-from app.tools import set_user_points
+from app.models import User, Ranking, WeeklyPoint
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -19,24 +18,21 @@ rankings = Ranking.objects.all().order_by("points").reverse()
 # Get and loop all users
 users = User.objects.all()
 for user in users:
-        
-    set_user_points (user)
     
-    # Update points
-    user.week_points = week_points
-    user.total_points = total_points
+    # Get user week points
+    week_points = WeeklyPoint.objects.filter(general_point__user=user).count ()
     
-    # Update ranking
+    # Found new ranking
     for ranking in rankings:
-        if total_points >= ranking.points:
+        if week_points >= ranking.points:
             user.ranking = ranking
+    
+            # Save user ranking and end loop
+            user.save()
             break
     
-    # Save user new data
-    user.save()
-    
     # Show status
-    logger.info ("Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
+    logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
     
     # TODO: Delete last week points
     
