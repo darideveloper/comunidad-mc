@@ -34,7 +34,7 @@ if DEBUG == "True":
 today = timezone.now().weekday()
 
 # Delete points history
-PointsHistory.objets.all().delete()
+PointsHistory.objects.all().delete()
 
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
@@ -65,6 +65,11 @@ if today == RESTART_POINTS_WEEK_DAY:
         
         # Show status
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
+    
+    # Only keep first 10 points history registers
+    point_history_firsts = [point_history.id for point_history in PointsHistory.objects.all().order_by("week_points").reverse()]
+    PointsHistory.objects.all().exclude(id__in=point_history_firsts[:10]).delete()
+    print ("history points saved")
     
     # Delete week points
     WeeklyPoint.objects.all().delete()
