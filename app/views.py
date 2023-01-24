@@ -284,10 +284,16 @@ def points(request):
     weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
     daily_points = models.DailyPoint.objects.filter(general_point__user=user)
     
-    # Format today points
+    
+    # Get only last 60 points
+    general_points_table = general_points
+    if general_points_table.count() > 60:
+        general_points_table = general_points[:60]
+        
+    # Format table points
     points_data = []
     current_points = 0
-    for point in daily_points:
+    for point in general_points_table:
         date = point.datetime.strftime("%d/%m/%Y")
         time = point.datetime.strftime("%H:%M")
         current_points += 1
@@ -308,7 +314,8 @@ def points(request):
         "profile_image": profile_image,
         "points": points_data,
         "general_points_num": general_points.count(),
-        "today_points_num": daily_points.count(),
+        "weekly_points_num": weekly_points.count(),
+        "daily_points_num": daily_points.count(),
         "rango": "no"
     })
 

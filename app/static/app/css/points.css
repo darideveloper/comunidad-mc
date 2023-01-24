@@ -414,7 +414,7 @@ main.points .content .points-table table thead {
   background-color: #17181D;
 }
 main.points .content .profile-card {
-  margin-top: -60px;
+  margin-top: 0px;
 }
 @media screen and (max-width: 850px) {
   main.points .content {

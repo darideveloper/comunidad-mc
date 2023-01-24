@@ -17,16 +17,26 @@
         class="ranking">
       <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image" title="usuario {{name}}">
     </div>
+
     <div class="title">
-      <h2>Puntos Gen.</h2>
+      <h2>Puntos Generales</h2>
       <div class="decorator"></div>
     </div>
     <p class="points">{{general_points_num}}</p>
+
+    
     <div class="title">
       <h2>Puntos Diarios</h2>
       <div class="decorator"></div>
     </div>
-    <p class="points">{{today_points_num}} / 10</p>
+    <p class="points">{{daily_points_num}} / 10</p>
+    
+    <div class="title">
+      <h2>Puntos Semanales</h2>
+      <div class="decorator"></div>
+    </div>
+    <p class="points">{{weekly_points_num}}</p>
+
     <div class="bg"></div>
   </section>
   <section class="points-table">
