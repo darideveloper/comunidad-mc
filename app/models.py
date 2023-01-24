@@ -1,3 +1,4 @@
+import pytz
 import datetime
 from django.db import models
 from django.utils import timezone
@@ -109,7 +110,7 @@ class GeneralPoint (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del punto", null=False, blank=False, default=timezone.now)
     
     def __str__(self):
-        return f"{self.user}: {self.datetime} - {self.stream.user.user_name}"
+        return f"{self.user}: {timezone.localtime(self.datetime, pytz.timezone(timezone.get_current_timezone_name()))} - {self.stream.user.user_name}"
     
     class Meta:
         verbose_name = "Punto general"

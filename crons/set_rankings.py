@@ -11,12 +11,10 @@ django.setup()
 
 from app.models import User, Ranking
 from app.tools import set_user_points
+from app.logs import logger
 
 # Get ranbkings and required points
 rankings = Ranking.objects.all().order_by("points").reverse()
-for ranking in rankings:
-    print (ranking)
-
 
 # Get and loop all users
 users = User.objects.all()
@@ -38,7 +36,7 @@ for user in users:
     user.save()
     
     # Show status
-    print (user, week_points, total_points, user.ranking)
+    logger.info ("Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
     
     # TODO: Delete last week points
     

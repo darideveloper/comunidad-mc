@@ -1,5 +1,6 @@
 import os
 import json
+import pytz
 import datetime
 import requests as req
 from .twitch import TwitchApi
@@ -284,18 +285,24 @@ def points(request):
     weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
     daily_points = models.DailyPoint.objects.filter(general_point__user=user)
     
-    
     # Get only last 60 points
     general_points_table = general_points
     if general_points_table.count() > 60:
         general_points_table = general_points[:60]
         
+    # Get user time zone
+    user_time_zone = user.time_zone.time_zone
+        
     # Format table points
     points_data = []
     current_points = 0
     for point in general_points_table:
-        date = point.datetime.strftime("%d/%m/%Y")
-        time = point.datetime.strftime("%H:%M")
+        
+        # Calculate datetime with time zone of the user
+        datetime_user = point.datetime.astimezone(pytz.timezone(user_time_zone))
+        
+        date = datetime_user.strftime("%d/%m/%Y")
+        time = datetime_user.strftime("%I:%M %p")
         current_points += 1
         channel = point.stream.user.user_name
         
