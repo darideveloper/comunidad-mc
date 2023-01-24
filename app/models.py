@@ -172,5 +172,5 @@ class PointsHistory (models.Model):
         return f"{self.user} (general: {self.general_points}, semana: {self.week_points})"
     
     class Meta:
-        verbose_name = "Punto historial"
-        verbose_name_plural = "Puntos historial"
+        verbose_name = "Historial de puntos generales y semanales"
+        verbose_name_plural = "Historial de puntos"
