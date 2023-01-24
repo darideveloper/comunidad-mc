@@ -12,7 +12,7 @@ django.setup()
 
 # Django imports
 from django.utils import timezone
-from app.models import User, Ranking, WeeklyPoint, DailyPoint
+from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -22,6 +22,9 @@ rankings = Ranking.objects.all().order_by("points").reverse()
 load_dotenv ()
 RESTART_POINTS_WEEK_DAY = int(os.getenv('RESTART_POINTS_WEEK_DAY'))
 DEBUG = os.getenv('DEBUG')
+RANKING_FIRST_BITS = int(os.getenv('RANKING_FIRST_BITS'))
+RANKING_SECOND_BITS = int(os.getenv('RANKING_SECOND_BITS'))
+RANKING_THIRD_BITS = int(os.getenv('RANKING_THIRD_BITS'))
 
 # Overwrite restart date in debug mode
 if DEBUG == "True":
@@ -30,15 +33,19 @@ if DEBUG == "True":
 # Get current week day
 today = timezone.now().weekday()
 
+# Delete points history
+PointsHistory.objets.all().delete()
+
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
-    
+        
     # Get and loop all users to update ranking
     users = User.objects.all()
     for user in users:
         
         # Get user week points
         week_points = WeeklyPoint.objects.filter(general_point__user=user).count ()
+        general_points = GeneralPoint.objects.filter(user=user).count ()
         
         # Set dimond ranking to admins
         if user.is_admin:
@@ -53,9 +60,12 @@ if today == RESTART_POINTS_WEEK_DAY:
         # Save user ranking
         user.save()
         
+        # Save pouints history
+        PointsHistory (user=user, general_points=general_points, week_points=week_points).save()
+        
         # Show status
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
-            
+    
     # Delete week points
     WeeklyPoint.objects.all().delete()
     print ("week points deleted")

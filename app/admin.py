@@ -120,3 +120,10 @@ class AdminRanking (admin.ModelAdmin):
     ordering = ('id', 'name', 'points')
     search_fields = ('name',)
     
+@admin.register (models.PointsHistory)
+class AdminPointsHistory (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'general_points', 'week_points')
+    ordering = ('id', 'user', 'general_points', 'week_points')
+    search_fields = ('user',)
+    
