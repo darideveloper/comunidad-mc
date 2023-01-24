@@ -4,6 +4,7 @@ import sys
 import pytz
 from django.utils import timezone
 from datetime import datetime
+from dotenv import load_dotenv
 parent_folder = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(parent_folder)
 
@@ -13,9 +14,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 
-# Options
-week_points = 8
-user_name = 'darideveloper3'
+# Load environment variables
+load_dotenv ()
+week_points = int(os.getenv('SCRIPTS_WEEK_POINTS'))
+user_name = os.getenv('SCRIPTS_USER_NAME')
 
 # Get user instance and last stream
 user = models.User.objects.filter(user_name=user_name).first()
