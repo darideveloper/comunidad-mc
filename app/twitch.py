@@ -18,6 +18,7 @@ class TwitchApi:
         self.twitch_secret = os.getenv("TWITCH_SECRET")
         self.min_checks = int(os.getenv("MIN_CHECKS"))
         self.min_comments = int(os.getenv("MIN_COMMENTS"))
+        self.max_daily_points = int(os.getenv("MAX_DAILY_POINTS"))
 
     def get_current_streams(self):
         """ Get the current live streams from databse
@@ -349,9 +350,16 @@ class TwitchApi:
             
             # Validate min number of checks and comments
             if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
-                # Save point
-                new_point = models.Point(user=user, stream=stream)
-                new_point.save ()
+                
+                # Save general and weekly point
+                new_general_point = models.GeneralPoint (user=user, stream=stream).save ()
+                new_weekly_point = models.WeeklyPoint (general_pont=new_general_point).save()
+                
+                # Get current number or daily points
+                current_daily_points = models.DailyPoint.objects.filter(date__date=datetime.date.today()).count()
+                if current_daily_points < self.max_daily_points:
+                    # Save daily point
+                    new_daily_point = models.DailyPoint (general_pont=new_general_point).save()
                 
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)

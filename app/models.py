@@ -18,9 +18,7 @@ class User (models.Model):
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
     is_admin = models.BooleanField(name='is_admin', verbose_name="administrador", help_text="indica si el usuario es administrador", default=False)
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
-    week_points = models.IntegerField(name='week_points', verbose_name="puntos semana", help_text="puntos de la semana", default=0)
-    total_points = models.IntegerField(name='total_points', verbose_name="puntos totales", help_text="puntos totales", default=0)
-
+    
     def __str__(self):
         email = self.email if self.email else "no email"
         return f"({self.id}) {self.user_name}"
@@ -104,7 +102,7 @@ class Status (models.Model):
         verbose_name = "Estatus"
         verbose_name_plural = "Estatus"
     
-class Point (models.Model):
+class GeneralPoint (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
     stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el punto", null=False, blank=False)
@@ -114,9 +112,31 @@ class Point (models.Model):
         return f"{self.user}: {self.datetime} - {self.stream.user.user_name}"
     
     class Meta:
-        verbose_name = "Punto"
-        verbose_name_plural = "Puntos"
+        verbose_name = "Punto general"
+        verbose_name_plural = "Puntos generales"
+
+class WeeklyPoint (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
+    general_point = models.ForeignKey('GeneralPoint', on_delete=models.CASCADE, name='general_point', verbose_name="punto general", help_text="punto general al que pertenece el punto", null=False, blank=False)
+
+    def __str__(self):
+        return str(self.general_point)
+    
+    class Meta:
+        verbose_name = "Punto semanal"
+        verbose_name_plural = "Puntos semanales"
         
+class DailyPoint (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
+    general_point = models.ForeignKey('GeneralPoint', on_delete=models.CASCADE, name='general_point', verbose_name="punto general", help_text="punto general al que pertenece el punto", null=False, blank=False)
+
+    def __str__(self):
+        return str(self.general_point)
+    
+    class Meta:
+        verbose_name = "Punto diarios"
+        verbose_name_plural = "Puntos diarios"
+
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)

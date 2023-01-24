@@ -1,14 +1,46 @@
 from . import models 
 from django.contrib import admin
 
+# Filter classes
+class FilterWeeklyDailyPoints (admin.SimpleListFilter):
+    """ Filter points by user name """
+    
+    # Visible texts
+    title = 'Usuario con puntos'
+    parameter_name = 'usuario'
+
+    def lookups(self, request, model_admin):
+        """ return options """
+        
+        # Generate options based in available users
+        options = []
+        for point in model_admin.model.objects.all():
+            options.append((point.general_point.user.id, point.general_point.user.user_name))
+       
+        return tuple(options)
+    
+    def queryset(self, request, queryset):
+        """ returns the filtered queryset """
+        
+        # Return all values
+        if self.value() is None:
+            return queryset
+        
+        # Get point who match with the user
+        user_id = self.value()
+        general_points = models.GeneralPoint.objects.filter(user_id=user_id)
+        points_user = queryset.filter (general_point__in=general_points)
+        
+        return points_user
+    
+# Admin classes
 @admin.register (models.User)
 class AdminUser (admin.ModelAdmin):
     
-    change_form_template = 'admin/change_form_users.html'
-    
-    list_display = ('id', 'user_name', 'is_active', 'is_admin', 'first_name', 'last_name', 'email', 'phone', 'week_points', 'total_points')
+    change_form_template = 'admin/change_form_users.html'    
+    list_display = ('id', 'user_name', 'is_active', 'is_admin', 'first_name', 'last_name', 'email', 'phone',)
     list_filter = ('country', 'time_zone', 'is_active', 'is_admin')
-    ordering = ('id', 'user_name', 'first_name', 'last_name', 'week_points', 'total_points', 'email', 'phone')
+    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
 
@@ -21,6 +53,7 @@ class AdminCountry (admin.ModelAdmin):
     
 @admin.register (models.TimeZone)
 class AdminTimeZone (admin.ModelAdmin):
+    
     list_display = ('id', 'time_zone')
     ordering = ('id', 'time_zone')
     search_fields = ('time_zone', )
@@ -56,13 +89,29 @@ class AdminStatus (admin.ModelAdmin):
     ordering = ('id', 'name')
     search_fields = ('name',)
     
-@admin.register (models.Point)
-class AdminPoint (admin.ModelAdmin):
+@admin.register (models.GeneralPoint)
+class AdminGeneralPoint (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'datetime')
     ordering = ('id', 'user', 'stream', 'datetime')
     list_filter = ('user', 'stream', 'datetime')
     search_fields = ('user', 'stream')
+    
+@admin.register (models.WeeklyPoint)
+class AdminWeeklyPoint (admin.ModelAdmin):
+    
+    list_display = ('id', 'general_point')
+    ordering = ('id', 'general_point')
+    list_filter = (FilterWeeklyDailyPoints,)
+    search_fields = ('general_point',)
+    
+@admin.register (models.DailyPoint)
+class AdminDailyPoint (admin.ModelAdmin):
+    
+    list_display = ('id', 'general_point')
+    ordering = ('id', 'general_point')
+    list_filter = (FilterWeeklyDailyPoints,)
+    search_fields = ('general_point',)
     
 @admin.register (models.Ranking)
 class AdminRanking (admin.ModelAdmin):

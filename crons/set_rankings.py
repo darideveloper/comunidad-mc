@@ -10,7 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 from app.models import User, Ranking
-from app.tools import get_user_points
+from app.tools import set_user_points
 
 # Get ranbkings and required points
 rankings = Ranking.objects.all().order_by("points").reverse()
@@ -22,7 +22,7 @@ for ranking in rankings:
 users = User.objects.all()
 for user in users:
         
-    today_points, week_points, total_points = get_user_points (user)
+    set_user_points (user)
     
     # Update points
     user.week_points = week_points
