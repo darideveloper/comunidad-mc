@@ -144,7 +144,7 @@ class Ranking (models.Model):
     points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
     
     def __str__(self):
-        return f"{self.name} ({self.points})"
+        return f"{self.name}"
     
     class Meta:
         verbose_name = "Ranking"

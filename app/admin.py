@@ -38,9 +38,9 @@ class FilterWeeklyDailyPoints (admin.SimpleListFilter):
 class AdminUser (admin.ModelAdmin):
     
     change_form_template = 'admin/change_form_users.html'    
-    list_display = ('id', 'user_name', 'is_active', 'is_admin', 'first_name', 'last_name', 'email', 'phone',)
-    list_filter = ('country', 'time_zone', 'is_active', 'is_admin')
-    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
+    list_display = ('id', 'user_name', 'is_active', 'is_admin', 'ranking', 'first_name', 'last_name', 'email', 'phone',)
+    list_filter = ('country', 'time_zone', 'is_active', 'is_admin', 'ranking',)
+    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking',)
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
 
