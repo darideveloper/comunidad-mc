@@ -12,6 +12,5 @@ django.setup()
 from app.twitch import TwitchApi
 
 # Submit data to nodejs api, for start reading chat
-# for _ in range (12):
 twitch = TwitchApi ()
 twitch.check_users_in_chat ()
