@@ -71,10 +71,11 @@ if today == RESTART_POINTS_WEEK_DAY:
     PointsHistory.objects.all().exclude(id__in=point_history_firsts[:10]).delete()
     print ("history points saved")
     
-    # Delete week points
-    WeeklyPoint.objects.all().delete()
-    print ("week points deleted")
-        
-# delete all daily points
-DailyPoint.objects.all().delete()
-print ("today points deleted")
+    # Delete all points
+    GeneralPoint.objects.all().delete()
+    print ("all points deleted")
+    
+else:        
+    # delete all daily points
+    DailyPoint.objects.all().delete()
+    print ("today points deleted")
