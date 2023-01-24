@@ -40,14 +40,18 @@ if today == RESTART_POINTS_WEEK_DAY:
         # Get user week points
         week_points = WeeklyPoint.objects.filter(general_point__user=user).count ()
         
-        # Found new ranking
-        for ranking in rankings:
-            if week_points >= ranking.points:
-                user.ranking = ranking
+        # Set dimond ranking to admins
+        if user.is_admin:
+            user.ranking = rankings.first()
+        else:
+            # Found new ranking
+            for ranking in rankings:
+                if week_points >= ranking.points:
+                    user.ranking = ranking
+                    break
         
-                # Save user ranking and end loop
-                user.save()
-                break
+        # Save user ranking
+        user.save()
         
         # Show status
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
