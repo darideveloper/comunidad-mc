@@ -281,29 +281,29 @@ def points(request):
     profile_image = user.picture
     
     # get points
-    general_points = models.GeneralPoint.objects.filter(user=user)
+    general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
     weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
     daily_points = models.DailyPoint.objects.filter(general_point__user=user)
     
     # Get only last 60 points
     general_points_table = general_points
-    if general_points_table.count() > 60:
-        general_points_table = general_points[:60]
+    if general_points_table.count() > 20:
+        general_points_table = general_points_table[:20]
         
     # Get user time zone
     user_time_zone = user.time_zone.time_zone
         
+    print (general_points_table)
+    
     # Format table points
     points_data = []
-    current_points = 0
+    current_points = general_points.count()
     for point in general_points_table:
         
         # Calculate datetime with time zone of the user
         datetime_user = point.datetime.astimezone(pytz.timezone(user_time_zone))
-        
         date = datetime_user.strftime("%d/%m/%Y")
         time = datetime_user.strftime("%I:%M %p")
-        current_points += 1
         channel = point.stream.user.user_name
         
         points_data.append ({
@@ -313,6 +313,9 @@ def points(request):
             "channel": channel
         })
 
+        # Decress punits counter
+        current_points -= 1
+        
     # Render page
     return render(request, 'app/points.html', {
         "name": user.user_name,

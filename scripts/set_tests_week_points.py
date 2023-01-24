@@ -14,7 +14,7 @@ django.setup()
 from app import models
 
 # Options
-week_points = 12
+week_points = 8
 user_name = 'darideveloper3'
 
 # Get user instance and last stream
