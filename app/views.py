@@ -292,9 +292,7 @@ def points(request):
         
     # Get user time zone
     user_time_zone = user.time_zone.time_zone
-        
-    print (general_points_table)
-    
+            
     # Format table points
     points_data = []
     current_points = general_points.count()
