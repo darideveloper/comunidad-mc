@@ -16,7 +16,7 @@ from app import models
 
 # Load environment variables
 load_dotenv ()
-WEEK_POINTS = int(os.getenv('SCRIPTS_WEEK_POINTS'))
+DAY_POINTS = int(os.getenv('SCRIPTS_DAY_POINTS'))
 USER_NAME = os.getenv('SCRIPTS_USER_NAME')
 
 # Get user instance and last stream
@@ -31,7 +31,7 @@ models.GeneralPoint.objects.filter (user=user).delete()
 for back_days in range (7):
     
     # Loop for save each user point
-    for _ in range (WEEK_POINTS):
+    for _ in range (DAY_POINTS):
     
         # Calculate back date
         back_date = timezone.now() - timezone.timedelta(days=back_days)
