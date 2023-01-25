@@ -1,3 +1,0 @@
-from twitch import update_user_token
-
-update_user_token (client_id="p1yxg1ystvc7ikxem39q7mhqq9fk59", client_secret="jtiq7oxr4sf19to16vxvx7wy5tp3jn", refresh_token="qczr7sav12lnoqaojz9cizi9nujjlwbgc15ojtd640uue317ed")
