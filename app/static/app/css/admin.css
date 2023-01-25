@@ -1,0 +1,22 @@
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e1119;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7a70b3;
+  margin-top: -5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cfd5dc;
+}
+
+.main.shifted > #nav-sidebar {
+  overflow: visible;
+}
+
+/*# sourceMappingURL=admin.css.map */
