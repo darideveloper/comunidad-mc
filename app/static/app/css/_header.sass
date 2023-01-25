@@ -1,0 +1,72 @@
+#header
+    nav 
+        display: flex
+        align-items: center
+        justify-content: space-between
+        position: relative
+
+        .logo img
+            height: 30px
+            margin: 10px 0
+
+        .btn.menu
+            display: none
+
+        .menu-wrapper
+            ul
+                margin: 0 
+                padding: 0
+                display: flex
+                align-items: center
+                justify-content: flex-end
+
+                li
+                    list-style: none
+                    padding: 0 20px
+
+                    &.active 
+                        a
+                            color: $color-green
+                            cursor: default
+
+                        &:hover
+                            border: none
+
+                    &:hover:not(.active)
+                        a
+                            color: $color-text
+                            border-bottom: 2px solid rgba($color-text, 1)
+
+                    &:last-child
+                        opacity: 0.5
+
+                    a
+                        padding: 10px
+                        display: inline-block
+                        border-bottom: 2px solid rgba($color-text, 0)
+                        color: rgba($color-text, 0.7)
+                        transition-duration: $transition-duration
+
+        @media screen and (max-width: 1000px)
+            &:not(.landing)
+                .btn.menu
+                    display: inline-block
+
+                .menu-wrapper
+                    position: fixed
+                    top: 0
+                    right: -200px
+                    height: 100vh
+                    width: 170px
+                    background-color: $color-bg-light
+                    transition-duration: $transition-duration
+
+                    &.open
+                        right: 0
+
+                    ul.menu
+                        flex-direction: column
+                        justify-content: flex-start
+
+                        li a
+                            padding: 15px 0

@@ -1,0 +1,123 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block main_class %}home{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'app/css/landing.css' %}">
+{% endblock %}
+
+{% block main %}
+<section class="hero paralax full-width" id="hero">
+  <div class="content regular-width">
+
+    <img src="{% static 'app/imgs/logo_white.png' %}" alt="Logo de comunidad mc, en color blanco" class="logo">
+    <div class="text">
+      <h1>¡Se bienvenido!</h1>
+      <p>
+        <span>
+          Nosotros somos la Comunidad MC.
+        </span>
+        <span>
+          Sabemos lo difícil que es crecer como creador de contenido, y es por eso que creamos esta herramienta exclusivamente para ti. Tan simple como registrarte y hacer crecer tu comunidad.
+        </span>
+      </p>
+    </div>
+  </div>
+  <a class="btn cta" href="{{twitch_link}}">
+    <div class="content">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path
+          d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z"
+          fill-rule="evenodd" clip-rule="evenodd" />
+      </svg>
+      <span>
+        Inicia sesión con twitch
+      </span>
+    </div>
+  </a>
+</section>
+
+<section class="first-steps" id="first-steps">
+  <div class="content regular-width">
+    <div class="text">
+      <h2>TUS PRIMEROS PASOS</h2>
+      <p>
+        Aquí te dejamos una guía detallada para que puedas emprender tus primeros pasos como gran streamer.
+        <br>
+        Te aconsejamos ver este video hasta el final y si tienes alguna duda, retrocede el video las veces que lo requieras. Aclara y despeja todas tus dudas, ¡tómate tu tiempo!
+        <br>
+        Estás a casi nada de cambiar tu carrera como streamer ¡FELICIDADES!
+      </p>
+    </div>
+    <iframe src="https://www.youtube.com/embed/mzPxo7Y6JyA" title="What is HTML5?" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+      class="shadow" id="video">
+    </iframe>
+  </div>
+</section>
+
+<section class="about regular-width" id="about">
+  <h2>ACERCA DE NOSOTROS</h2>
+  <p>
+    Sabemos lo difícil que es crecer en Twitch y más aún cuando no encuentras el apoyo que necesitas y mereces. Al igual que tú, he dedicado mucho tiempo y calidad a mis streams para que más gente llegue, pero a veces necesitamos un pequeño empujón.
+  </p>
+  <p>
+    Comunidad MC premia a las personas que dan el apoyo que todos buscamos y merecemos, no somos una comunidad follow por follow, y mucho menos te obligamos a seguir a las personas dentro de la Comunidad MC. Lo que buscamos con esta página es que impulses tu PROPIA comunidad haciendo que el algoritmo de Twitch te promocione en el apartado "CANALES RECOMENDADOS" y puedas hacer una mejor exposición de tu canal y contenido.
+  </p>
+  <p>
+    Simplemente nos enfocaremos en hacer crecer tu contenido y llegar a más personas para que puedas lograr tu sueño.
+  </p>
+  <p>
+    Mucha suerte a ti, que eres un gran streamer de Twitch.
+  </p>
+</section>
+
+<section class="rules" id="rules">
+  <div class="paralax">
+    <h2>REGLAS</h2>
+  </div>
+
+  <div class="rules-cards cards regular-width">
+    <div class="card">
+      <img src="{% static 'app/imgs/icon1.png' %}" alt="icon follows">
+      <h3>FOLLOWS</h3>
+      <p>
+        No es un grupo follow x follow, si alguien quiere seguirte es porque agrada tu contenido, por lo mismo pedimos DESACTIVAR EL CHAT SOLO PARA SEGUIDORES. Tendrás más y mejores posibilidades de tener una comunidad orgánica.
+      </p>
+    </div>
+    <div class="card">
+      <img src="{% static 'app/imgs/icon2.png' %}" alt="icon follows">
+      <h3>RESPETO</h3>
+      <p>
+        Debes tratar a todos con respeto y consideración sin importar su género, raza, orientación sexual, discapacidad, edad, etc. Tener siempre una actitud positiva y transmitir siempre las mejores vibras para el streamer hagamos de Twitch la mejor plataforma para platicar y convivir.
+      </p>
+    </div>
+    <div class="card">
+      <img src="{% static 'app/imgs/icon3.png' %}" alt="icon follows">
+      <h3>ESCUDO</h3>
+      <p>
+        Twitch siempre intenta implementar nuevas y mejores formas para ti, pero también hace que muchas personas no tengan la facilidad de interactuar contigo. DESACTIVA EL MODO ESCUDO para que más gente pueda charlar contigo.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="banner-cta full-width" id="banner-cta">
+  <h2>Aquí inicia tu futuro</h2>
+    <a class="btn cta dark" href="{{twitch_link}}">
+      <div class="content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path
+            d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z"
+            fill-rule="evenodd" clip-rule="evenodd" />
+        </svg>
+        <span>
+          Inicia sesión con twitch
+        </span>
+      </div>
+    </a>
+</section>
+{% endblock %}

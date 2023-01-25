@@ -1,0 +1,42 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Not found{% endblock %}
+
+{% block main_class %}error404{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'app/css/404.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="content rigular-width">
+  <p class="icon"></p>
+  <h1>Página no encontrada</h1>
+  <p>
+    Click <a href="/">aquí</a> para regresar al inicio
+  </p>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  
+  function random(mn, mx) {
+    // select a random between mn and mx
+    return Math.random() * (mx - mn) + mn;
+  }
+
+  // Array of emojis
+  const emojis = ["（　ﾟДﾟ）", "ಥ_ಥ", "ಥ﹏ಥ", "(´･_･`)", "(⩾﹏⩽)", "{•̃_•̃}", "눈_눈"]
+  
+  // Select a random emoji
+  const emoji = emojis[Math.floor(random(0, emojis.length))];
+
+  // Show random emoji
+  document.querySelector(".icon").innerHTML = emoji;
+  
+</script>
+
+
+{% endblock %}

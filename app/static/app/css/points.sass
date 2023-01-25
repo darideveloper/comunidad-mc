@@ -1,0 +1,53 @@
+@import 'base'
+@import 'profile-card'
+
+main.points .content
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    .points-table
+        width: calc(100% - 300px)
+
+        table
+            width: 100%
+            border-collapse: collapse
+
+            td, th
+                text-align: center
+                color: $color-text
+                padding: 10px 0
+
+            th
+                text-transform: uppercase
+                border-bottom: 2px solid rgba($color-primary, 0.5)
+
+            tr
+                display: table
+                table-layout: fixed
+                width: 100%
+
+                &:nth-child(even)
+                    background-color: $color-bg-light
+
+            tbody
+                display: block
+                height: 500px
+                overflow-y: scroll
+                background-color: $color-bg
+
+            thead
+                background-color: $color-bg-light
+
+    .profile-card
+        margin-top: 0px
+
+    @media screen and (max-width: 850px)
+        flex-direction: column
+
+        .profile-card
+            margin-top: 0
+
+        .points-table
+            width: 100%
+            margin-top: 50px
