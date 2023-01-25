@@ -12,7 +12,7 @@ django.setup()
 
 # Django imports
 from django.utils import timezone
-from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint
+from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint, Bits
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -67,9 +67,18 @@ if today == RESTART_POINTS_WEEK_DAY:
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
     
     # Only keep first 10 points history registers
-    point_history_firsts = [point_history.id for point_history in PointsHistory.objects.all().order_by("week_points").reverse()]
+    point_history_firsts = [point_history.id for point_history in PointsHistory.objects.all().order_by("general_points").reverse()]
     PointsHistory.objects.all().exclude(id__in=point_history_firsts[:10]).delete()
     print ("history points saved")
+    
+    # Add bits to first, second and third users in points table
+    first_user = PointsHistory.objects.filter(id=point_history_firsts[0]).first().user
+    second_user = PointsHistory.objects.filter(id=point_history_firsts[1]).first().user
+    third_user = PointsHistory.objects.filter(id=point_history_firsts[2]).first().user
+    Bits (user=first_user, amount=RANKING_FIRST_BITS).save ()
+    Bits (user=second_user, amount=RANKING_SECOND_BITS).save ()
+    Bits (user=third_user, amount=RANKING_THIRD_BITS).save ()
+    print ("Bits added to first, second and third users")
     
     # Delete all points
     GeneralPoint.objects.all().delete()

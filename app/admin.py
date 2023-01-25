@@ -127,3 +127,10 @@ class AdminPointsHistory (admin.ModelAdmin):
     ordering = ('id', 'user', 'general_points', 'week_points')
     search_fields = ('user',)
     
+@admin.register (models.Bits)
+class AdminPointsHistory (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'amount')
+    ordering = ('id', 'user', 'amount')
+    list_filter = ('user',)
+    search_fields = ('user',)
