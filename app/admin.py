@@ -13,11 +13,11 @@ class FilterWeeklyDailyPoints (admin.SimpleListFilter):
         """ return options """
         
         # Generate options based in available users
-        options = []
-        for point in model_admin.model.objects.all():
-            options.append((point.general_point.user.id, point.general_point.user.user_name))
+        user_ids = model_admin.model.objects.all().values_list('general_point__user').distinct()
+        users = [models.User.objects.filter(id=user_id[0]).first() for user_id in user_ids]
+        options = tuple([(user.id, user.user_name) for user in users])
        
-        return tuple(set(options))
+        return options
     
     def queryset(self, request, queryset):
         """ returns the filtered queryset """
