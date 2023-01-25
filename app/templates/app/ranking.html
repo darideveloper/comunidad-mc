@@ -1,13 +1,16 @@
 {% extends "app/base.html" %}
 {% load static %}
 
-{% block title %}App{% endblock %}
+{% block title %}Ranking{% endblock %}
 
-{% block main_class %}app{% endblock %}
+{% block main_class %}ranking app-screen{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'app/css/points.css' %}">
+{% endblock %}
 
 {% block main %}
-<div class="regular-width">
-  <h1>Hola {{name}}</h1>
-  <p>{{current_page}}</p>
+<div class="content regular-width">
+  
 </div>
 {% endblock %}

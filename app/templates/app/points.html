@@ -11,36 +11,7 @@
 
 {% block main %}
 <div class="content regular-width">
-  <section class="profile-card">
-    <div class="profile">
-      {% with 'app/imgs/icon_'|add:ranking|add:'.png' as ranking_image %}
-        <img src="{% static ranking_image %}" alt="icono de rango: {{ranking}}" title="rango {{ranking}}"
-        class="ranking">
-      {% endwith %}
-      <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image" title="usuario {{name}}">
-    </div>
-
-    <div class="title">
-      <h2>Puntos Generales</h2>
-      <div class="decorator"></div>
-    </div>
-    <p class="points">{{general_points_num}}</p>
-
-    
-    <div class="title">
-      <h2>Puntos Diarios</h2>
-      <div class="decorator"></div>
-    </div>
-    <p class="points">{{daily_points_num}} / 10</p>
-    
-    <div class="title">
-      <h2>Puntos Semanales</h2>
-      <div class="decorator"></div>
-    </div>
-    <p class="points">{{weekly_points_num}}</p>
-
-    <div class="bg"></div>
-  </section>
+  {% include 'app/components/profile_card.html' %}
   <section class="points-table">
     <h1>Puntos obtenidos</h1>
     <table>
