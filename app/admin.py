@@ -17,7 +17,7 @@ class FilterWeeklyDailyPoints (admin.SimpleListFilter):
         for point in model_admin.model.objects.all():
             options.append((point.general_point.user.id, point.general_point.user.user_name))
        
-        return tuple(options)
+        return tuple(set(options))
     
     def queryset(self, request, queryset):
         """ returns the filtered queryset """
