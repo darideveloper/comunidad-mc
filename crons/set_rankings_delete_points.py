@@ -66,11 +66,6 @@ if today == RESTART_POINTS_WEEK_DAY:
         # Show status
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
     
-    # Only keep first 10 points history registers
-    point_history_firsts = [point_history.id for point_history in PointsHistory.objects.all().order_by("general_points").reverse()]
-    PointsHistory.objects.all().exclude(id__in=point_history_firsts[:10]).delete()
-    print ("history points saved")
-    
     # Add bits to first, second and third users in points table
     first_user = PointsHistory.objects.filter(id=point_history_firsts[0]).first().user
     second_user = PointsHistory.objects.filter(id=point_history_firsts[1]).first().user
