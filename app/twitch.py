@@ -385,7 +385,7 @@ class TwitchApi:
         
         sleep (wait_time)
         
-        logger.info(f"Added general to user: {user}")
+        logger.info(f"Added general point to user: {user}")
         
         # Save general point
         new_general_point = models.GeneralPoint (user=user, stream=stream)
@@ -405,12 +405,14 @@ class TwitchApi:
             
             logger.info(f"Added daily and weekly point to user: {user}")
             
-            # Check if there are less than 10 users in the Ranking of daily points
+            # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
             current_tops = models.TopDailyPoint.objects.all().count()
-            if current_tops < 10:
+            current_points = current_daily_points + 1
+            if current_tops < 10 and current_points == 10:
                 
                 # Add user to Ranking of daily points if there isnt in table
-                if models.TopDailyPoint.objects.filter (user=user).count() == 0:
+                user_in_top = models.TopDailyPoint.objects.filter(user=user).count()
+                if user_in_top == 0:
                     logger.info (f"User {user} already have 10 points. Added to Ranking of daily points")      
                     new_top_daily_point = models.TopDailyPoint (position=current_tops+1, user=user)
                     new_top_daily_point.save ()
