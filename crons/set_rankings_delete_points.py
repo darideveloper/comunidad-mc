@@ -67,9 +67,10 @@ if today == RESTART_POINTS_WEEK_DAY:
         logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
     
     # Add bits to first, second and third users in points table
-    first_user = PointsHistory.objects.filter(id=point_history_firsts[0]).first().user
-    second_user = PointsHistory.objects.filter(id=point_history_firsts[1]).first().user
-    third_user = PointsHistory.objects.filter(id=point_history_firsts[2]).first().user
+    points_history_all = PointsHistory.objects.all().order_by("general_points")
+    first_user = points_history_all[0].user
+    second_user = points_history_all[1].user
+    third_user = points_history_all[2].user
     Bits (user=first_user, amount=RANKING_FIRST_BITS).save ()
     Bits (user=second_user, amount=RANKING_SECOND_BITS).save ()
     Bits (user=third_user, amount=RANKING_THIRD_BITS).save ()
