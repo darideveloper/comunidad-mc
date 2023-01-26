@@ -12,7 +12,7 @@ django.setup()
 
 # Django imports
 from django.utils import timezone
-from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint, Bits
+from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint, Bits, TopDailyPoint
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -75,6 +75,10 @@ if today == RESTART_POINTS_WEEK_DAY:
     Bits (user=second_user, amount=RANKING_SECOND_BITS).save ()
     Bits (user=third_user, amount=RANKING_THIRD_BITS).save ()
     print ("Bits added to first, second and third users")
+    
+    # Delete top daily points
+    TopDailyPoint.objects.all().delete()
+    print ("top daily points deleted")
     
     # Delete all points
     GeneralPoint.objects.all().delete()
