@@ -383,8 +383,10 @@ def ranking(request):
     
     # Get top 10 users from general points
     points_history = models.PointsHistory.objects.all().order_by("general_points").reverse()[:10]
-    ranking_global = [[index + 1, register.user.user_name, register.general_points, register.user.ranking, register.user.picture] \
+    ranking_global = [[index + 1, register.user.user_name, register.general_points, f'app/imgs/icon_{register.user.ranking}.png', register.user.picture, register.user.ranking] \
         for index, register in enumerate(points_history)]
+    ranking_global_top = ranking_global[:3]
+    ranking_global_other = ranking_global[3:]
     
     # Render page
     return render(request, 'app/ranking.html', {
@@ -403,7 +405,8 @@ def ranking(request):
         
         # Specific context
         "ranking_today": ranking_today,
-        "ranking_global": ranking_global,
+        "ranking_global_top": ranking_global_top,
+        "ranking_global_other": ranking_global_other,
     })
     
 @decorators.validate_login

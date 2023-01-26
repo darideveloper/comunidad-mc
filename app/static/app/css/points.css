@@ -349,7 +349,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin: 0 auto;
   margin-bottom: -9px;
   margin-left: 35px;
-  transform: rotate(-27deg);
+  transform: rotate(-30deg);
 }
 .profile-card.vertical .profile img.profile-image {
   width: 150px;
@@ -397,7 +397,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   position: absolute;
   top: -32px;
   left: 5px;
-  transform: rotate(-31deg);
+  transform: rotate(-30deg);
 }
 .profile-card.horizontal .profile img.profile-image {
   width: 90px;

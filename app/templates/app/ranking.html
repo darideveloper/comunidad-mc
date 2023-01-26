@@ -15,7 +15,7 @@
 <div class="content regular-width">
   <div class="left">
     {% include 'app/components/profile_card.html' %}
-    <section class="ranking-today">
+    <section class="ranking-today ranking-table">
       <div class="title-card">
         <h2>RANKING DEL DÍA</h2>
         <div class="decorator"></div>
@@ -31,15 +31,61 @@
       </ul>   
     </section>
   </div>
-  <section class="right ranking-global">
+  <section class="right ranking-global ranking-table">
+    <div class="title-card">
+      <h2>RANKING GLOBAL</h2>
+      <div class="decorator"></div>
+    </div>
+
+    <div class="top-cards">
+      <div class="top-card-wrapper first">
+        <div class="top-card">
+          <div class="profile">
+            <img src="{{ranking_global_top.0.4}}" class="image" alt="imagen de perfil de usuario {{ranking_global_top.0.1}}">
+            <img src="{% static ranking_global_top.0.3 %}"  class="ranking" alt="icono de rango: {{ranking_global_top.0.5}}" title="rango {{ranking_global_top.0.3}}"
+            class="ranking">
+          </div>
+          <span class="position">{{ranking_global_top.0.0}}</span>
+          <span class="points">{{ranking_global_top.0.2}} pots</span>
+          <span class="name">{{ranking_global_top.0.1}}</span>
+        </div>
+      </div>
+
+      <div class="second-third-wrapper">
+        <div class="top-card-wrapper">
+          <div class="top-card">
+            <div class="profile">
+              <img src="{{ranking_global_top.1.4}}" class="image" alt="imagen de perfil de usuario {{ranking_global_top.1.1}}">
+              <img src="{% static ranking_global_top.1.3 %}"  class="ranking" alt="icono de rango: {{ranking_global_top.1.5}}" title="rango {{ranking_global_top.1.3}}"
+              class="ranking">
+            </div>
+            <span class="position">{{ranking_global_top.1.0}}</span>
+            <span class="points">{{ranking_global_top.1.2}} pots</span>
+            <span class="name">{{ranking_global_top.1.1}}</span>
+          </div>
+        </div>
+
+        <div class="top-card-wrapper">
+          <div class="top-card">
+            <div class="profile">
+              <img src="{{ranking_global_top.2.4}}" class="image" alt="imagen de perfil de usuario {{ranking_global_top.2.1}}">
+              <img src="{% static ranking_global_top.2.3 %}"  class="ranking" alt="icono de rango: {{ranking_global_top.2.5}}" title="rango {{ranking_global_top.2.3}}"
+              class="ranking">
+            </div>
+            <span class="position">{{ranking_global_top.2.0}}</span>
+            <span class="points">{{ranking_global_top.2.2}} pots</span>
+            <span class="name">{{ranking_global_top.2.1}}</span>
+          </div>
+        </div>     
+      </div>
+    </div>
+
     <ul>
-      {% for user in ranking_global %}
+      {% for user in ranking_global_other %}
         <li>
           <span class="position">{{user.0}}</span>
           <span class="name">{{user.1}}</span>
           <span class="points">{{user.2}}</span>
-          <span class="ranking">{{user.3}}</span>
-          <span class="profile">{{user.4}}</span>
         </li>
       {% endfor %}
     </ul>
