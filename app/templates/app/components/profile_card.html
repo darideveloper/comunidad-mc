@@ -1,5 +1,5 @@
 {% load static %}
-<section class="profile-card">
+<section class="profile-card {{profile_card_layout}}">
   <div class="profile">
     {% with 'app/imgs/icon_'|add:ranking|add:'.png' as ranking_image %}
       <img src="{% static ranking_image %}" alt="icono de rango: {{ranking}}" title="rango {{ranking}}"
@@ -8,23 +8,31 @@
     <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image" title="usuario {{name}}">
   </div>
 
-  <div class="title">
-    <h2>Puntos Generales</h2>
-    <div class="decorator"></div>
-  </div>
-  <p class="points">{{general_points_num}}</p>
-
-  <div class="title">
-    <h2>Puntos Diarios</h2>
-    <div class="decorator"></div>
-  </div>
-  <p class="points">{{daily_points_num}} / 10</p>
+  <div class="points-wrapper">
+    <div class="point">
+      <div class="title-card">
+        <h2>Puntos Generales</h2>
+        <div class="decorator"></div>
+      </div>
+      <p class="point-num">{{general_points_num}}</p>
+    </div>
   
-  <div class="title">
-    <h2>Puntos Semanales</h2>
-    <div class="decorator"></div>
+    <div class="point">    
+      <div class="title-card">
+        <h2>Puntos Diarios</h2>
+        <div class="decorator"></div>
+      </div>
+      <p class="point-num">{{daily_points_num}} / 10</p>
+    </div>
+    
+    <div class="point">   
+      <div class="title-card">
+        <h2>Puntos Semanales</h2>
+        <div class="decorator"></div>
+      </div>
+      <p class="point-num">{{weekly_points_num}} / 60</p>
+    </div>
   </div>
-  <p class="points">{{weekly_points_num}}</p>
 
   <div class="bg"></div>
 </section>

@@ -3,15 +3,18 @@
 
 {% block title %}Puntos{% endblock %}
 
-{% block main_class %}points app-screen{% endblock %}
+{% block main_class %}{{current_page}} app-screen{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'app/css/points.css' %}">
+  {% with 'app/css/'|add:current_page|add:'.css' as stylesheet %}
+    <link rel="stylesheet" href="{% static stylesheet %}">
+  {% endwith %}
 {% endblock %}
 
 {% block main %}
 <div class="content regular-width">
   {% include 'app/components/profile_card.html' %}
+  
   <section class="points-table">
     <h1>Puntos obtenidos</h1>
     <table>
@@ -36,4 +39,8 @@
     </table>
   </section>
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/app.js' %}"></script>
 {% endblock %}

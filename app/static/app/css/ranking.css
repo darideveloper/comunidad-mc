@@ -435,58 +435,45 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin-top: 0;
 }
 
-main.points .content {
+main.ranking .content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-main.points .content .points-table {
-  width: calc(100% - 300px);
+main.ranking .content .left {
+  width: 400px;
 }
-main.points .content .points-table table {
-  width: 100%;
-  border-collapse: collapse;
+main.ranking .content .left .ranking-today {
+  background-color: #17181D;
+  border-radius: 10px;
+  padding: 20px;
+  padding-top: 5px;
+  margin-top: 30px;
 }
-main.points .content .points-table table td, main.points .content .points-table table th {
-  text-align: center;
+main.ranking .content .left .ranking-today .title-card {
+  margin-left: -20px;
+  width: 270px;
+}
+main.ranking .content .left .ranking-today ul {
+  margin: 0;
+  padding: 0;
+  width: 80%;
+  margin: 0 auto;
+}
+main.ranking .content .left .ranking-today ul li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+main.ranking .content .left .ranking-today ul li span {
   color: #cfd5dc;
-  padding: 10px 0;
+  font-weight: bold;
+  z-index: 1;
 }
-main.points .content .points-table table th {
-  text-transform: uppercase;
-  border-bottom: 2px solid rgba(122, 112, 179, 0.5);
-}
-main.points .content .points-table table tr {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-}
-main.points .content .points-table table tr:nth-child(even) {
-  background-color: #17181D;
-}
-main.points .content .points-table table tbody {
-  display: block;
-  height: 500px;
-  overflow-y: scroll;
-  background-color: #0e1119;
-}
-main.points .content .points-table table thead {
-  background-color: #17181D;
-}
-main.points .content .profile-card {
-  margin-top: 0px;
-}
-@media screen and (max-width: 850px) {
-  main.points .content {
-    flex-direction: column;
-  }
-  main.points .content .profile-card {
-    margin-top: 0;
-  }
-  main.points .content .points-table {
-    width: 100%;
-    margin-top: 50px;
-  }
+main.ranking .content .right.ranking-global {
+  width: calc(100% - 400px - 30px);
 }
 
-/*# sourceMappingURL=points.css.map */
+/*# sourceMappingURL=ranking.css.map */

@@ -1,0 +1,43 @@
+@import 'base'
+@import 'profile-card'
+
+main.ranking .content
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    .left
+        width: 400px
+
+        .ranking-today
+            background-color: $color-bg-light
+            border-radius: 10px
+            padding: 20px
+            padding-top: 5px
+            margin-top: 30px
+
+            .title-card
+                margin-left: -20px
+                width: 270px
+
+            ul
+                margin: 0
+                padding: 0
+                width: 80%
+                margin: 0 auto
+
+                li
+                    list-style: none
+                    display: flex
+                    align-items: center
+                    justify-content: space-between
+                    margin: 5px 0
+
+                    span
+                        color: $color-text
+                        font-weight: bold
+                        z-index: 1
+    
+    .right.ranking-global
+        width: calc(100% - 400px - 30px)
+

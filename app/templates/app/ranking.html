@@ -1,16 +1,53 @@
 {% extends "app/base.html" %}
 {% load static %}
 
-{% block title %}Ranking{% endblock %}
+{% block title %}{{current_page|title}}{% endblock %}
 
-{% block main_class %}ranking app-screen{% endblock %}
+{% block main_class %}{{current_page}} app-screen{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'app/css/points.css' %}">
+  {% with 'app/css/'|add:current_page|add:'.css' as stylesheet %}
+    <link rel="stylesheet" href="{% static stylesheet %}">
+  {% endwith %}
 {% endblock %}
 
 {% block main %}
 <div class="content regular-width">
-  
+  <div class="left">
+    {% include 'app/components/profile_card.html' %}
+    <section class="ranking-today">
+      <div class="title-card">
+        <h2>RANKING DEL DÍA</h2>
+        <div class="decorator"></div>
+      </div>
+      <ul>
+        {% for user in ranking_today %}
+          <li>
+            <span class="position">{{user.0}}</span>
+            <span class="name">{{user.1}}</span>
+            <span class="points">10/10</span>
+          </li>
+        {% endfor %}
+      </ul>   
+    </section>
+  </div>
+  <section class="right ranking-global">
+    <ul>
+      {% for user in ranking_global %}
+        <li>
+          <span class="position">{{user.0}}</span>
+          <span class="name">{{user.1}}</span>
+          <span class="points">{{user.2}}</span>
+          <span class="ranking">{{user.3}}</span>
+          <span class="profile">{{user.4}}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
 </div>
 {% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/app.js' %}"></script>
+{% endblock %}
+

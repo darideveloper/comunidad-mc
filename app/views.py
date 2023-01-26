@@ -7,7 +7,7 @@ from .twitch import TwitchApi
 from . import models
 from . import decorators
 from .logs import logger
-from .tools import get_user_message_cookies
+from .tools import get_user_message_cookies, get_user_points
 from dotenv import load_dotenv
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -279,11 +279,7 @@ def points(request):
     # Get user data
     user, message = get_user_message_cookies(request)
     profile_image = user.picture
-    
-    # get points
-    general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
-    weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
-    daily_points = models.DailyPoint.objects.filter(general_point__user=user)
+    general_points, weekly_points, daily_points = get_user_points (user)
     
     # Get only last 60 points
     general_points_table = general_points
@@ -316,28 +312,48 @@ def points(request):
         
     # Render page
     return render(request, 'app/points.html', {
+        # General context
         "name": user.user_name,
         "message": message,
+        
+        # User profile context
         "current_page": "points",
         "profile_image": profile_image,
-        "points": points_data,
         "general_points_num": general_points.count(),
         "weekly_points_num": weekly_points.count(),
         "daily_points_num": daily_points.count(),
-        "ranking": user.ranking.name
+        "ranking": user.ranking.name,
+        "profile_card_layout": "vertical",
+        
+        # Specific context
+        "points": points_data,
     })
 
 @decorators.validate_login
 def schedule(request):
     """ Page for schedule stream """
     
+    # Get user data
     user, message = get_user_message_cookies(request)
-
+    profile_image = user.picture
+    general_points, weekly_points, daily_points = get_user_points (user)
+    
     # Render page
     return render(request, 'app/schedule.html', {
+        # General context
         "name": user.user_name,
         "message": message,
-        "current_page": "schedule"
+        
+        # User profile context
+        "current_page": "schedule",
+        "profile_image": profile_image,
+        "general_points_num": general_points.count(),
+        "weekly_points_num": weekly_points.count(),
+        "daily_points_num": daily_points.count(),
+        "ranking": user.ranking.name,
+        "profile_card_layout": "horizontal",
+        
+        # Specific context
     })
     
 @decorators.validate_login
@@ -357,13 +373,37 @@ def support(request):
 def ranking(request):
     """ Page for show the live ranking of the users based in points """
     
+    # Get user data
     user, message = get_user_message_cookies(request)
-
+    profile_image = user.picture
+    general_points, weekly_points, daily_points = get_user_points (user)
+    
+    # Get top 10 users from TopDailyPoint
+    ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
+    
+    # Get top 10 users from general points
+    points_history = models.PointsHistory.objects.all().order_by("general_points").reverse()[:10]
+    ranking_global = [[index + 1, register.user.user_name, register.general_points, register.user.ranking, register.user.picture] \
+        for index, register in enumerate(points_history)]
+    
     # Render page
     return render(request, 'app/ranking.html', {
+        # General context
         "name": user.user_name,
         "message": message,
-        "current_page": "ranking"
+        
+        # User profile context
+        "current_page": "ranking",
+        "profile_image": profile_image,
+        "general_points_num": general_points.count(),
+        "weekly_points_num": weekly_points.count(),
+        "daily_points_num": daily_points.count(),
+        "ranking": user.ranking.name,
+        "profile_card_layout": "horizontal small",
+        
+        # Specific context
+        "ranking_today": ranking_today,
+        "ranking_global": ranking_global,
     })
     
 @decorators.validate_login
