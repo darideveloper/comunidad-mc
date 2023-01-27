@@ -1,6 +1,32 @@
 @import 'base'
 @import 'profile-card'
 
+@mixin streams-cards-horizontal
+    flex-direction: row
+
+    .stream-card
+        width: 40%
+        margin-bottom: 0
+
+        &:nth-child(2)
+            margin-top: 0
+
+        p
+            margin-left: 70px
+
+@mixin streams-cards-vertical
+    flex-direction: column
+
+    .stream-card
+        width: 80%
+        margin-bottom: 20px
+
+        &:nth-child(2)
+            margin-top: 100px
+
+        p
+            margin-left: 0px
+
 main.support > .content
     display: flex
     align-items: center
@@ -39,28 +65,12 @@ main.support > .content
 
             img
                 width: 300px
-            
+
             .text
                 text-align: center
-                
+
                 h3
                     font-size: 1.5em
-    
-        .referral
-            display: flex
-            align-items: center
-            justify-content: center
-            margin: 0 auto
-            margin-top: 50px
-            
-            p
-                text-transform: uppercase
-
-            span
-                background-color: $color-bg-light
-                padding: 5px 10px
-                margin-left: 20px
-                color: $color-text
 
         .streams-cards
             display: flex
@@ -98,3 +108,96 @@ main.support > .content
 
                     span
                         font-weight: bold
+
+        .referral
+            display: flex
+            align-items: center
+            justify-content: center
+            margin: 0 auto
+            margin-top: 50px
+
+            p
+                text-transform: uppercase
+
+            span
+                background-color: $color-bg-light
+                padding: 5px 10px
+                margin-left: 20px
+                color: $color-text
+
+    @media screen and (max-width: 1100px)
+        .streams
+            .streams-cards
+                @include streams-cards-vertical
+
+            .referral
+                flex-direction: column
+
+                span
+                    margin-left: 0
+
+    @media screen and (max-width: 1050px)
+        .streams
+            .message-card
+                flex-direction: column
+
+    @media screen and (max-width: 850px)
+        flex-direction: column
+
+        .streams
+            width: 100%
+
+            .streams-cards
+                @include streams-cards-horizontal
+
+            .referral
+                margin-bottom: 50px
+                text-align: center
+
+    @media screen and (max-width: 750px)
+        .streams
+            .streams-cards
+                @include streams-cards-vertical
+
+    @media screen and (max-width: 450px)
+        .streams
+            .streams-cards
+                .stream-card
+                    height: auto
+                    border-radius: 10px
+
+                    &:nth-child(1)
+                        margin-top: 50px
+
+                    &:nth-child(2)
+                        margin-top: 170px
+
+                    p
+                        margin: 15px
+
+                    img
+                        top: -92px
+                        left: 50%
+                        transform: translateX(-50%)
+
+            .message-card
+                img
+                    width: 100%
+
+    @media screen and (max-width: 380px)
+        .streams
+            .time-timezone-wrapper
+                .time-timezone
+                    display: flex
+                    flex-direction: column
+                    align-items: center
+                    justify-content: center
+                    width: 100%
+
+                    span.time
+                        font-size: 2rem
+                        margin-top: 0
+
+            .streams-cards
+                margin-top: 30px
+
