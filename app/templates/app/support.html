@@ -1,13 +1,89 @@
 {% extends "app/base.html" %}
 {% load static %}
 
-{% block title %}App{% endblock %}
+{% block title %}{{current_page|title}}{% endblock %}
 
-{% block main_class %}app{% endblock %}
+{% block main_class %}{{current_page}} app-screen{% endblock %}
+
+{% block styles %}
+  {% with 'app/css/'|add:current_page|add:'.css' as stylesheet %}
+    <link rel="stylesheet" href="{% static stylesheet %}">
+  {% endwith %}
+{% endblock %}
 
 {% block main %}
-<div class="regular-width">
-  <h1>Hola {{name}}</h1>
-  <p>{{current_page}}</p>
+<div class="regular-width content">
+  {% include 'app/components/profile_card.html' %}
+  <div class="streams">
+
+    <!-- Time component -->
+    <div class="time-timezone-wrapper">
+      <p class="time-timezone">
+        <span class="user_timezone">
+          Hora de {{user_timezone}}
+        </span>
+        <span class="time">
+          {{user_time}}
+        </span>
+      </p>
+    </div>
+
+    <!-- Detect if there are stream available -->
+    {% if streams|length == 0 %}
+    
+      <!-- Error mensaje if there aren't streams -->
+      <div class="message-card">
+        <img src="{% static 'app/imgs/icon_ups.png' %}" alt="ups icon">
+        <div class="text">
+          <h3>LO SENTIMOS</h3>
+          <p>No hay streams en emisión en este momento</p>
+        </div>
+      </div>
+
+    {% else %}
+    
+      {% if user_streaming %}
+
+        <!-- Error message if user its streaming -->
+        <div class="message-card">
+          <img src="{% static 'app/imgs/icon_on_air.png' %}" alt="on air icon">
+          <div class="text">
+            <h3>¿QUE HACES AQUÍ?</h3>
+            <p>Tu directo está agendado a esta hora</p>
+          </div>
+        </div>
+
+      {% else %}
+
+        <!-- Show available streams -->
+        <div class="streams-cards">
+          {% for stream in streams %}
+            <div class="stream-card">
+              <img src="{{stream.picture}}" alt="imagen de perfil del usuario {{stream.user}}">
+              <p class="name">{{stream.user}}</p>
+              <button class="btn cta">
+                <div class="content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="m6 18h-3c-.48 0-1-.379-1-1v-14c0-.481.38-1 1-1h14c.621 0 1 .522 1 1v3h3c.621 0 1 .522 1 1v14c0 .621-.522 1-1 1h-14c-.48 0-1-.379-1-1zm1.5-10.5v13h13v-13zm9-1.5v-2.5h-13v13h2.5v-9.5c0-.481.38-1 1-1z" fill-rule="nonzero"/>
+                  </svg>
+                  <span>
+                    Copiar
+                  </span>
+                </div>
+              </button>
+            </div>
+          {% endfor %}
+        </div>
+
+      {% endif %}
+
+
+    {% endif %}
+
+    <div class="referral">
+      <p>Invita a un amigo a unirse</p>
+      <span>{{referral_link}}</span>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -441,70 +441,103 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   }
 }
 
-main.points .content {
+main.support > .content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
-main.points .content .points-table {
+main.support > .content .streams {
   width: calc(100% - 300px);
 }
-main.points .content .points-table table {
+main.support > .content .streams .time-timezone-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
   width: 100%;
-  border-collapse: collapse;
-  display: block;
+  margin-top: 30px;
+  margin-bottom: 50px;
 }
-main.points .content .points-table table td, main.points .content .points-table table th {
-  text-align: center;
+main.support > .content .streams .time-timezone-wrapper .time-timezone {
+  background-color: #17181D;
+  padding: 0 10px;
+}
+main.support > .content .streams .time-timezone-wrapper .time-timezone span {
+  margin: 20px;
   color: #cfd5dc;
-  padding: 10px 0;
+  display: inline-block;
 }
-main.points .content .points-table table th {
+main.support > .content .streams .time-timezone-wrapper .time-timezone span.time {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+main.support > .content .streams .message-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+main.support > .content .streams .message-card img {
+  width: 300px;
+}
+main.support > .content .streams .message-card .text {
+  text-align: center;
+}
+main.support > .content .streams .message-card .text h3 {
+  font-size: 1.5em;
+}
+main.support > .content .streams .referral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+main.support > .content .streams .referral p {
   text-transform: uppercase;
-  border-bottom: 2px solid rgba(122, 112, 179, 0.5);
 }
-main.points .content .points-table table tr {
-  display: table;
-  table-layout: fixed;
+main.support > .content .streams .referral span {
+  background-color: #17181D;
+  padding: 5px 10px;
+  margin-left: 20px;
+  color: #cfd5dc;
+}
+main.support > .content .streams .streams-cards {
+  display: flex;
   width: 100%;
-  min-width: 380px;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 100px;
 }
-main.points .content .points-table table tr:nth-child(even) {
+main.support > .content .streams .streams-cards .stream-card {
+  height: 70px;
   background-color: #17181D;
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40%;
 }
-main.points .content .points-table table tbody {
-  display: block;
-  height: 400px;
-  overflow-y: scroll;
+main.support > .content .streams .streams-cards .stream-card img {
+  width: 100px;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: -15px;
+}
+main.support > .content .streams .streams-cards .stream-card p {
+  margin-left: 70px;
+}
+main.support > .content .streams .streams-cards .stream-card .btn.cta {
+  position: absolute;
+  bottom: -70px;
   background-color: #0e1119;
+  border: none;
 }
-main.points .content .points-table table thead {
-  background-color: #17181D;
-}
-main.points .content .profile-card {
-  margin-top: 0px;
-}
-@media screen and (max-width: 850px) {
-  main.points .content {
-    flex-direction: column;
-  }
-  main.points .content .profile-card {
-    margin-top: 0;
-  }
-  main.points .content .points-table {
-    width: 100%;
-    margin-top: 50px;
-  }
-}
-@media screen and (max-width: 450px) {
-  main.points .content .points-table table {
-    overflow: scroll;
-    height: 400px;
-  }
-  main.points .content .points-table table tbody {
-    height: auto;
-    overflow: visible;
-  }
+main.support > .content .streams .streams-cards .stream-card .btn.cta span {
+  font-weight: bold;
 }
 
-/*# sourceMappingURL=points.css.map */
+/*# sourceMappingURL=support.css.map */

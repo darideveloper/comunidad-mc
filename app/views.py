@@ -196,21 +196,6 @@ def logout(request):
     return redirect("home")
 
 
-def apoyar(request):
-    """ Get data of the stream that is currently being broadcast, for node.js api"""
-
-    # TODO: Validate if node server its running
-    is_node_working = twitch.is_node_working(NODE_API)
-
-    # Render template with error message if node.js api is not working
-    if is_node_working:
-        return render(request, 'app/apoyar.html', {})
-    else:
-        return render(request, 'app/apoyar.html', {
-            "error": "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
-        })
-
-
 @csrf_exempt
 def add_comment(request):
     """ Add comment to stream """
@@ -315,9 +300,9 @@ def points(request):
         # General context
         "name": user.user_name,
         "message": message,
+        "current_page": "points",
         
         # User profile context
-        "current_page": "points",
         "profile_image": profile_image,
         "general_points_num": general_points.count(),
         "weekly_points_num": weekly_points.count(),
@@ -343,9 +328,9 @@ def schedule(request):
         # General context
         "name": user.user_name,
         "message": message,
+        "current_page": "schedule",
         
         # User profile context
-        "current_page": "schedule",
         "profile_image": profile_image,
         "general_points_num": general_points.count(),
         "weekly_points_num": weekly_points.count(),
@@ -361,12 +346,58 @@ def support(request):
     """ Page for show live streamers and copy link to stream """
     
     user, message = get_user_message_cookies(request)
+    profile_image = user.picture
+    general_points, weekly_points, daily_points = get_user_points (user)
+    
+    # TODO: Validate if node server its running
+    is_node_working = twitch.is_node_working()
+
+    # Valide if node server is working
+    error = ""
+    if not is_node_working:
+        error = "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
+
+    # Get current streams and format
+    current_streams = twitch.get_current_streams()
+    if not current_streams:
+        current_streams = []
+    streams = [{"user": stream.user.user_name, "picture": stream.user.picture} for stream in current_streams]
+    print (streams)
+    
+    # Culate time of the user
+    user_timezone = user.time_zone.time_zone
+    user_time = datetime.datetime.now(pytz.timezone(user_timezone)).strftime("%I %p")
+    
+    # Validate if the user is streaming right now
+    user_streaming = False
+    if list(filter (lambda stream: stream.user == user, current_streams)):
+        user_streaming = True
+    
+    # Gerate referral link
+    referral_link = f"{HOST}landing?referred={user.user_name}"
 
     # Render page
     return render(request, 'app/support.html', {
+        # General context
         "name": user.user_name,
         "message": message,
-        "current_page": "support"
+        "current_page": "support",
+        "error": error,
+        
+        # User profile context
+        "profile_image": profile_image,
+        "general_points_num": general_points.count(),
+        "weekly_points_num": weekly_points.count(),
+        "daily_points_num": daily_points.count(),
+        "ranking": user.ranking.name,
+        "profile_card_layout": "vertical",
+        
+        # Specific context
+        "streams": streams,
+        "user_time": user_time,
+        "user_timezone": user_timezone.replace("-", " ").replace("/", " / ").replace("_", " "),
+        "user_streaming": user_streaming,
+        "referral_link": referral_link
     })
     
 @decorators.validate_login

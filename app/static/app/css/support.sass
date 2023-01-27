@@ -1,0 +1,100 @@
+@import 'base'
+@import 'profile-card'
+
+main.support > .content
+    display: flex
+    align-items: center
+    justify-content: center
+
+    .streams
+        width: calc(100% - 300px)
+
+        .time-timezone-wrapper
+            display: flex
+            align-items: center
+            justify-content: center
+            margin: 0 auto
+            width: 100%
+            margin-top: 30px
+            margin-bottom: 50px
+
+            .time-timezone
+                background-color: $color-bg-light
+                padding: 0 10px
+
+                span
+                    margin: 20px
+                    color: $color-text
+                    display: inline-block
+
+                    &.time
+                        font-size: 1.2em
+                        font-weight: bold
+
+        .message-card
+            display: flex
+            align-items: center
+            justify-content: center
+            padding: 50px
+
+            img
+                width: 300px
+            
+            .text
+                text-align: center
+                
+                h3
+                    font-size: 1.5em
+    
+        .referral
+            display: flex
+            align-items: center
+            justify-content: center
+            margin: 0 auto
+            margin-top: 50px
+            
+            p
+                text-transform: uppercase
+
+            span
+                background-color: $color-bg-light
+                padding: 5px 10px
+                margin-left: 20px
+                color: $color-text
+
+        .streams-cards
+            display: flex
+            width: 100%
+            align-items: center
+            justify-content: space-evenly
+            margin-bottom: 100px
+
+            .stream-card
+                height: 70px
+                background-color: $color-bg-light
+                border-top-left-radius: 100px
+                border-bottom-left-radius: 100px
+                display: flex
+                align-items: center
+                justify-content: center
+                position: relative
+                width: 40%
+
+                img
+                    width: 100px
+                    border-radius: 50%
+                    position: absolute
+                    left: 0
+                    top: -15px
+
+                p
+                    margin-left: 70px
+
+                .btn.cta
+                    position: absolute
+                    bottom: -70px
+                    background-color: $color-bg
+                    border: none
+
+                    span
+                        font-weight: bold
