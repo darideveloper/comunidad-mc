@@ -33,11 +33,12 @@ if DEBUG == "True":
 # Get current week day
 today = timezone.now().weekday()
 
-# Delete points history
-PointsHistory.objects.all().delete()
 
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
+    
+    # Delete points history for global ranking
+    PointsHistory.objects.all().delete()
         
     # Get and loop all users to update ranking
     users = User.objects.all()
