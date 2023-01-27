@@ -434,6 +434,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   font-weight: bold;
   margin-top: 0;
 }
+@media screen and (max-width: 400px) {
+  .profile-card.horizontal .points-wrapper .point {
+    padding: 0 10px;
+  }
+}
 
 main.points .content {
   display: flex;

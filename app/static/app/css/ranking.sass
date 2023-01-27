@@ -5,6 +5,7 @@ main.ranking .content
     display: flex
     align-items: center
     justify-content: space-between
+    margin-top: 30px
 
     .left
         width: 400px
@@ -12,12 +13,14 @@ main.ranking .content
     .right.ranking-global
         width: calc(100% - 400px - 100px)
 
+    .ranking-today
+        margin-top: 30px
+
     .ranking-table
         background-color: $color-bg-light
         border-radius: 10px
         padding: 20px
         padding-top: 5px
-        margin-top: 30px
 
         .title-card
             margin-left: -20px
@@ -47,7 +50,6 @@ main.ranking .content
                 display: flex
                 align-items: center
                 justify-content: space-between
-                margin-left: 35px
                 margin-bottom: 30px
 
             .top-card-wrapper
@@ -59,12 +61,10 @@ main.ranking .content
                     margin: 0 auto
                     display: block
                     margin-bottom: 30px
-
-                    .top-card
-                        margin-left: 35px
+                    margin-top: 20px
 
                 .top-card
-                    width: calc(100% - 20px - 35px)
+                    width: calc(100% - 20px)
                     background-color: $color-bg
                     position: relative
                     z-index: 1
@@ -72,9 +72,10 @@ main.ranking .content
                     align-items: center
                     justify-content: space-between
                     padding: 0 10px
+                    border-top-left-radius: 100px
+                    border-bottom-left-radius: 100px
 
                     .profile
-                        margin-left: -35px
 
                         .image
                             width: 60px
@@ -84,7 +85,7 @@ main.ranking .content
                             width: 30px
                             position: absolute
                             top: -23px
-                            left: -35px
+                            left: 0
                             transform: rotate($crown-angule)
 
                     span
@@ -97,3 +98,54 @@ main.ranking .content
                             top: -20px
                             right: 0
                             transform: rotate(10deg)
+
+    @media screen and (max-width: 1150px)
+        .ranking-table
+            .top-cards
+                .second-third-wrapper
+                    flex-direction: column
+                    width: 90%
+                    margin: 0 auto
+                    margin-bottom: 30px
+
+                    .top-card-wrapper
+                        margin-left: 0
+                        margin-top: 30px
+                        
+
+                .top-card-wrapper
+                    width: 100%
+                    margin-left: 35px
+
+                    &.first
+                        width: 90%
+                        margin-bottom: 0
+
+    @media screen and (max-width: 1050px)
+        .ranking-table
+            .top-cards
+                .second-third-wrapper
+                    width: 100%
+
+                .top-card-wrapper
+                    &.first
+                        width: 100%
+
+    @media screen and (max-width: 950px)
+        flex-direction: column
+
+        .left
+            width: 80%
+            margin-bottom: 30px
+
+        .right.ranking-global
+            width: calc(80% - 40px)
+
+    @media screen and (max-width: 650px)
+        flex-direction: column
+
+        .left
+            width: 100%
+
+        .right.ranking-global
+            width: calc(100% - 40px)
