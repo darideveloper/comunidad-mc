@@ -153,6 +153,7 @@
     width: 170px;
     background-color: #17181D;
     transition-duration: 0.3s;
+    z-index: 2;
   }
   #header nav:not(.landing) .menu-wrapper.open {
     right: 0;
