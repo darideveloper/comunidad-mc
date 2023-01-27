@@ -292,13 +292,13 @@ def points(request):
     # Format table points
     points_data = []
     current_points = general_points.count()
-    for point in general_points_table:
+    for point in daily_points:
         
         # Calculate datetime with time zone of the user
-        datetime_user = point.datetime.astimezone(pytz.timezone(user_time_zone))
+        datetime_user = point.general_point.datetime.astimezone(pytz.timezone(user_time_zone))
         date = datetime_user.strftime("%d/%m/%Y")
         time = datetime_user.strftime("%I:%M %p")
-        channel = point.stream.user.user_name
+        channel = point.general_point.stream.user.user_name
         
         points_data.append ({
             "date": date,

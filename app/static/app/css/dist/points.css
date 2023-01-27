@@ -474,7 +474,7 @@ main.points .content .points-table table tr:nth-child(even) {
 }
 main.points .content .points-table table tbody {
   display: block;
-  height: 500px;
+  height: 400px;
   overflow-y: scroll;
   background-color: #0e1119;
 }
@@ -499,7 +499,7 @@ main.points .content .profile-card {
 @media screen and (max-width: 450px) {
   main.points .content .points-table table {
     overflow: scroll;
-    height: 500px;
+    height: 400px;
   }
   main.points .content .points-table table tbody {
     height: auto;
