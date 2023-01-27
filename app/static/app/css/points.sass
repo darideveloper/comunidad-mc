@@ -12,6 +12,7 @@ main.points .content
         table
             width: 100%
             border-collapse: collapse
+            display: block
 
             td, th
                 text-align: center
@@ -26,6 +27,7 @@ main.points .content
                 display: table
                 table-layout: fixed
                 width: 100%
+                min-width: 380px
 
                 &:nth-child(even)
                     background-color: $color-bg-light
@@ -51,3 +53,15 @@ main.points .content
         .points-table
             width: 100%
             margin-top: 50px
+
+    @media screen and (max-width: 450px)
+        .points-table
+            table
+                overflow: scroll
+                height: 500px
+
+                tbody
+                    height: auto
+                    overflow: visible
+
+            
