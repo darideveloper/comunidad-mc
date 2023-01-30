@@ -1,0 +1,87 @@
+@import 'base'
+@import 'profile-card'
+
+.profile-card-wrapper
+    width: 550px
+    margin: 0 auto 
+    margin-top: 50px
+
+.my-streams-shedule-form-wrapper
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-top: 50px
+    
+    .my-streams, .shedule-form
+        background-color: $color-bg-light
+        color: $color-text
+        padding-bottom: 20px
+
+    .my-streams
+        width: calc(100% - 600px)
+        table
+            width: 100%
+
+            td, th
+                text-align: center
+                padding: 10px 0
+
+    .shedule-form
+        width: 550px
+        form
+            display: flex
+            align-items: center
+            justify-content: space-between
+            padding: 20px
+
+            .select-wrapper
+                background-color: $color-bg
+                border-radius: 10px
+                padding: 20px 0
+                max-height: 275px
+                overflow-y: scroll
+
+                .select
+                    display: flex
+                    align-items: center
+                    justify-content: cneter
+                    flex-direction: column
+
+                    label
+                        width: 150px
+                        display: inline-block
+                        text-transform: uppercase
+                        padding: 10px 0
+                        cursor: pointer
+
+                        &.disabled
+                            opacity: 0.5
+                            cursor: not-allowed
+
+                        &.active
+                            font-weight: bold
+                            background-color: $color-primary
+
+                        &:hover:not(.disabled):not(.active)
+                            background-color: $color-primary-light
+
+                        input
+                            display: none
+
+            .date, .time, .confirmation
+                text-align: center
+
+            .confirmation
+                width: 150px
+                p
+                    span
+                        display: block
+                        margin: 10px 0         
+
+                        &.time-zone
+                            font-size: 0.8rem 
+
+                .btn
+                    margin-top: 20px
+                    font-size: 1.2rem

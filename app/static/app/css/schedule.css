@@ -49,15 +49,15 @@
   background-color: rgba(14, 17, 25, 0.8);
 }
 .btn.cta.green .content {
-  background-color: #499c7d;
-  border-color: #499c7d;
+  background-color: #5db897;
+  border-color: #5db897;
 }
 .btn.cta.green:hover .content {
-  background-color: rgba(73, 156, 125, 0.1);
-  color: #499c7d;
+  background-color: rgba(93, 184, 151, 0.1);
+  color: #5db897;
 }
 .btn.cta.green:active .content {
-  background-color: rgba(73, 156, 125, 0.8);
+  background-color: rgba(93, 184, 151, 0.8);
 }
 .btn.cta.green svg {
   fill: #cfd5dc;
@@ -77,6 +77,25 @@
   fill: #cfd5dc;
   width: 40px;
   height: 40px;
+}
+.btn.form {
+  border: none;
+  padding: 5px 20px;
+  border-radius: 100px;
+  color: #0e1119;
+  font-weight: bold;
+}
+.btn.form.regular {
+  background-color: #5db897;
+}
+.btn.form.warning {
+  background-color: #a34d4d;
+}
+.btn.form:hover {
+  opacity: 0.8;
+}
+.btn.form:active {
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar {
@@ -121,7 +140,7 @@
   padding: 0 20px;
 }
 #header nav .menu-wrapper ul li.active a {
-  color: #499c7d;
+  color: #5db897;
   cursor: default;
 }
 #header nav .menu-wrapper ul li.active:hover {
@@ -441,206 +460,93 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   }
 }
 
-main.support > .content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-main.support > .content .streams {
-  width: calc(100% - 300px);
-}
-main.support > .content .streams .time-timezone-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  width: 100%;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
-main.support > .content .streams .time-timezone-wrapper .time-timezone {
-  background-color: #17181D;
-  padding: 0 10px;
-}
-main.support > .content .streams .time-timezone-wrapper .time-timezone span {
-  margin: 20px;
-  color: #cfd5dc;
-  display: inline-block;
-}
-main.support > .content .streams .time-timezone-wrapper .time-timezone span.time {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-main.support > .content .streams .message-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 50px;
-}
-main.support > .content .streams .message-card img {
-  width: 300px;
-}
-main.support > .content .streams .message-card .text {
-  text-align: center;
-}
-main.support > .content .streams .message-card .text h3 {
-  font-size: 1.5em;
-}
-main.support > .content .streams .streams-cards {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-bottom: 100px;
-}
-main.support > .content .streams .streams-cards .stream-card {
-  height: 70px;
-  background-color: #17181D;
-  border-top-left-radius: 100px;
-  border-bottom-left-radius: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 40%;
-}
-main.support > .content .streams .streams-cards .stream-card img {
-  width: 100px;
-  border-radius: 50%;
-  position: absolute;
-  left: 0;
-  top: -15px;
-}
-main.support > .content .streams .streams-cards .stream-card p {
-  margin-left: 70px;
-}
-main.support > .content .streams .streams-cards .stream-card .btn.cta {
-  position: absolute;
-  bottom: -70px;
-  background-color: #0e1119;
-  border: none;
-}
-main.support > .content .streams .streams-cards .stream-card .btn.cta span {
-  font-weight: bold;
-}
-main.support > .content .streams .referral {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.profile-card-wrapper {
+  width: 550px;
   margin: 0 auto;
   margin-top: 50px;
 }
-main.support > .content .streams .referral p {
-  text-transform: uppercase;
+
+.my-streams-shedule-form-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 50px;
 }
-main.support > .content .streams .referral span {
+.my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
   background-color: #17181D;
-  padding: 5px 10px;
-  margin-left: 20px;
   color: #cfd5dc;
+  padding-bottom: 20px;
 }
-@media screen and (max-width: 1100px) {
-  main.support > .content .streams .streams-cards {
-    flex-direction: column;
-  }
-  main.support > .content .streams .streams-cards .stream-card {
-    width: 80%;
-    margin-bottom: 20px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(2) {
-    margin-top: 100px;
-  }
-  main.support > .content .streams .streams-cards .stream-card p {
-    margin-left: 0px;
-  }
-  main.support > .content .streams .referral {
-    flex-direction: column;
-  }
-  main.support > .content .streams .referral span {
-    margin-left: 0;
-  }
+.my-streams-shedule-form-wrapper .my-streams {
+  width: calc(100% - 600px);
 }
-@media screen and (max-width: 1050px) {
-  main.support > .content .streams .message-card {
-    flex-direction: column;
-  }
+.my-streams-shedule-form-wrapper .my-streams table {
+  width: 100%;
 }
-@media screen and (max-width: 850px) {
-  main.support > .content {
-    flex-direction: column;
-  }
-  main.support > .content .streams {
-    width: 100%;
-  }
-  main.support > .content .streams .streams-cards {
-    flex-direction: row;
-  }
-  main.support > .content .streams .streams-cards .stream-card {
-    width: 40%;
-    margin-bottom: 0;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(2) {
-    margin-top: 0;
-  }
-  main.support > .content .streams .streams-cards .stream-card p {
-    margin-left: 70px;
-  }
-  main.support > .content .streams .referral {
-    margin-bottom: 50px;
-    text-align: center;
-  }
+.my-streams-shedule-form-wrapper .my-streams table td, .my-streams-shedule-form-wrapper .my-streams table th {
+  text-align: center;
+  padding: 10px 0;
 }
-@media screen and (max-width: 750px) {
-  main.support > .content .streams .streams-cards {
-    flex-direction: column;
-  }
-  main.support > .content .streams .streams-cards .stream-card {
-    width: 80%;
-    margin-bottom: 20px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(2) {
-    margin-top: 100px;
-  }
-  main.support > .content .streams .streams-cards .stream-card p {
-    margin-left: 0px;
-  }
+.my-streams-shedule-form-wrapper .shedule-form {
+  width: 550px;
 }
-@media screen and (max-width: 450px) {
-  main.support > .content .streams .streams-cards .stream-card {
-    height: auto;
-    border-radius: 10px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(1) {
-    margin-top: 50px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(2) {
-    margin-top: 170px;
-  }
-  main.support > .content .streams .streams-cards .stream-card p {
-    margin: 15px;
-  }
-  main.support > .content .streams .streams-cards .stream-card img {
-    top: -92px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  main.support > .content .streams .message-card img {
-    width: 100%;
-  }
+.my-streams-shedule-form-wrapper .shedule-form form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
 }
-@media screen and (max-width: 380px) {
-  main.support > .content .streams .time-timezone-wrapper .time-timezone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-  main.support > .content .streams .time-timezone-wrapper .time-timezone span.time {
-    font-size: 2rem;
-    margin-top: 0;
-  }
-  main.support > .content .streams .streams-cards {
-    margin-top: 30px;
-  }
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper {
+  background-color: #0e1119;
+  border-radius: 10px;
+  padding: 20px 0;
+  max-height: 275px;
+  overflow-y: scroll;
 }
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select {
+  display: flex;
+  align-items: center;
+  justify-content: cneter;
+  flex-direction: column;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label {
+  width: 150px;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label.active {
+  font-weight: bold;
+  background-color: #7a70b3;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label:hover:not(.disabled):not(.active) {
+  background-color: #3f3b59;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label input {
+  display: none;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .date, .my-streams-shedule-form-wrapper .shedule-form form .time, .my-streams-shedule-form-wrapper .shedule-form form .confirmation {
+  text-align: center;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .confirmation {
+  width: 150px;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .confirmation p span {
+  display: block;
+  margin: 10px 0;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .confirmation p span.time-zone {
+  font-size: 0.8rem;
+}
+.my-streams-shedule-form-wrapper .shedule-form form .confirmation .btn {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+/*# sourceMappingURL=schedule.css.map */

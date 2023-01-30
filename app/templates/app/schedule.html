@@ -13,7 +13,100 @@
 
 {% block main %}
 <div class="regular-width content">
-  <h1>Hola {{name}}</h1>
-  <p>{{current_page}}</p>
+  <div class="profile-card-wrapper">
+    {% include 'app/components/profile_card.html' %}
+  </div>
+  <div class="my-streams-shedule-form-wrapper">
+    <div class="my-streams">
+      
+      <div class="title-card">
+        <h2>MIS STREAMS</h2>
+        <div class="decorator"></div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>FECHA</th>
+            <th>HORA</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stream in streams %}
+          <tr>
+            <td>{{stream.date}}</td>
+            <td>{{stream.time}}</td>
+            <td>
+              <button data-stream="{{stream.id}}" class="btn form green {{stream.is_cancellable}}">Calcelar</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+    <div class="shedule-form">
+
+      <div class="title-card">
+        <h2>AGENDAR</h2>
+        <div class="decorator"></div>
+      </div>
+
+      <form action="." method="post">
+
+        <div class="date">
+          <h3>Fecha</h3>
+          <div class="select-wrapper">
+            <div class="select">
+              {% for day in available_days %}
+              <label class="{% if day.disabled %}disabled{% endif %}{% if day.active %}active{% endif %}">
+                {{day.name}}
+                <input type="radio" name="date" value="lunes" disabled="{{day.disabled}}">
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="time">
+          <h3>Hora</h3>
+          <div class="select-wrapper">
+            <div class="select">
+              {% for hour in hours %}
+              <label>
+                {{hour}}:00 hrs
+                <input type="radio" name="hour" value="hour">
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="confirmation">
+          <h3>Confirma</h3>
+          <p>
+            <span class="day">Lunes</span>
+            <span class="date">10 de Diciembre</span>
+            <span class="time">22:00 Horas</span>
+            <span class="time-zone">(Zona horaria: {{time_zone}})</span>
+          </p>
+
+          <input type="submit" class="btn form regular" value="confirmar">
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+  available_hours = {{available_hours|safe}};
+  console.log (available_hours)
+</script>
+<script src="{% static 'app/code/profile-card.js' %}"></script>
+<!-- <script src="{% static 'app/code/ranking.js' %}"></script> -->
 {% endblock %}

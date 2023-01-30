@@ -2,12 +2,12 @@ import os
 import json
 import pytz
 import datetime
-import requests as req
-from .twitch import TwitchApi
+from . import tools
 from . import models
 from . import decorators
+from .twitch import TwitchApi
 from .logs import logger
-from .tools import get_user_message_cookies, get_user_points
+from collections import OrderedDict
 from dotenv import load_dotenv
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -21,6 +21,8 @@ HOST = os.environ.get("HOST")
 
 # Twitch instance
 twitch = TwitchApi ()
+
+WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 
 # Create your views here.
 def login(request):
@@ -99,7 +101,7 @@ def landing(request):
 def home(request):
     """ Home page with link for login with twitch """
 
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
 
     # Return to landing page if user id not exist in database
     if not user:
@@ -122,7 +124,7 @@ def register(request):
     """ Page for complete register, after login with twitcyh the first time """
 
     # Get user from cookies
-    user, _ = get_user_message_cookies(request)
+    user, _ = tools.get_user_message_cookies(request)
 
     # Redirect to home if user id is not valid
     if not user or (user.first_name and user.first_name.strip() != ""):
@@ -262,9 +264,9 @@ def points(request):
     """ Page for show the points of the user """
     
     # Get user data
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = get_user_points (user)
+    general_points, weekly_points, daily_points = tools.get_user_points (user)
     
     # Get only last 60 points
     general_points_table = general_points
@@ -319,9 +321,65 @@ def schedule(request):
     """ Page for schedule stream """
     
     # Get user data
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = get_user_points (user)
+    general_points, weekly_points, daily_points = tools.get_user_points (user)
+    user_time_zone = pytz.timezone(user.time_zone.time_zone)
+    
+    # Get next streams of the user in the next 7 days
+    logger.debug (f"Getting next streams of the user {user}")
+    now = timezone.now()
+    start_datetime = datetime.datetime(
+        now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+    end_datetime = start_datetime + datetime.timedelta(days=7)
+
+    # Get current streams
+    user_streams = models.Stream.objects.filter(
+        datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
+    
+    if not user_streams:
+        user_streams = None
+        
+    # Format streams
+    streams = []
+    for stream in user_streams:
+        id = stream.id
+        stream_datetime = stream.datetime.astimezone(user_time_zone)
+        date = stream_datetime.strftime("%d/%m/%Y")
+        time = stream_datetime.strftime("%I:%M %p")
+        is_cancellable = stream.datetime > ( timezone.now() + datetime.timedelta(hours=1) )
+        streams.append ({
+            "id": id,
+            "date": date, 
+            "time": time, 
+            "is_cancellable": "regular" if is_cancellable else "warning",
+        })
+        
+    # Get available days of the week
+    today = datetime.datetime.today().astimezone(user_time_zone)
+    today_week = today.weekday()
+    available_days = []
+    for day_num in range (0, 7):
+        day_name = WEEK_DAYS[day_num]
+        if day_num == today_week:
+            available_days.append({"name": day_name, "disabled": False, "active": True})
+        elif day_num < today_week:
+            available_days.append({"name": day_name, "disabled": True, "active": False})
+        else:
+            available_days.append({"name": day_name, "disabled": False, "active": False})   
+            
+    # Get available hours in each available day
+    available_hours = {}
+    hours = [hour for hour in range (0, 24)]
+    for day in available_days:
+        if day["disabled"] == False:
+            day_name = day["name"]
+            day_num = WEEK_DAYS.index(day_name)
+            current_date = today + datetime.timedelta(days=day_num-today_week)
+            day_streams = models.Stream.objects.filter(datetime__date=current_date).all()
+            day_streams_hours = [stream.datetime.astimezone(user_time_zone).hour for stream in day_streams]
+            day_available_hours = [hour for hour in hours if hour not in day_streams_hours]
+            available_hours[day_name] = day_available_hours
     
     # Render page
     return render(request, 'app/schedule.html', {
@@ -339,15 +397,20 @@ def schedule(request):
         "profile_card_layout": "horizontal",
         
         # Specific context
+        "streams": streams,
+        "available_days": available_days,
+        "available_hours": available_hours,
+        "hours": hours,
+        "time_zone": tools.get_time_zone_text(user),
     })
     
 @decorators.validate_login
 def support(request):
     """ Page for show live streamers and copy link to stream """
     
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = get_user_points (user)
+    general_points, weekly_points, daily_points = tools.get_user_points (user)
     
     # TODO: Validate if node server its running
     is_node_working = twitch.is_node_working()
@@ -368,9 +431,26 @@ def support(request):
     user_time = datetime.datetime.now(pytz.timezone(user_timezone)).strftime("%I %p")
     
     # Calculate next stream
-    next_stream_time = None
+    next_stream_date_timezone = None
     if not streams:
-        next_stream_time = twitch.get_next_stream_time (user_timezone)
+        # Get date ranges
+        logger.debug ("Getting our of the next stream")
+        now = timezone.now()
+        start_datetime = datetime.datetime(
+            now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+        end_datetime = start_datetime + datetime.timedelta(days=1)
+
+        # Get current streams
+        next_stream = models.Stream.objects.filter(
+            datetime__range=[start_datetime, end_datetime]).first()
+        
+        if not next_stream:
+            logger.info("No next stream found")
+            return None
+        
+        # Get time of the next stream withj timezone
+        next_stream_date = next_stream.datetime
+        next_stream_date_timezone = next_stream_date.astimezone (pytz.timezone(user_timezone)).strftime("%I %p")
     
     # Validate if the user is streaming right now
     user_streaming = False
@@ -399,9 +479,9 @@ def support(request):
         
         # Specific context
         "streams": streams,
-        "next_stream_time": next_stream_time,
+        "next_stream_time": next_stream_date_timezone,
         "user_time": user_time,
-        "user_timezone": user_timezone.replace("-", " ").replace("/", " / ").replace("_", " "),
+        "user_timezone": tools.get_time_zone_text(user),
         "user_streaming": user_streaming,
         "referral_link": referral_link
     })
@@ -411,9 +491,9 @@ def ranking(request):
     """ Page for show the live ranking of the users based in points """
     
     # Get user data
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = get_user_points (user)
+    general_points, weekly_points, daily_points = tools.get_user_points (user)
     
     # Get top 10 users from TopDailyPoint
     ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
@@ -450,7 +530,7 @@ def ranking(request):
 def profile(request):
     """ Page for show and update the user data """
     
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
 
     # Render page
     return render(request, 'app/profile.html', {
@@ -463,7 +543,7 @@ def profile(request):
 def wallet(request):
     """ Page for withdraw bits to wallet """
     
-    user, message = get_user_message_cookies(request)
+    user, message = tools.get_user_message_cookies(request)
 
     # Render page
     return render(request, 'app/wallet.html', {
