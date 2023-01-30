@@ -37,6 +37,13 @@
         <div class="text">
           <h3>LO SENTIMOS</h3>
           <p>No hay streams en emisión en este momento</p>
+          {% if next_stream_time %}
+          <p class="next-stream">Siguiente stream: 
+            <span>
+              {{next_stream_time}}
+            </span>
+          </p>
+          {% endif %}
         </div>
       </div>
 

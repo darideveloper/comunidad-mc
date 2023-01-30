@@ -1,4 +1,5 @@
 import os
+import pytz
 import json
 import requests
 import datetime
@@ -46,6 +47,37 @@ class TwitchApi:
             return None
         
         return current_streams
+    
+    def get_next_stream_time (self, timezone_name: str):
+        """ Get the our of the next stream, in specific timezone
+        
+        Args:
+            timezone_name (str): name of the time zone of specific user
+        
+        Returns: 
+            int: hour of the next stream in 24 hours format
+        """
+        
+        # Get date ranges
+        logger.debug ("Getting our of the next stream")
+        now = timezone.now()
+        start_datetime = datetime.datetime(
+            now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+        end_datetime = start_datetime + datetime.timedelta(days=1)
+
+        # Get current streams
+        next_stream = models.Stream.objects.filter(
+            datetime__range=[start_datetime, end_datetime]).first()
+        
+        if not next_stream:
+            logger.info("No next stream found")
+            return None
+        
+        # Get time of the next stream withj timezone
+        next_stream_date = next_stream.datetime
+        next_stream_date_timezone = next_stream_date.astimezone (pytz.timezone(timezone_name)).strftime("%I %p")
+        
+        return next_stream_date_timezone
     
 
     def submit_streams_node_bg(self):

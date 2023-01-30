@@ -486,6 +486,9 @@ main.support > .content .streams .message-card .text {
 main.support > .content .streams .message-card .text h3 {
   font-size: 1.5em;
 }
+main.support > .content .streams .message-card .text .next-stream span {
+  padding: 15px;
+}
 main.support > .content .streams .streams-cards {
   display: flex;
   width: 100%;

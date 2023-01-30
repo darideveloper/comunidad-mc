@@ -362,11 +362,15 @@ def support(request):
     if not current_streams:
         current_streams = []
     streams = [{"user": stream.user.user_name, "picture": stream.user.picture} for stream in current_streams]
-    print (streams)
     
     # Culate time of the user
     user_timezone = user.time_zone.time_zone
     user_time = datetime.datetime.now(pytz.timezone(user_timezone)).strftime("%I %p")
+    
+    # Calculate next stream
+    next_stream_time = None
+    if not streams:
+        next_stream_time = twitch.get_next_stream_time (user_timezone)
     
     # Validate if the user is streaming right now
     user_streaming = False
@@ -375,6 +379,7 @@ def support(request):
     
     # Gerate referral link
     referral_link = f"{HOST}landing?referred={user.user_name}"
+    
 
     # Render page
     return render(request, 'app/support.html', {
@@ -394,6 +399,7 @@ def support(request):
         
         # Specific context
         "streams": streams,
+        "next_stream_time": next_stream_time,
         "user_time": user_time,
         "user_timezone": user_timezone.replace("-", " ").replace("/", " / ").replace("_", " "),
         "user_streaming": user_streaming,
