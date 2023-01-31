@@ -24,8 +24,6 @@ function show_available_hours () {
 
   const current_day = document.querySelector (`${selector_day_item}.active`).innerText.toLowerCase()
   const day_hours = available_hours[current_day]
-
-  console.log (day_hours)
   
   // Delete current content of select element
   const select = document.querySelector (selector_time_wrapper)
@@ -36,7 +34,6 @@ function show_available_hours () {
 
     // Disable hours already booked
     disabled_class = day_hours.includes (hour) ? "" :  "disabled"
-    console.log ({disabled_class, hour})
 
     const item = `
       <label class=${disabled_class}>
