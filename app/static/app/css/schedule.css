@@ -91,11 +91,15 @@
 .btn.form.warning {
   background-color: #a34d4d;
 }
-.btn.form:hover {
+.btn.form:hover:not([disabled]) {
   opacity: 0.8;
 }
-.btn.form:active {
+.btn.form:active:not([disabled]) {
   opacity: 0.5;
+}
+.btn.form[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 ::-webkit-scrollbar {

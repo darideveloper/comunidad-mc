@@ -97,8 +97,12 @@
         &.warning
             background-color: $color-red
 
-        &:hover
+        &:hover:not([disabled])
             opacity: 0.8
 
-        &:active
+        &:active:not([disabled])
             opacity: 0.5
+
+        &[disabled]
+            opacity: 0.6
+            cursor: not-allowed
