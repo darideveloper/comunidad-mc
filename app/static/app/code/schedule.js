@@ -25,37 +25,37 @@ function show_available_hours () {
   console.log ({available_hours})
   
   // Delete current content of select element
-  const select = document.querySelector (selector_time_wrapper)
-  select.innerHTML = ""
+  const time_items = document.querySelectorAll (selector_time_item)
 
   // Get current hour
-  now = new Date ()
-  current_hour = now.getHours ()
+  const now = new Date ()
+  const current_hour = now.getHours ()
 
   // Add new options to select element
-  for (hour of hours) {
+  time_items.forEach (time_item => {
 
-    console.log ({today_week_name, current_day})
+    // Get item hour
+    hour = time_item.querySelector ("input").value
+
+    // Remove disabled class
+    time_item.classList.remove ("disabled")
 
     // Disable hours before current time
-    let disabled_class = ""
+    let disabled = false
     if (today_week_name == current_day) {
-      disabled_class = hour < current_hour ? "disabled" : ""
+      disabled = parseInt(hour) < current_hour ? true : false
     }
     
     // Disable hours already booked
-    if (disabled_class == "") {
-      disabled_class = day_hours.includes (hour) ? "" :  "disabled"
+    if (disabled == false) {
+      disabled = day_hours.includes (hour) ? false : true
     }
 
-    const item = `
-      <label class=${disabled_class}>
-        ${hour}:00 hrs
-        <input type="radio" name="hour" value="${hour}">
-      </label>
-    `
-    select.innerHTML += item
-  }
+    // Add disabled class
+    if (disabled) {
+      time_item.classList.add ("disabled")
+    }
+  })
 }
 
 function toggle_submit (activate) {
@@ -69,8 +69,8 @@ function toggle_submit (activate) {
   }
 }
 
-const day_items = document.querySelectorAll (selector_day_item)
 // Activate day when ckick on it
+const day_items = document.querySelectorAll (selector_day_item)
 day_items.forEach(day_item => {
   // Add lister to item
   day_item.addEventListener ("click", event => {

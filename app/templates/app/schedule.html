@@ -73,6 +73,12 @@
           <h3>Hora</h3>
           <div class="select-wrapper">
             <div class="select">
+              {% for hour in hours %}
+                <label>
+                  {{hour}}:00 hrs
+                  <input type="radio" name="hour" value="{{hour}}">
+                </label>
+              {% endfor %}
             </div>
           </div>
         </div>
