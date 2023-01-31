@@ -358,15 +358,16 @@ def schedule(request):
     # Get available days of the week
     today = datetime.datetime.today().astimezone(user_time_zone)
     today_week = today.weekday()
+    today_week_name = WEEK_DAYS[today_week]
     available_days = []
     for day_num in range (0, 7):
         day_name = WEEK_DAYS[day_num]
         if day_num == today_week:
-            available_days.append({"name": day_name, "disabled": False, "active": True})
+            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": True})
         elif day_num < today_week:
-            available_days.append({"name": day_name, "disabled": True, "active": False})
+            available_days.append({"name": day_name, "num": day_num, "disabled": True, "active": False})
         else:
-            available_days.append({"name": day_name, "disabled": False, "active": False})   
+            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": False})   
     
     # Get available hours in each available day
     hours = [hour for hour in range(0, 24)]
@@ -374,16 +375,16 @@ def schedule(request):
     for day in available_days:
         if day["disabled"] == False:
             day_name = day["name"]
-            day_num = WEEK_DAYS.index(day_name)
+            day_num = day["num"]
             current_date = today + datetime.timedelta(days=day_num-today_week)
             day_streams = models.Stream.objects.filter(datetime__date=current_date).all()
-            day_streams_hours = [stream.datetime.astimezone(user_time_zone).hour for stream in day_streams]
-            day_available_hours = [str(hour) for hour in hours if hour not in day_streams_hours and hour >= current_date.hour]
-            day_available_hours = [f"0{hour}" if len(str(hour)) == 1 else str(hour) for hour in day_available_hours]
+            day_streams_hours = list(map(lambda stream: stream.datetime.astimezone(user_time_zone).hour, day_streams))
+            day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
+            day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
-            
+        
     # Format base hours
-    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour) ,hours))
+    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))
     
     # Render page
     return render(request, 'app/schedule.html', {
@@ -406,6 +407,7 @@ def schedule(request):
         "available_hours": available_hours,
         "time_zone": tools.get_time_zone_text(user),
         "hours": hours,
+        "today_week_name": today_week_name,
     })
     
 @decorators.validate_login

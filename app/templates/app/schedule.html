@@ -86,7 +86,7 @@
             <span class="time-zone">(Zona horaria: {{time_zone}})</span>
           </p>
 
-          <input type="submit" class="btn form regular" value="confirmar" disabled>
+          <input type="submit" class="btn form regular" value="confirmar" id="submit" disabled>
         </div>
 
       </form>
@@ -100,6 +100,7 @@
 <script>
   const available_hours = {{available_hours|safe}};
   const hours = {{hours|safe}};
+  const today_week_name = "{{today_week_name}}";
 </script>
 <script src="{% static 'app/code/profile-card.js' %}"></script>
 <script src="{% static 'app/code/schedule.js' %}"></script>

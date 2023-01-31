@@ -42,4 +42,4 @@ def get_time_zone_text (user):
     
     time_zone = str(user.time_zone.time_zone)
     return time_zone.replace("-", " ").replace("/", " / ").replace("_", " ")
-    
+     
