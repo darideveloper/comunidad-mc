@@ -62,7 +62,7 @@
               {% for day in available_days %}
               <label class="{% if day.disabled %}disabled{% endif %}{% if day.active %}active{% endif %}">
                 {{day.name}}
-                <input type="radio" name="date" value="{{day.name}}" disabled="{{day.disabled}}">
+                <input type="radio" name="date" value="{{day.name}}" disabled="{{day.disabled}}" data-date="{{day.date_text}}">
               </label>
               {% endfor %}
             </div>
@@ -86,9 +86,9 @@
         <div class="confirmation">
           <h3>Confirma</h3>
           <p>
-            <span class="day">Lunes</span>
-            <span class="date">10 de Diciembre</span>
-            <span class="time">22:00 Horas</span>
+            <span class="day"></span>
+            <span class="date"></span>
+            <span class="time"></span>
             <span class="time-zone">(Zona horaria: {{time_zone}})</span>
           </p>
 

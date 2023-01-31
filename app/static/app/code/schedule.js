@@ -2,6 +2,15 @@
 const selector_time_wrapper = ".time .select"
 const selector_time_item = ".time .select label"
 const selector_day_item = ".date .select label"
+const selector_confirmation = ".confirmation .info"
+const selector_confirmation_day = ".confirmation .day"
+const selector_confirmation_date = ".confirmation .date"
+const selector_confirmation_time = ".confirmation .time"
+
+// Global nodes
+confirmation_day = document.querySelector (selector_confirmation_day)
+confirmation_date = document.querySelector (selector_confirmation_date)
+confirmation_time = document.querySelector (selector_confirmation_time)
 
 function activate_item (item, selector) {
   // Disable current active item and enable new active item
@@ -21,8 +30,6 @@ function show_available_hours () {
 
   const current_day = document.querySelector (`${selector_day_item}.active`).innerText.toLowerCase()
   const day_hours = available_hours[current_day]
-
-  console.log ({available_hours})
   
   // Delete current content of select element
   const time_items = document.querySelectorAll (selector_time_item)
@@ -39,6 +46,7 @@ function show_available_hours () {
 
     // Remove disabled class
     time_item.classList.remove ("disabled")
+    time_item.classList.remove ("active")
 
     // Disable hours before current time
     let disabled = false
@@ -51,7 +59,7 @@ function show_available_hours () {
       disabled = day_hours.includes (hour) ? false : true
     }
 
-    // Add disabled class
+    // Disable item
     if (disabled) {
       time_item.classList.add ("disabled")
     }
@@ -82,6 +90,11 @@ day_items.forEach(day_item => {
 
     // Disable submit button
     toggle_submit (false)
+
+    // Reset confirmation info 
+    confirmation_day.innerText = ""
+    confirmation_date.innerText = ""
+    confirmation_time.innerText = ""
   })
 })
 
@@ -95,6 +108,14 @@ time_items.forEach(time_item => {
 
     // Enable submit button
     toggle_submit (true)
+
+    // Update date confirmation
+    const day = document.querySelector (`${selector_day_item}.active`).innerText
+    const date = document.querySelector (`${selector_day_item}.active > input`).getAttribute ("data-date")
+    const time = document.querySelector (`${selector_time_item}.active`).innerText.toLowerCase()
+    confirmation_day.innerText = day
+    confirmation_date.innerText = date
+    confirmation_time.innerText = time
   })
 });
 

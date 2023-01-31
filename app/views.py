@@ -23,6 +23,20 @@ HOST = os.environ.get("HOST")
 twitch = TwitchApi ()
 
 WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+MONTHS = {
+    "January": "Enero",
+    "February": "Febrero",
+    "March": "Marzo",
+    "April": "Abril",
+    "May": "Mayo",
+    "June": "Junio",
+    "July": "Julio",
+    "August": "Agosto",
+    "September": "Septiembre",
+    "October": "Octubre",
+    "November": "Noviembre",
+    "December": "Diciembre"
+}
 
 # Create your views here.
 def login(request):
@@ -362,12 +376,17 @@ def schedule(request):
     available_days = []
     for day_num in range (0, 7):
         day_name = WEEK_DAYS[day_num]
+        date = today + datetime.timedelta(days=day_num-today_week)
+        date_text_day = date.strftime("%d")
+        date_text_month = date.strftime("%B")
+        date_text_month_spanish = MONTHS[date_text_month]
+        date_text = f"{date_text_day} de {date_text_month_spanish}"
         if day_num == today_week:
-            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": True})
+            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": True, "date": date, "date_text": date_text})
         elif day_num < today_week:
-            available_days.append({"name": day_name, "num": day_num, "disabled": True, "active": False})
+            available_days.append({"name": day_name, "num": day_num, "disabled": True, "active": False, "date": date, "date_text": date_text})
         else:
-            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": False})   
+            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": False, "date": date, "date_text": date_text})   
     
     # Get available hours in each available day
     hours = [hour for hour in range(0, 24)]
@@ -376,7 +395,7 @@ def schedule(request):
         if day["disabled"] == False:
             day_name = day["name"]
             day_num = day["num"]
-            current_date = today + datetime.timedelta(days=day_num-today_week)
+            current_date = day["date"]
             day_streams = models.Stream.objects.filter(datetime__date=current_date).all()
             day_streams_hours = list(map(lambda stream: stream.datetime.astimezone(user_time_zone).hour, day_streams))
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
