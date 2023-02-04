@@ -26,6 +26,7 @@ class User (models.Model):
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
+        ordering = ['user_name']
     
 class TimeZone (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de la zona horaria", null=False, blank=False, editable=False)
