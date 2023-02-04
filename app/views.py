@@ -579,3 +579,12 @@ def wallet(request):
         "message": message,
         "current_page": "wallet"
     })
+    
+def testing (request):
+    """ Page for tests """
+
+    dari = models.User.objects.filter(user_name='darideveloper').first()
+    
+    live = twitch.is_user_live(dari)
+    
+    return HttpResponse(live)

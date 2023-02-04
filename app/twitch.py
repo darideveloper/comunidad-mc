@@ -44,7 +44,7 @@ class TwitchApi:
         
         if not current_streams:
             logger.info("No streams found")
-            return None
+            return []
         
         return current_streams
     
@@ -177,7 +177,6 @@ class TwitchApi:
 
         return (user_id, user_email, user_picture, user_name)
 
-
     def get_twitch_login_link(self, redirect_url: str):
         """ Generate link for login with twitch
 
@@ -195,7 +194,8 @@ class TwitchApi:
             "moderation:read",
             "moderator:read:chatters",
             "moderator:read:chat_settings",
-            "chat:read"
+            "chat:read",
+            "bits:read",
         ]
         url_params = {
             "client_id": self.twitch_client_id,
@@ -418,4 +418,29 @@ class TwitchApi:
                     new_top_daily_point = models.TopDailyPoint (position=current_tops+1, user=user)
                     new_top_daily_point.save ()
             
+    def is_user_live (self, user: models.User):
+        """ Return if user is live or not
+
+        Args:
+            user (models.User): user object
+
+        Returns:
+            bool: True if user is live, False if not
+        """
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {user.access_token}",
+            "Client-Id": self.twitch_client_id,
+        }
+
+        res = requests.get(f'https://api.twitch.tv/helix/streams?user_id={user.id}', headers=headers)
         
+        # Get json data 
+        json_data = res.json()
+        
+        # valdiate if user is live
+        is_live = False
+        if json_data.get("data"):
+            is_live = True
+            
+        return is_live
