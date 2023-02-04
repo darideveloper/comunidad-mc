@@ -405,6 +405,9 @@ def schedule(request):
     # Format base hours
     hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))
     
+    # TODO: Calculate if user can schedule a stream
+    
+    
     # Render page
     return render(request, 'app/schedule.html', {
         # General context

@@ -116,8 +116,8 @@ class AdminDailyPoint (admin.ModelAdmin):
 @admin.register (models.Ranking)
 class AdminRanking (admin.ModelAdmin):
     
-    list_display = ('id', 'name', 'points')
-    ordering = ('id', 'name', 'points')
+    list_display = ('id', 'name', 'points', 'max_streams')
+    ordering = ('id', 'name', 'points', 'max_streams')
     search_fields = ('name',)
     
 @admin.register (models.PointsHistory)

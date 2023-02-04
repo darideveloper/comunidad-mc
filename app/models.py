@@ -21,8 +21,7 @@ class User (models.Model):
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
     
     def __str__(self):
-        email = self.email if self.email else "no email"
-        return f"({self.id}) {self.user_name}"
+        return f"{self.user_name}"
     
     class Meta:
         verbose_name = "Usuario"
@@ -142,6 +141,7 @@ class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
     points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
+    max_streams = models.IntegerField(name='max_streams', verbose_name="máximo de streams", help_text="máximo de streams que puede tener el usuario para el ranking", null=False, blank=False, default=0)
     
     def __str__(self):
         return f"{self.name}"
