@@ -102,15 +102,29 @@ class Status (models.Model):
     class Meta:
         verbose_name = "Estatus"
         verbose_name_plural = "Estatus"
+        
+class InfoPoint (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de la información de punto", null=False, blank=False, editable=False)
+    info = models.CharField(name='info', verbose_name="información", help_text="información del punto", null=False, blank=False, max_length=100)
     
+    def __str__(self):
+        return self.info
+    
+    class Meta:
+        verbose_name = "Información de punto"
+        verbose_name_plural = "Información de puntos"
+
 class GeneralPoint (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
     stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el punto", null=False, blank=False)
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del punto", null=False, blank=False, default=timezone.now)
+    amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de puntos", null=False, blank=False, default=1)
+    info = models.ForeignKey('InfoPoint', on_delete=models.CASCADE, name='info', verbose_name="información", help_text="información del punto", null=False, blank=False, default=1)
     
     def __str__(self):
-        return f"{self.user}: {timezone.localtime(self.datetime, pytz.timezone(timezone.get_current_timezone_name()))} - {self.stream.user.user_name}"
+        time_user = timezone.localtime(self.datetime, pytz.timezone(timezone.get_current_timezone_name()))
+        return f"{self.user} ({self.amount}): {time_user} - {self.stream.user.user_name}"
     
     class Meta:
         verbose_name = "Punto general"

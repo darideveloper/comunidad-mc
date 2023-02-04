@@ -89,13 +89,20 @@ class AdminStatus (admin.ModelAdmin):
     list_display = ('id', 'name')
     ordering = ('id', 'name')
     search_fields = ('name',)
+
+@admin.register (models.InfoPoint)
+class AdminInfoPoint (admin.ModelAdmin):
+    
+    list_display = ('id', 'info')
+    ordering = ('id', 'info')
+    search_fields = ('info',)
     
 @admin.register (models.GeneralPoint)
 class AdminGeneralPoint (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'stream', 'datetime')
-    ordering = ('id', 'user', 'stream', 'datetime')
-    list_filter = ('user', 'stream', 'datetime')
+    list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
+    ordering = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
+    list_filter = ('user', 'stream', 'info', 'datetime')
     search_fields = ('user', 'stream')
     
 @admin.register (models.WeeklyPoint)
