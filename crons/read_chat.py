@@ -1,3 +1,5 @@
+""" Read chat from twitch streams who are live (in system) """
+
 # Add parent folder to path
 import os
 import sys

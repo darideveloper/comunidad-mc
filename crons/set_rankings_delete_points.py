@@ -1,3 +1,5 @@
+""" Check points of users and set ranking, and delete old points """
+
 # Add parent folder to path
 import os
 import sys

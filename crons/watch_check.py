@@ -1,3 +1,5 @@
+""" Check if users are in chat of streams """
+
 # Add parent folder to path
 import os
 import sys
