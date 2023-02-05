@@ -16,14 +16,15 @@
   {% include 'app/components/profile_card.html' %}
   
   <section class="points-table">
-    <h1>Puntos obtenidos hoy</h1>
+    <h1>Puntos obtenidos</h1>
     <table>
       <thead>
         <tr>
           <th>Fecha</th>
           <th>Hora</th>
-          <th>Mis puntos</th>
-          <th>Canal</th>
+          <th>Mis pts</th>
+          <th>Pts obtenidos</th>
+          <th>Detalles</th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +33,12 @@
           <td>{{point.date}}</td>
           <td>{{point.time}}</td>
           <td>{{point.my_points}}</td>
-          <td>{{point.channel}}</td>
+          {% if point.points > 0 %}
+            <td>+ {{point.points}}</td>
+          {% else %}
+            <td>{{point.points}}</td>
+          {% endif %}
+          <td>{{point.details}}</td>
         </tr>
         {% endfor %}
       </tbody>
