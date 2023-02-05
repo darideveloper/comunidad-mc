@@ -280,7 +280,8 @@ def points(request):
     # Get user data
     user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = tools.get_user_points (user)
+    general_points, weekly_points, daily_points, \
+        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
     # Get only last 60 points
     general_points_table = general_points
@@ -292,7 +293,7 @@ def points(request):
             
     # Format table points
     points_data = []
-    current_points = general_points.count()
+    current_points = general_points_num
     for point in daily_points:
         
         # Calculate datetime with time zone of the user
@@ -320,9 +321,9 @@ def points(request):
         
         # User profile context
         "profile_image": profile_image,
-        "general_points_num": general_points.count(),
-        "weekly_points_num": weekly_points.count(),
-        "daily_points_num": daily_points.count(),
+        "general_points_num": general_points_num,
+        "weekly_points_num": weekly_points_num,
+        "daily_points_num": daily_points_num,
         "ranking": user.ranking.name,
         "profile_card_layout": "vertical",
         
@@ -337,7 +338,8 @@ def schedule(request):
     # Get user data
     user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = tools.get_user_points (user)
+    general_points, weekly_points, daily_points, \
+        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     
     # Get next streams of the user in the next 7 days
@@ -417,9 +419,9 @@ def schedule(request):
         
         # User profile context
         "profile_image": profile_image,
-        "general_points_num": general_points.count(),
-        "weekly_points_num": weekly_points.count(),
-        "daily_points_num": daily_points.count(),
+        "general_points_num": general_points_num,
+        "weekly_points_num": weekly_points_num,
+        "daily_points_num": daily_points_num,
         "ranking": user.ranking.name,
         "profile_card_layout": "horizontal",
         
@@ -438,9 +440,10 @@ def support(request):
     
     user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = tools.get_user_points (user)
+    general_points, weekly_points, daily_points, \
+        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
-    # TODO: Validate if node server its running
+    # Validate if node server its running
     is_node_working = twitch.is_node_working()
 
     # Valide if node server is working
@@ -462,7 +465,7 @@ def support(request):
     next_stream_date_timezone = None
     if not streams:
         # Get date ranges
-        logger.debug ("Getting our of the next stream")
+        logger.debug ("Getting hour of the next stream")
         now = timezone.now()
         start_datetime = datetime.datetime(
             now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
@@ -472,13 +475,10 @@ def support(request):
         next_stream = models.Stream.objects.filter(
             datetime__range=[start_datetime, end_datetime]).first()
         
-        if not next_stream:
-            logger.info("No next stream found")
-            return None
-        
         # Get time of the next stream withj timezone
-        next_stream_date = next_stream.datetime
-        next_stream_date_timezone = next_stream_date.astimezone (pytz.timezone(user_timezone)).strftime("%I %p")
+        if next_stream:
+            next_stream_date = next_stream.datetime
+            next_stream_date_timezone = next_stream_date.astimezone (pytz.timezone(user_timezone)).strftime("%I %p")
     
     # Validate if the user is streaming right now
     user_streaming = False
@@ -487,7 +487,6 @@ def support(request):
     
     # Gerate referral link
     referral_link = f"{HOST}landing?referred={user.user_name}"
-    
 
     # Render page
     return render(request, 'app/support.html', {
@@ -499,9 +498,9 @@ def support(request):
         
         # User profile context
         "profile_image": profile_image,
-        "general_points_num": general_points.count(),
-        "weekly_points_num": weekly_points.count(),
-        "daily_points_num": daily_points.count(),
+        "general_points_num": general_points_num,
+        "weekly_points_num": weekly_points_num,
+        "daily_points_num": daily_points_num,
         "ranking": user.ranking.name,
         "profile_card_layout": "vertical",
         
@@ -521,7 +520,8 @@ def ranking(request):
     # Get user data
     user, message = tools.get_user_message_cookies(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points = tools.get_user_points (user)
+    general_points, weekly_points, daily_points, \
+        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
     # Get top 10 users from TopDailyPoint
     ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
@@ -542,9 +542,9 @@ def ranking(request):
         # User profile context
         "current_page": "ranking",
         "profile_image": profile_image,
-        "general_points_num": general_points.count(),
-        "weekly_points_num": weekly_points.count(),
-        "daily_points_num": daily_points.count(),
+        "general_points_num": general_points_num,
+        "weekly_points_num": weekly_points_num,
+        "daily_points_num": daily_points_num,
         "ranking": user.ranking.name,
         "profile_card_layout": "horizontal small",
         
