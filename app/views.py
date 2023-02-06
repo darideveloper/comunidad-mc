@@ -136,9 +136,11 @@ def home(request):
     if not user.first_name or user.first_name.strip() == "":
         return redirect('register')
 
-    # Show to user to whastapp page if user is not active
+    # Show to user to whatsapppage if user is not active
     if not user.is_active:
-        return render(request, 'app/whatsapp.html')
+        return render(request, 'app/whatsapp.html', {
+            "current_page": "whatsapp",
+        })
 
     # Redirect to Apoyar page
     return redirect("support")
@@ -161,6 +163,7 @@ def register(request):
             "email": user.email,
             "picture": user.picture,
             "user_name": user.user_name,
+            "current_page": "register"
         })
 
     elif request.method == "POST":
@@ -179,7 +182,8 @@ def register(request):
                 "email": user.email,
                 "picture": user.picture,
                 "user_name": user.user_name,
-                "error": "Algo salió mal, intente de nuevo"
+                "error": "Algo salió mal, intente de nuevo",
+                "current_page": "register"
             })
 
         # Create country and time zone objects

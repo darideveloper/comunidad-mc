@@ -1,12 +1,14 @@
 {% extends "app/base.html" %}
 {% load static %}
 
-{% block title %}Registro{% endblock %}
+{% block title %}{{current_page|title}}{% endblock %}
 
-{% block main_class %}register{% endblock %}
+{% block main_class %}{{current_page}} app-screen{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="{% static 'app/css/register.css' %}">
+  {% with 'app/css/'|add:current_page|add:'.css' as stylesheet %}
+    <link rel="stylesheet" href="{% static stylesheet %}">
+  {% endwith %}
 {% endblock %}
 
 {% block main %}
