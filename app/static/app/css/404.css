@@ -49,15 +49,15 @@
   background-color: rgba(14, 17, 25, 0.8);
 }
 .btn.cta.green .content {
-  background-color: #499c7d;
-  border-color: #499c7d;
+  background-color: #5db897;
+  border-color: #5db897;
 }
 .btn.cta.green:hover .content {
-  background-color: rgba(73, 156, 125, 0.1);
-  color: #499c7d;
+  background-color: rgba(93, 184, 151, 0.1);
+  color: #5db897;
 }
 .btn.cta.green:active .content {
-  background-color: rgba(73, 156, 125, 0.8);
+  background-color: rgba(93, 184, 151, 0.8);
 }
 .btn.cta.green svg {
   fill: #cfd5dc;
@@ -78,9 +78,33 @@
   width: 40px;
   height: 40px;
 }
+.btn.form {
+  border: none;
+  padding: 5px 20px;
+  border-radius: 100px;
+  color: #0e1119;
+  font-weight: bold;
+}
+.btn.form.regular {
+  background-color: #5db897;
+}
+.btn.form.warning {
+  background-color: #a34d4d;
+}
+.btn.form:hover:not([disabled]) {
+  opacity: 0.8;
+}
+.btn.form:active:not([disabled]) {
+  opacity: 0.5;
+}
+.btn.form[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -120,7 +144,7 @@
   padding: 0 20px;
 }
 #header nav .menu-wrapper ul li.active a {
-  color: #499c7d;
+  color: #5db897;
   cursor: default;
 }
 #header nav .menu-wrapper ul li.active:hover {
@@ -152,6 +176,7 @@
     width: 170px;
     background-color: #17181D;
     transition-duration: 0.3s;
+    z-index: 2;
   }
   #header nav:not(.landing) .menu-wrapper.open {
     right: 0;
@@ -167,7 +192,7 @@
 
 #footer {
   text-align: center;
-  margin-top: 5px;
+  margin-top: 15px;
   margin-bottom: 5px;
   color: #cfd5dc;
   font-size: 0.8rem;
@@ -268,6 +293,150 @@ h1, h2, h3, h4, h5, h6, .title {
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.app-screen {
+  width: 100%;
+}
+.app-screen > .content {
+  min-height: calc(100vh - 53px - 36px);
+}
+
+.title-card {
+  position: relative;
+  height: 60px;
+}
+.title-card h2 {
+  font-size: 1.2rem;
+  color: #cfd5dc;
+  font-weight: bold;
+  padding: 10px 0;
+  position: relative;
+  margin-left: -20px;
+  z-index: 1;
+  text-align: center;
+}
+.title-card h2::after {
+  position: absolute;
+  content: "";
+  width: calc(100% - 20px);
+  height: 100%;
+  background-color: #3f3b59;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.title-card .decorator {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  top: 0;
+  left: 0;
+}
+.title-card .decorator::after {
+  position: absolute;
+  content: "";
+  width: 50px;
+  height: 50px;
+  background-color: rgba(63, 59, 89, 0.2);
+  top: 17px;
+  left: -10px;
+  z-index: -2;
+  transform: rotate(45deg);
+}
+.title-card .decorator::before {
+  position: absolute;
+  content: "";
+  width: 59px;
+  height: 70px;
+  background-color: #17181D;
+  top: 10px;
+  left: 0px;
+  z-index: -1;
+}
+
+.loading-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(14, 17, 25, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+@keyframes ldio-m9447fica1r-o {
+  0% {
+    opacity: 1;
+    transform: translate(0 0);
+  }
+  49.99% {
+    opacity: 1;
+    transform: translate(64.68px, 0);
+  }
+  50% {
+    opacity: 0;
+    transform: translate(64.68px, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+}
+@keyframes ldio-m9447fica1r {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(64.68px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.loading-wrapper .ldio-m9447fica1r div {
+  position: absolute;
+  width: 64.68px;
+  height: 64.68px;
+  border-radius: 50%;
+  top: 83.16px;
+  left: 50.82px;
+}
+.loading-wrapper .ldio-m9447fica1r div:nth-child(1) {
+  background: #7a70b3;
+  animation: ldio-m9447fica1r 1s linear infinite;
+  animation-delay: -0.5s;
+}
+.loading-wrapper .ldio-m9447fica1r div:nth-child(2) {
+  background: #5db897;
+  animation: ldio-m9447fica1r 1s linear infinite;
+  animation-delay: 0s;
+}
+.loading-wrapper .ldio-m9447fica1r div:nth-child(3) {
+  background: #7a70b3;
+  animation: ldio-m9447fica1r-o 1s linear infinite;
+  animation-delay: -0.5s;
+}
+.loading-wrapper .loadingio-spinner-dual-ball-ng13x2kgmq {
+  width: 231px;
+  height: 231px;
+  display: inline-block;
+  overflow: hidden;
+  background: none;
+}
+.loading-wrapper .ldio-m9447fica1r {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+}
+.loading-wrapper .ldio-m9447fica1r div {
+  box-sizing: content-box;
 }
 
 main.error404 .content {

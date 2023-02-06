@@ -79,13 +79,13 @@ h1, h2, h3, h4, h5, h6, .title
     box-shadow: 0px 0px 23px -15px $color-primary
 
 // Diable arrow in number inputs
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button 
-  -webkit-appearance: none
-  margin: 0
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
+    -webkit-appearance: none
+    margin: 0
 
-.app-screen 
+.app-screen
     width: 100%
-    
+
     > .content
         min-height: calc(100vh - 53px - 36px)
 
@@ -141,3 +141,83 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
             top: 10px
             left: 0px
             z-index: -1
+
+// Loading model stayles
+.loading-wrapper
+    width: 100vw
+    height: 100vh
+    background-color: rgba($color-bg, 0.6)
+    display: flex
+    align-items: center
+    justify-content: center
+    position: fixed
+    top: 0
+    left: 0
+    z-index: 3
+
+    @keyframes ldio-m9447fica1r-o
+        0%     
+            opacity: 1 
+            transform: translate(0 0)
+        49.99% 
+            opacity: 1 
+            transform: translate(64.68px,0)
+        50%
+            opacity: 0 
+            transform: translate(64.68px,0)
+        100%    
+            opacity: 0 
+            transform: translate(0,0)
+
+    @keyframes ldio-m9447fica1r
+        0%  
+            transform: translate(0,0)
+        50% 
+            transform: translate(64.68px,0)
+        100% 
+            transform: translate(0,0)
+
+    .ldio-m9447fica1r div
+        position: absolute
+        width: 64.68px
+        height: 64.68px
+        border-radius: 50%
+        top: 83.16px
+        left: 50.82px
+
+
+        &:nth-child(1)
+            background: #7a70b3
+            animation: ldio-m9447fica1r 1s linear infinite
+            animation-delay: -0.5s
+
+
+        &:nth-child(2)
+            background: #5db897
+            animation: ldio-m9447fica1r 1s linear infinite
+            animation-delay: 0s
+
+
+        &:nth-child(3)
+            background: #7a70b3
+            animation: ldio-m9447fica1r-o 1s linear infinite
+            animation-delay: -0.5s
+
+    .loadingio-spinner-dual-ball-ng13x2kgmq
+        width: 231px
+        height: 231px
+        display: inline-block
+        overflow: hidden
+        background: none
+
+    .ldio-m9447fica1r
+        width: 100%
+        height: 100%
+        position: relative
+        transform: translateZ(0) scale(1)
+        backface-visibility: hidden
+        transform-origin: 0 0 /* see note above */
+
+
+        & div 
+            box-sizing: content-box
