@@ -1,16 +1,6 @@
 {% extends "app/base.html" %}
 {% load static %}
 
-{% block title %}{{current_page|title}}{% endblock %}
-
-{% block main_class %}{{current_page}} app-screen{% endblock %}
-
-{% block styles %}
-  {% with 'app/css/'|add:current_page|add:'.css' as stylesheet %}
-    <link rel="stylesheet" href="{% static stylesheet %}">
-  {% endwith %}
-{% endblock %}
-
 {% block main %}
 <img src="{% static 'app/imgs/border-top-left.png' %}" alt="borde de decoración" class="decoration top-left">
 <img src="{% static 'app/imgs/border-bottom-right.png' %}" alt="borde de decoración" class="decoration bottom-right">
