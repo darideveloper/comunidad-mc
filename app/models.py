@@ -13,7 +13,6 @@ class Ranking (models.Model):
     def get_lower(cls):
         return cls.objects.all().order_by('points').first()
     
-    
     def __str__(self):
         return f"{self.name}"
     

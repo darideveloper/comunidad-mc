@@ -51,7 +51,7 @@ function show_available_hours () {
     // Disable hours before current time
     let disabled = false
     if (today_week_name == current_day) {
-      disabled = parseInt(hour) < current_hour ? true : false
+      disabled = parseInt(hour) <= current_hour ? true : false
     }
     
     // Disable hours already booked
@@ -98,7 +98,7 @@ day_items.forEach(day_item => {
   })
 })
 
-// Activate time when ckick on it
+// Activate time when click on it
 const time_items = document.querySelectorAll (selector_time_item)
 time_items.forEach(time_item => {
   // Add lister to item
@@ -111,7 +111,7 @@ time_items.forEach(time_item => {
 
     // Update date confirmation
     const day = document.querySelector (`${selector_day_item}.active`).innerText
-    const date = document.querySelector (`${selector_day_item}.active > input`).getAttribute ("data-date")
+    const date = document.querySelector (`${selector_day_item}.active > input`).getAttribute ("date-text")
     const time = document.querySelector (`${selector_time_item}.active`).innerText.toLowerCase()
     confirmation_day.innerText = day
     confirmation_date.innerText = date

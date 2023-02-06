@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
 
 # Get credentials
 load_dotenv()
@@ -368,6 +369,44 @@ def schedule(request):
     user_streams = models.Stream.objects.filter(
         datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
     
+    # Default message and error
+    message = ""
+    error = ""
+    
+    # Validate if stream can be saved, in post 
+    if request.method == "POST":
+        
+        
+        # Get stream data
+        form_date = request.POST.get("date", "")
+        form_hour = request.POST.get("hour", "")
+        
+        # Convert to datetime
+        selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour, "%Y-%m-%d %H")
+        selected_datetime = selected_datetime.astimezone (user_time_zone)
+        
+        # Validte if user have available streams
+        max_streams = user.ranking.max_streams
+        available_stream = max_streams - user_streams.count() > 0
+        print (available_stream)
+        if not available_stream:
+            user_ranking = user.ranking
+            ranking_name = user_ranking.name
+            ranking_max_streams = user_ranking.max_streams
+            error = f"Lo sentimos. El ranking {ranking_name} solo puede agendar {ranking_max_streams} streams."
+        
+        # Validate if the date and time are free
+        if not error:
+            streams_match = models.Stream.objects.filter (datetime=selected_datetime)
+            if streams_match.count() > 1:
+                error = "Lo sentimos. Esa fecha y hora ya está agendada."
+                
+        # Schedule stream
+        if not error:
+            new_stream = models.Stream (user=user, datetime=selected_datetime)
+            new_stream.save ()
+            message = "Stream agendado!"
+        
     if not user_streams:
         user_streams = []
         
@@ -392,19 +431,34 @@ def schedule(request):
     today_week_name = WEEK_DAYS[today_week]
     available_days = []
     for day_num in range (0, 7):
+        
+        # Calculate dates
         day_name = WEEK_DAYS[day_num]
         date = today + datetime.timedelta(days=day_num-today_week)
         date_text_day = date.strftime("%d")
         date_text_month = date.strftime("%B")
         date_text_month_spanish = MONTHS[date_text_month]
         date_text = f"{date_text_day} de {date_text_month_spanish}"
+        date_formatted = date.strftime("%Y-%m-%d")
+        
+        # Date status
+        disabled = False
+        active = False
         if day_num == today_week:
-            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": True, "date": date, "date_text": date_text})
+            active = True
         elif day_num < today_week:
-            available_days.append({"name": day_name, "num": day_num, "disabled": True, "active": False, "date": date, "date_text": date_text})
-        else:
-            available_days.append({"name": day_name, "num": day_num, "disabled": False, "active": False, "date": date, "date_text": date_text})   
-    
+            disabled = True
+           
+        # Add date 
+        available_days.append({
+            "name": day_name, 
+            "num": day_num, 
+            "disabled": disabled, 
+            "active": active, 
+            "date": date_formatted, 
+            "date_text": date_text
+        })   
+        
     # Get available hours in each available day
     hours = [hour for hour in range(0, 24)]
     available_hours = {}
@@ -413,23 +467,22 @@ def schedule(request):
             day_name = day["name"]
             day_num = day["num"]
             current_date = day["date"]
-            day_streams = models.Stream.objects.filter(datetime__date=current_date).all()
-            day_streams_hours = list(map(lambda stream: stream.datetime.astimezone(user_time_zone).hour, day_streams))
+            day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
+            day_streams = day_streams.filter(dcount__gt=1)
+            day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).hour, day_streams))
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
         
     # Format base hours
-    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))
-    
-    # Calculate if user can schedule a stream
-    
+    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))        
     
     # Render page
     return render(request, 'app/schedule.html', {
         # General context
         "name": user.user_name,
         "message": message,
+        "error": error,
         "current_page": "schedule",
         
         # User profile context

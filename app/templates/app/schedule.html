@@ -44,6 +44,7 @@
       </div>
 
       <form action="." method="post">
+        {% csrf_token %}
 
         <div class="date">
           <h3>Fecha</h3>
@@ -52,7 +53,13 @@
               {% for day in available_days %}
               <label class="{% if day.disabled %}disabled{% endif %}{% if day.active %}active{% endif %}">
                 {{day.name}}
-                <input type="radio" name="date" value="{{day.name}}" disabled="{{day.disabled}}" data-date="{{day.date_text}}">
+                <input 
+                  type="radio" 
+                  name="date" 
+                  value="{{day.date}}" 
+                  date-text="{{day.date_text}}"
+                  {% if day.disabled %}disabled{% endif %}
+                  {% if day.active %}checked{% endif %}>
               </label>
               {% endfor %}
             </div>

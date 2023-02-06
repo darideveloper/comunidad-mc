@@ -359,7 +359,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .loading-wrapper {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(14, 17, 25, 0.6);
+  background-color: rgba(14, 17, 25, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
