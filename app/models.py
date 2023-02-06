@@ -3,6 +3,24 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+class Ranking (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
+    points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
+    max_streams = models.IntegerField(name='max_streams', verbose_name="máximo de streams", help_text="máximo de streams que puede tener el usuario para el ranking", null=False, blank=False, default=0)
+    
+    @classmethod
+    def get_lower(cls):
+        return cls.objects.all().order_by('points').first()
+    
+    
+    def __str__(self):
+        return f"{self.name}"
+    
+    class Meta:
+        verbose_name = "Ranking"
+        verbose_name_plural = "Rankings"
+
 class User (models.Model):
     id = models.IntegerField(primary_key=True, name='id', verbose_name="id", help_text="id de twitch", null=False, blank=False, editable=False)
     email = models.EmailField(name='email', verbose_name="email", help_text="email de twitch", null=False, blank=True)
@@ -151,19 +169,6 @@ class DailyPoint (models.Model):
     class Meta:
         verbose_name = "Punto diarios"
         verbose_name_plural = "Puntos diarios"
-
-class Ranking (models.Model):
-    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
-    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
-    points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
-    max_streams = models.IntegerField(name='max_streams', verbose_name="máximo de streams", help_text="máximo de streams que puede tener el usuario para el ranking", null=False, blank=False, default=0)
-    
-    def __str__(self):
-        return f"{self.name}"
-    
-    class Meta:
-        verbose_name = "Ranking"
-        verbose_name_plural = "Rankings"
         
 class Bits (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de los bits", null=False, blank=False, editable=False)

@@ -63,9 +63,19 @@ def login(request):
             new_user = models.User.objects.filter(id=user_id).first()
             if not new_user:
 
+                # Get lower ranking
+                lower_ranking = models.Ranking.get_lower()
+                
+
                 # Save new user data in database
-                new_user = models.User(
-                    user_id, user_email, user_picture, user_name, user_token, refresh_token)
+                new_user = models.User()
+                new_user.id = user_id
+                new_user.email = user_email
+                new_user.picture = user_picture
+                new_user.user_name = user_name
+                new_user.access_token = user_token
+                new_user.refresh_token = refresh_token
+                new_user.ranking = lower_ranking
                 new_user.save()
 
             # Save user id in session
@@ -161,7 +171,7 @@ def register(request):
         country = request.POST.get("country", "")
         time_zone = request.POST.get("time-zone", "")
         phone = request.POST.get("full-phone", "")
-
+        
         if not first_name or not last_name or not country or not time_zone or not phone:
             # Show error if data is not valid
             return render(request, 'app/register.html', {
@@ -355,7 +365,7 @@ def schedule(request):
         datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
     
     if not user_streams:
-        user_streams = None
+        user_streams = []
         
     # Format streams
     streams = []
@@ -408,7 +418,7 @@ def schedule(request):
     # Format base hours
     hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))
     
-    # TODO: Calculate if user can schedule a stream
+    # Calculate if user can schedule a stream
     
     
     # Render page

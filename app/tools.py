@@ -34,6 +34,15 @@ def get_user_points (user):
     weekly_points_num = weekly_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
     daily_points_num = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
     
+    if not general_points_num:
+        general_points_num = 0
+        
+    if not weekly_points_num:
+        weekly_points_num = 0
+        
+    if not daily_points_num:
+        daily_points_num = 0
+    
     return general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num
 
 def get_time_zone_text (user):
