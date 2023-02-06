@@ -24,4 +24,5 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('wallet/', views.wallet, name='wallet'),
     path('testing/', views.testing, name='testing'),
+    path('whastapp/', views.whatsapp, name='whatsapp'),
 ]
