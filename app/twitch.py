@@ -354,6 +354,14 @@ class TwitchApi:
             # Validate min number of checks and comments
             if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
                 
+                # Subtract point to streamer (except rankings: diamente, platino and free streams)
+                streamer = stream.user
+                if streamer.ranking.name not in ["diamante", "platino"] and not stream.is_free:
+                    info_point = models.InfoPoint.objects.get (info="viwer asistió a stream")
+                    general_point = models.GeneralPoint (
+                        user=streamer, stream=stream, datetime=timezone.now(), amount=-1, info=info_point)
+                    general_point.save ()
+                
                 # Calculate time for stream ends
                 stream_datetime = stream.datetime
                 now = timezone.now ()
