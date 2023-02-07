@@ -18,7 +18,7 @@ from app.twitch import TwitchApi
 
 # Users to add points
 users = [
-    "darideveloper", 
+    "DariDeveloper", 
     "Maxiast23", 
     "minecuak", 
     "danigempleis", 
@@ -27,7 +27,6 @@ users = [
     "sauromplays", 
     "el_lenniin", 
     "Raven__gg", 
-    "varkcum"
 ]
 
 # get last stream 
@@ -49,13 +48,14 @@ for user_name in users:
         points_day = random.randrange(1, 11)
         
         # Loop for save each user point
+        info_point = models.InfoPoint.objects.get (info="penalización por no abrir stream a tiempo")
         for _ in range (points_day):
         
             # Calculate back date
             back_date = timezone.now() - timezone.timedelta(days=back_days)
             
             # Save general point
-            new_general_point = models.GeneralPoint(datetime=back_date, user=user, stream=stream)
+            new_general_point = models.GeneralPoint(user=user, stream=stream, datetime=back_date, info=info_point)
             new_general_point.save()
         
             # save weekly points

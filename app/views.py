@@ -671,3 +671,32 @@ def testing (request):
     live = twitch.is_user_live(dari)
     
     return HttpResponse(live)
+
+@decorators.validate_login
+@decorators.validate_whatsapp
+@decorators.validate_admin
+def user_points (request):
+    """ Display points for all users, to admins only """
+    
+    # Get all users
+    users_data = []
+    users = models.User.objects.all()
+    for user in users:
+        
+        *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points(user)
+        
+        users_data.append ({
+            "link": f"{HOST}/admin/app/user/{user.id}/change/",
+            "id": user.id,
+            "user_name": user.user_name,
+            "ranking": user.ranking.name,
+            "email": user.email,
+            "generals": general_points_num,
+            "weekly": weekly_points_num,
+            "daily": daily_points_num,
+        })
+    
+    return render(request, 'app/users_points.html', {
+        "current_page": "users-points",
+        "users": users_data,
+    })
