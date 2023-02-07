@@ -205,3 +205,8 @@ class TopDailyPoint (models.Model):
     class Meta:
         verbose_name = "Top"
         verbose_name_plural = "Top puntos diarios"
+        
+class StreamExtra (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream extra", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
+    amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de estreams extra", null=False, blank=False, default=1)

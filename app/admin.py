@@ -150,3 +150,11 @@ class AdminTopDailyPoint (admin.ModelAdmin):
     ordering = ('position', 'user', 'datetime')
     list_filter = ('user', 'datetime')
     search_fields = ('user',)
+    
+@admin.register (models.StreamExtra)
+class AdminStreamExtra (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'amount')
+    ordering = ('id', 'user', 'amount')
+    list_filter = ('user',)
+    search_fields = ('user',)
