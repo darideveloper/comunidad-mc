@@ -38,10 +38,10 @@ class FilterWeeklyDailyPoints (admin.SimpleListFilter):
 class AdminUser (admin.ModelAdmin):
     
     change_form_template = 'admin/change_form_users.html'    
-    list_display = ('id', 'user_name', 'is_active', 'is_admin', 'ranking', 'first_name', 'last_name', 'email', 'phone',)
-    list_filter = ('country', 'time_zone', 'is_active', 'is_admin', 'ranking',)
-    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking',)
-    search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone')
+    list_display = ('id', 'user_name', 'is_active', 'ranking', 'first_name', 'last_name', 'email', 'phone', 'admin_type')
+    list_filter = ('country', 'time_zone', 'is_active', 'ranking', 'admin_type')
+    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'admin_type')
+    search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone', 'admin_type')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
     ordering = ['user_name']
 
@@ -158,3 +158,11 @@ class AdminStreamExtra (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
+    
+@admin.register (models.AdminType)
+class AdminAdminType (admin.ModelAdmin):
+    
+    list_display = ('id', 'name', 'ranking')
+    ordering = ('id', 'name', 'ranking')
+    list_filter = ('name', 'ranking')
+    search_fields = ('name', 'ranking')

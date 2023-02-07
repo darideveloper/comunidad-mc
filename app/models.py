@@ -3,6 +3,18 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+class AdminType (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del tipo de administrador", null=False, blank=False, editable=False)
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del tipo de administrador", null=False, blank=False, max_length=100)
+    ranking = models.ForeignKey('Ranking', on_delete=models.CASCADE, name='ranking', verbose_name="ranking", help_text="ranking asignado al tipo de administrador", null=False, blank=False)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "Tipo de admin"
+        verbose_name_plural = "Tipos de admins"
+
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
@@ -34,8 +46,8 @@ class User (models.Model):
     phone = models.CharField(name='phone', verbose_name="teléfono", help_text="teléfono con código de país", null=True, blank=True, max_length=20)
     time_zone = models.ForeignKey('TimeZone', on_delete=models.CASCADE, name='time_zone', verbose_name="zona horaria", help_text="zona horaria", null=True, blank=True)
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
-    is_admin = models.BooleanField(name='is_admin', verbose_name="administrador", help_text="indica si el usuario es administrador", default=False)
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
+    admin_type = models.ForeignKey('AdminType', on_delete=models.SET_NULL, name='admin_type', verbose_name="tipo de administrador", help_text="tipo de administrador del usuario", null=True, blank=True)
     
     def __str__(self):
         return f"{self.user_name}"
@@ -211,3 +223,10 @@ class StreamExtra (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream extra", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de estreams extra", null=False, blank=False, default=1)
+    
+    def __str__(self):
+        return f"({self.amount}) {self.user}"
+    
+    class Meta:
+        verbose_name = "Stream extra"
+        verbose_name_plural = "Streams extra"
