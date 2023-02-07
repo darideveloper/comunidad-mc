@@ -14,7 +14,8 @@ django.setup()
 
 # Django imports
 from django.utils import timezone
-from app.models import User, Ranking, WeeklyPoint, DailyPoint, PointsHistory, GeneralPoint, Bits, TopDailyPoint
+from app.models import User, Ranking, WeeklyPoint, DailyPoint, \
+    PointsHistory, GeneralPoint, Bits, TopDailyPoint, StreamExtra
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -35,12 +36,14 @@ if DEBUG == "True":
 # Get current week day
 today = timezone.now().weekday()
 
-
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
     
     # Delete points history for global ranking
     PointsHistory.objects.all().delete()
+    
+    # Delete extra streams
+    StreamExtra.objects.all().delete()
         
     # Get and loop all users to update ranking
     users = User.objects.all()
