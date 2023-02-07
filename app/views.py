@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
+from django.db.models import Sum
 
 # Get credentials
 load_dotenv()
@@ -393,6 +394,10 @@ def schedule(request):
         
         # Validte if user have available streams
         max_streams = user.ranking.max_streams
+        streams_extra = models.StreamExtra.objects.filter(user=user).all()
+        if streams_extra.count() > 0:
+            streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
+            max_streams += streams_extra_num
         available_stream = max_streams - user_streams.count() > 0
         print (available_stream)
         if not available_stream:
