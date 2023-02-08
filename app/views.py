@@ -366,11 +366,15 @@ def schedule(request):
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     
-    # Get next streams of the user in the next 7 days
-    user_streams, streams = tools.get_user_streams(user, user_time_zone)
-    
     # Validate if stream can be saved, in post 
     if request.method == "POST":
+        
+        # Get next streams of the user in the next 7 days
+        user_streams, streams = tools.get_user_streams(user, user_time_zone)
+        
+        user_streams_num = 0
+        if user_streams:
+            user_streams_num = user_streams.count()
         
         # Get stream data
         form_date = request.POST.get("date", "")
@@ -381,18 +385,23 @@ def schedule(request):
         selected_datetime = selected_datetime.astimezone (user_time_zone)
         
         # Calculate available points
-        available_points = general_points_num - user_streams.count() * 50 
+        available_points = general_points_num - user_streams_num * 50 
         
-        # Validte if user have available streams
-        max_streams = user.ranking.max_streams
-        streams_extra = models.StreamExtra.objects.filter(user=user).all()
-        if streams_extra.count() > 0:
-            streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
-            max_streams += streams_extra_num
-            
-        available_stream = max_streams - user_streams.count() > 0
-        if not available_stream or available_points < 50:
-            error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
+        # Infinity streams for admins
+        if user.admin_type:
+            max_streams = user_streams_num + 1
+        
+        # Validte if regular user have available streams
+        else:
+            max_streams = user.ranking.max_streams
+            streams_extra = models.StreamExtra.objects.filter(user=user).all()
+            if streams_extra.count() > 0:
+                streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
+                max_streams += streams_extra_num
+                
+            available_stream = max_streams - user_streams_num > 0
+            if not available_stream or available_points < 50:
+                error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
         if not error:
@@ -405,6 +414,9 @@ def schedule(request):
             new_stream = models.Stream (user=user, datetime=selected_datetime)
             new_stream.save ()
             message = "Stream agendado!"
+            
+    # Get next streams of the user in the next 7 days
+    user_streams, streams = tools.get_user_streams(user, user_time_zone)
         
     # Get available days of the week
     today = datetime.datetime.today().astimezone(user_time_zone)
