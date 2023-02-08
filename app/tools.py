@@ -1,13 +1,15 @@
 from . import models
 from datetime import datetime, timedelta
 from django.db.models import Sum
+from .logs import logger
+from django.utils import timezone
 
-def get_user_message_cookies (request):
+def get_cookies_data (request, delete_data:bool=True):
     
     """ Get user and message from cookies
 
     Returns:
-        touple: message and user
+        touple: user object, menssaje text, error text
     """
 
     # Get user data from cookies
@@ -16,10 +18,15 @@ def get_user_message_cookies (request):
     
     # Get message from cookies
     message = request.session.get("message", "")
-    if message:
+    if message and delete_data:
         del request.session["message"]
+        
+    # Get error from cookies
+    error = request.session.get("error", "")
+    if error and delete_data:
+        del request.session["error"]
     
-    return user, message
+    return user, message, error
     
 def get_user_points (user):
     """ Get user point, count and register reguister and counters """
@@ -58,3 +65,54 @@ def get_time_zone_text (user):
     time_zone = str(user.time_zone.time_zone)
     return time_zone.replace("-", " ").replace("/", " / ").replace("_", " ")
      
+def get_user_streams (user, user_time_zone):
+    """ Return user streams for the next 7 days, and its proccessed data
+
+    Args:
+        user (models.User): user instance
+
+    Returns:
+        touple: user_streams (model Objects), user_streams_data (array)
+    """
+    
+    logger.debug (f"Getting next streams of the user {user}")
+    now = timezone.now()
+    start_datetime = datetime(
+        now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+    end_datetime = start_datetime + timedelta(days=7)
+
+    # Get current streams
+    user_streams = models.Stream.objects.filter(
+        datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
+    
+    if not user_streams:
+        user_streams = []
+        
+    # Format streams
+    user_streams_data = []
+    for stream in user_streams:
+        id = stream.id
+        stream_datetime = stream.datetime.astimezone(user_time_zone)
+        date = stream_datetime.strftime("%d/%m/%Y")
+        time = stream_datetime.strftime("%I:%M %p")
+        is_cancellable = is_stream_cancelable(stream)
+        user_streams_data.append ({
+            "id": id,
+            "date": date, 
+            "time": time, 
+            "is_cancellable": "regular" if is_cancellable else "warning",
+        })
+        
+    return user_streams, user_streams_data
+
+def is_stream_cancelable (stream):
+    """ Return if stream is cancelable or not
+
+    Args:
+        stream (models.Stream): stream object
+
+    Returns:
+        bool: True if stream is cancelable, False if not
+    """
+    
+    return stream.datetime > ( timezone.now() + timedelta(hours=1) )

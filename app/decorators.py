@@ -1,6 +1,6 @@
 from functools import wraps
 from django.shortcuts import redirect
-from .tools import get_user_message_cookies
+from . import tools
 
 def validate_login (function):
     """ View wrapper for show page only if user is logged in. """
@@ -17,7 +17,7 @@ def validate_whatsapp (function):
     """ View wrapper for show page only if user have been validated whatsapp. """
     @wraps(function)
     def wrap (request, *args, **kwargs):
-        user, other = get_user_message_cookies(request)
+        user, *other = tools.get_cookies_data(request, delete_data=False)
         if user.is_active:
             return function(request, *args, **kwargs)
         else:
@@ -29,7 +29,7 @@ def validate_admin (function):
     """ Validate if user is admin, for show page """
     @wraps(function)
     def wrap (request, *args, **kwargs):
-        user, other = get_user_message_cookies(request)
+        user, *other = tools.get_cookies_data(request, delete_data=False)
         if user.admin_type:
             return function(request, *args, **kwargs)
         else:

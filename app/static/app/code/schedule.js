@@ -1,3 +1,5 @@
+import {loading_wrapper} from './loading.js'
+
 // css selectors
 const selector_time_wrapper = ".time .select"
 const selector_time_item = ".time .select label"
@@ -8,9 +10,9 @@ const selector_confirmation_date = ".confirmation .date"
 const selector_confirmation_time = ".confirmation .time"
 
 // Global nodes
-confirmation_day = document.querySelector (selector_confirmation_day)
-confirmation_date = document.querySelector (selector_confirmation_date)
-confirmation_time = document.querySelector (selector_confirmation_time)
+const confirmation_day = document.querySelector (selector_confirmation_day)
+const confirmation_date = document.querySelector (selector_confirmation_date)
+const confirmation_time = document.querySelector (selector_confirmation_time)
 
 function activate_item (item, selector) {
   // Disable current active item and enable new active item
@@ -42,7 +44,7 @@ function show_available_hours () {
   time_items.forEach (time_item => {
 
     // Get item hour
-    hour = time_item.querySelector ("input").value
+    const hour = time_item.querySelector ("input").value
 
     // Remove disabled class
     time_item.classList.remove ("disabled")
@@ -119,6 +121,45 @@ time_items.forEach(time_item => {
   })
 });
 
+// Add events to cancal buttons
+const cancel_buttons = document.querySelectorAll ("button.cancel")
+cancel_buttons.forEach (cancel_button => {
+  cancel_button.addEventListener ("click", event => {
+
+    // Show loading
+    loading_wrapper.classList.remove ('hide')
+
+    // Get id from attributes
+    const stream_id = cancel_button.getAttribute ("data-stream")
+    const cancel_url = `/cancel-stream/${stream_id}`
+
+    // check if is a warning button
+    if (cancel_button.classList.contains ("warning")) {
+
+      // Hide loading
+      loading_wrapper.classList.add ('hide')
+
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Queda muy poco tiempo que este estream inicie, si lo borras ahora perderás puntos.",
+        showDenyButton: true,
+        confirmButtonText: 'Sí, cancelar y perder puntos',
+        denyButtonText: 'No, mantener mis puntos',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Show loading
+          loading_wrapper.classList.remove ('hide')
+
+          // Redirect to cancel page
+          window.location.href = cancel_url
+        }
+      })      
+    } else {
+      // Redirect to cancel page
+      window.location.href = cancel_url
+    }
+  })
+})
 
 // Set available hours when page loads
 show_available_hours ()

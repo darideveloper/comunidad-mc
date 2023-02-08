@@ -132,7 +132,7 @@ def whatsapp (request):
 def home(request):
     """ Home page with link for login with twitch """
 
-    user, message = tools.get_user_message_cookies(request)
+    user, *other = tools.get_cookies_data(request)
 
     # Return to landing page if user id not exist in database
     if not user:
@@ -156,7 +156,7 @@ def register(request):
     """ Page for complete register, after login with twitcyh the first time """
 
     # Get user from cookies
-    user, _ = tools.get_user_message_cookies(request)
+    user, *other = tools.get_cookies_data(request)
 
     # Redirect to home if user id is not valid
     if not user or (user.first_name and user.first_name.strip() != ""):
@@ -299,7 +299,7 @@ def points(request):
     """ Page for show the points of the user """
     
     # Get user data
-    user, message = tools.get_user_message_cookies(request)
+    user, message, _ = tools.get_cookies_data(request)
     profile_image = user.picture
     general_points, weekly_points, daily_points, \
         general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
@@ -321,14 +321,16 @@ def points(request):
         datetime_user = point.datetime.astimezone(pytz.timezone(user_time_zone))
         date = datetime_user.strftime("%d/%m/%Y")
         time = datetime_user.strftime("%I:%M %p")
-        channel = point.stream.user.user_name
+        channel = ""
+        if point.stream:
+            channel = f" ({point.stream.user.user_name})"
         
         points_data.append ({
             "date": date,
             "time": time,
             "my_points": current_points,
             "points": point.amount, 
-            "details": point.info.info + " de " + point.stream.user.user_name,
+            "details": point.info.info + channel
         })
         
         # Decress punits counter
@@ -359,30 +361,17 @@ def schedule(request):
     """ Page for schedule stream """
     
     # Get user data
-    user, message = tools.get_user_message_cookies(request)
+    user, message, error = tools.get_cookies_data(request)
+    print (f"message {message}, error {error}")
     profile_image = user.picture
-    general_points, weekly_points, daily_points, \
-        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
+    *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     
     # Get next streams of the user in the next 7 days
-    logger.debug (f"Getting next streams of the user {user}")
-    now = timezone.now()
-    start_datetime = datetime.datetime(
-        now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
-    end_datetime = start_datetime + datetime.timedelta(days=7)
-
-    # Get current streams
-    user_streams = models.Stream.objects.filter(
-        datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
-    
-    # Default message and error
-    message = ""
-    error = ""
+    user_streams, streams = tools.get_user_streams(user, user_time_zone)
     
     # Validate if stream can be saved, in post 
     if request.method == "POST":
-        
         
         # Get stream data
         form_date = request.POST.get("date", "")
@@ -417,24 +406,6 @@ def schedule(request):
             new_stream = models.Stream (user=user, datetime=selected_datetime)
             new_stream.save ()
             message = "Stream agendado!"
-        
-    if not user_streams:
-        user_streams = []
-        
-    # Format streams
-    streams = []
-    for stream in user_streams:
-        id = stream.id
-        stream_datetime = stream.datetime.astimezone(user_time_zone)
-        date = stream_datetime.strftime("%d/%m/%Y")
-        time = stream_datetime.strftime("%I:%M %p")
-        is_cancellable = stream.datetime > ( timezone.now() + datetime.timedelta(hours=1) )
-        streams.append ({
-            "id": id,
-            "date": date, 
-            "time": time, 
-            "is_cancellable": "regular" if is_cancellable else "warning",
-        })
         
     # Get available days of the week
     today = datetime.datetime.today().astimezone(user_time_zone)
@@ -518,10 +489,9 @@ def schedule(request):
 def support(request):
     """ Page for show live streamers and copy link to stream """
     
-    user, message = tools.get_user_message_cookies(request)
+    user, message, _ = tools.get_cookies_data(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points, \
-        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
+    *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
     # Validate if node server its running
     is_node_working = twitch.is_node_working()
@@ -599,10 +569,9 @@ def ranking(request):
     """ Page for show the live ranking of the users based in points """
     
     # Get user data
-    user, message = tools.get_user_message_cookies(request)
+    user, message, _ = tools.get_cookies_data(request)
     profile_image = user.picture
-    general_points, weekly_points, daily_points, \
-        general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
+    *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
     # Get top 10 users from TopDailyPoint
     ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
@@ -640,7 +609,7 @@ def ranking(request):
 def profile(request):
     """ Page for show and update the user data """
     
-    user, message = tools.get_user_message_cookies(request)
+    user, message, _ = tools.get_cookies_data(request)
 
     # Render page
     return render(request, 'app/profile.html', {
@@ -654,7 +623,7 @@ def profile(request):
 def wallet(request):
     """ Page for withdraw bits to wallet """
     
-    user, message = tools.get_user_message_cookies(request)
+    user, message, _ = tools.get_cookies_data(request)
 
     # Render page
     return render(request, 'app/wallet.html', {
@@ -700,3 +669,38 @@ def user_points (request):
         "current_page": "users-points",
         "users": users_data,
     })
+
+@decorators.validate_login
+@decorators.validate_whatsapp
+def cancel_stream (request, id):
+    
+    # Get stream
+    stream = models.Stream.objects.filter(id=id).first()
+    
+    # Get current user
+    user, *other = tools.get_cookies_data(request)
+
+    # Validate if stream is cancelable
+    is_cancellable = tools.is_stream_cancelable(stream)
+    print (is_cancellable)
+    print (stream.user == user)
+        
+    # Validtae if the user is the owner of the stream, for delete it
+    if stream.user == user:
+        
+        # Discount points to user
+        if not is_cancellable:
+            info_point = info_point = models.InfoPoint.objects.get (info="penalización por cancelar stream")
+            negative_points = models.GeneralPoint(user=user, datetime=timezone.now(), info=info_point, amount=-50)
+            print (negative_points)
+            negative_points.save()
+        
+        # Delete stream
+        stream.delete()
+        request.session["message"] = "Stream elminado."  
+    else:  
+        request.session["error"] = "Ha ocurrido un error al borrar el stream. Intente de nuevo mas tarde."
+    
+    # redirect
+    return redirect('schedule')
+    

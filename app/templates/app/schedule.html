@@ -28,7 +28,7 @@
             <td>{{stream.date}}</td>
             <td>{{stream.time}}</td>
             <td>
-              <button data-stream="{{stream.id}}" class="btn form green {{stream.is_cancellable}}">Calcelar</button>
+              <button data-stream="{{stream.id}}" class="btn cancel form green {{stream.is_cancellable}}">Calcelar</button>
             </td>
           </tr>
           {% endfor %}
@@ -106,5 +106,5 @@
   const today_week_name = "{{today_week_name}}";
 </script>
 <script src="{% static 'app/code/profile-card.js' %}"></script>
-<script src="{% static 'app/code/schedule.js' %}"></script>
+<script src="{% static 'app/code/schedule.js' %}" type="module"></script>
 {% endblock %}

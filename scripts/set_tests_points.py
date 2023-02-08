@@ -48,14 +48,14 @@ for user_name in users:
         points_day = random.randrange(1, 11)
         
         # Loop for save each user point
-        info_point = models.InfoPoint.objects.get (info="penalización por no abrir stream a tiempo")
+        info_point = models.InfoPoint.objects.get (info="ver stream")
         for _ in range (points_day):
         
             # Calculate back date
             back_date = timezone.now() - timezone.timedelta(days=back_days)
             
             # Save general point
-            new_general_point = models.GeneralPoint(user=user, stream=stream, datetime=back_date, info=info_point)
+            new_general_point = models.GeneralPoint(user=user, datetime=back_date, info=info_point)
             new_general_point.save()
         
             # save weekly points
