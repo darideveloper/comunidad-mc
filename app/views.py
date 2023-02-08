@@ -380,18 +380,19 @@ def schedule(request):
         selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour, "%Y-%m-%d %H")
         selected_datetime = selected_datetime.astimezone (user_time_zone)
         
+        # Calculate available points
+        available_points = general_points_num - user_streams.count() * 50 
+        
         # Validte if user have available streams
         max_streams = user.ranking.max_streams
         streams_extra = models.StreamExtra.objects.filter(user=user).all()
         if streams_extra.count() > 0:
             streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
             max_streams += streams_extra_num
+            
         available_stream = max_streams - user_streams.count() > 0
-        if not available_stream:
-            user_ranking = user.ranking
-            ranking_name = user_ranking.name
-            ranking_max_streams = user_ranking.max_streams
-            error = f"Lo sentimos. El ranking {ranking_name} solo puede agendar {ranking_max_streams} streams."
+        if not available_stream or available_points < 50:
+            error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
         if not error:
