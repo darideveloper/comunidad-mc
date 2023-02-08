@@ -362,7 +362,6 @@ def schedule(request):
     
     # Get user data
     user, message, error = tools.get_cookies_data(request)
-    print (f"message {message}, error {error}")
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
@@ -388,7 +387,6 @@ def schedule(request):
             streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
             max_streams += streams_extra_num
         available_stream = max_streams - user_streams.count() > 0
-        print (available_stream)
         if not available_stream:
             user_ranking = user.ranking
             ranking_name = user_ranking.name
@@ -682,9 +680,7 @@ def cancel_stream (request, id):
 
     # Validate if stream is cancelable
     is_cancellable = tools.is_stream_cancelable(stream)
-    print (is_cancellable)
-    print (stream.user == user)
-        
+
     # Validtae if the user is the owner of the stream, for delete it
     if stream.user == user:
         
@@ -692,7 +688,6 @@ def cancel_stream (request, id):
         if not is_cancellable:
             info_point = info_point = models.InfoPoint.objects.get (info="penalización por cancelar stream")
             negative_points = models.GeneralPoint(user=user, datetime=timezone.now(), info=info_point, amount=-50)
-            print (negative_points)
             negative_points.save()
         
         # Delete stream
