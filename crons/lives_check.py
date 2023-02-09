@@ -33,7 +33,7 @@ for stream in streams:
         
         info_point = models.InfoPoint.objects.get (info="penalización por no abrir stream a tiempo")
         general_point = models.GeneralPoint (
-            user=user, stream=stream, datetime=timezone.now(), amount=-50, info=info_point)
+            user=user, datetime=timezone.now(), amount=-50, info=info_point)
         general_point.save ()
         
         # Delete stream
