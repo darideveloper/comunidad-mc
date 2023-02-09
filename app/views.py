@@ -532,11 +532,11 @@ def support(request):
             now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
         end_datetime = start_datetime + datetime.timedelta(days=1)
 
-        # Get current streams
+        # Get next streams
         next_stream = models.Stream.objects.filter(
-            datetime__range=[start_datetime, end_datetime]).first()
+            datetime__range=[start_datetime, end_datetime]).order_by("datetime").first()
         
-        # Get time of the next stream withj timezone
+        # Get time of the next stream with timezone
         if next_stream:
             next_stream_date = next_stream.datetime
             next_stream_date_timezone = next_stream_date.astimezone (pytz.timezone(user_timezone)).strftime("%I %p")

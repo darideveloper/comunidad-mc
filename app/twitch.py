@@ -354,7 +354,7 @@ class TwitchApi:
             # Validate min number of checks and comments
             if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
                 
-                # Subtract point to streamer (except rankings: diamente, platino and free streams)
+                # Subtract point to streamer (except rankings: admin and free streams)
                 streamer = stream.user
                 if streamer.admin_type and not stream.is_free:
                     info_point = models.InfoPoint.objects.get (info="viwer asistió a stream")
