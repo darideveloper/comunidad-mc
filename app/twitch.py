@@ -356,7 +356,7 @@ class TwitchApi:
                 
                 # Subtract point to streamer (except rankings: admin and free streams)
                 streamer = stream.user
-                if streamer.admin_type and not stream.is_free:
+                if not streamer.admin_type and not stream.is_free:
                     info_point = models.InfoPoint.objects.get (info="viwer asistió a stream")
                     general_point = models.GeneralPoint (
                         user=streamer, stream=stream, datetime=timezone.now(), amount=-1, info=info_point)
