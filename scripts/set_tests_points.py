@@ -19,7 +19,6 @@ from app.twitch import TwitchApi
 # Users to add points
 users = [
     "DariDeveloper", 
-    "Maxiast23", 
     "minecuak", 
     "danigempleis", 
     "Lucifer__TV__", 

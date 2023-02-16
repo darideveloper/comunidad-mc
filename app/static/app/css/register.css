@@ -27,11 +27,11 @@
   display: inline-block;
   font-weight: bold;
 }
-.btn.cta:hover .content {
+.btn.cta:hover .content, .btn.cta.active .content {
   background-color: rgba(122, 112, 179, 0.1);
   gap: 0px;
 }
-.btn.cta:hover .content svg {
+.btn.cta:hover .content svg, .btn.cta.active .content svg {
   width: 0px;
 }
 .btn.cta:active .content {

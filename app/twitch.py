@@ -392,7 +392,7 @@ class TwitchApi:
             wait_time (int): wait time in seconds before add point 
         """
         
-        sleep (wait_time)
+        # sleep (wait_time)
         
         logger.info(f"Added general point to user: {user}")
         

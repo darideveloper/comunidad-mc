@@ -10,8 +10,10 @@ copy_buttons.forEach (function (button) {
     const copy_text = button.parentNode.querySelector ("p.name").innerText
     navigator.clipboard.writeText(copy_text)
 
-    // Show alert
-    show_message ("Nombre de usuario copiado al portapapeles.")
+    // Change button text
+    button.classList.add ("active")
+    const inner_span = button.querySelector ("span")
+    inner_span.innerText = "Copiado!"
 
   })
 })
