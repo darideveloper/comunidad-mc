@@ -450,8 +450,14 @@ def schedule(request):
             "date_text": date_text
         })   
         
-    # Get available hours in each available day
-    hours = [hour for hour in range(0, 24)]
+    # Calculate and format hours
+    hours = list(range(0, 24))
+    disabled_hours = [2, 3, 4, 5, 6]
+    hours = list(filter(lambda hour: hour not in disabled_hours, hours))
+    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
+    print (hours)  
+    
+    # Calculate free hours for streams
     available_hours = {}
     for day in available_days:
         if day["disabled"] == False:
@@ -465,8 +471,6 @@ def schedule(request):
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
         
-    # Format base hours
-    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))        
     
     # Render page
     return render(request, 'app/schedule.html', {
