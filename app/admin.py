@@ -41,7 +41,7 @@ class AdminUser (admin.ModelAdmin):
     list_display = ('id', 'user_name', 'is_active', 'ranking', 'first_name', 'last_name', 'email', 'phone', 'admin_type')
     list_filter = ('country', 'time_zone', 'is_active', 'ranking', 'admin_type')
     ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'admin_type')
-    search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'country', 'time_zone', 'admin_type')
+    search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
     ordering = ['user_name']
 
@@ -65,7 +65,7 @@ class AdminStream (admin.ModelAdmin):
     list_display = ('id', 'user', 'datetime')
     ordering = ('id', 'user', 'datetime')
     list_filter = ('user', 'datetime')
-    search_fields = ('user', )
+    search_fields = ('user__user_name', )
     
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
@@ -73,7 +73,7 @@ class AdminComment (admin.ModelAdmin):
     list_display = ('id', 'user', 'stream', 'comment', 'datetime', 'status')
     ordering = ('id', 'user', 'stream', 'datetime', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
-    search_fields = ('user', 'stream', 'comment')
+    search_fields = ('user__user_name', 'stream__user__user_name', 'comment')
     
 @admin.register (models.WhatchCheck)
 class AdminWhatchCheck (admin.ModelAdmin):
@@ -81,7 +81,7 @@ class AdminWhatchCheck (admin.ModelAdmin):
     list_display = ('id', 'user', 'stream', 'datetime', 'status')
     ordering = ('id', 'user', 'stream', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
-    search_fields = ('user', 'stream')
+    search_fields = ('user__user_name', 'stream__user__user_name')
     
 @admin.register (models.Status)
 class AdminStatus (admin.ModelAdmin):
@@ -103,7 +103,7 @@ class AdminGeneralPoint (admin.ModelAdmin):
     list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
     ordering = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
     list_filter = ('user', 'stream', 'info', 'datetime')
-    search_fields = ('user', 'stream')
+    search_fields = ('user__user_name', 'stream__user__user_name')
     
 @admin.register (models.WeeklyPoint)
 class AdminWeeklyPoint (admin.ModelAdmin):
@@ -111,7 +111,7 @@ class AdminWeeklyPoint (admin.ModelAdmin):
     list_display = ('id', 'general_point')
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
-    search_fields = ('general_point',)
+    search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
     
 @admin.register (models.DailyPoint)
 class AdminDailyPoint (admin.ModelAdmin):
@@ -119,7 +119,7 @@ class AdminDailyPoint (admin.ModelAdmin):
     list_display = ('id', 'general_point')
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
-    search_fields = ('general_point',)
+    search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
     
 @admin.register (models.Ranking)
 class AdminRanking (admin.ModelAdmin):
@@ -133,7 +133,7 @@ class AdminPointsHistory (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'general_points', 'week_points')
     ordering = ('id', 'user', 'general_points', 'week_points')
-    search_fields = ('user',)
+    search_fields = ('user__user_name',)
     
 @admin.register (models.Bits)
 class AdminBits (admin.ModelAdmin):
@@ -141,7 +141,7 @@ class AdminBits (admin.ModelAdmin):
     list_display = ('id', 'user', 'amount')
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
-    search_fields = ('user',)
+    search_fields = ('user__user_name',)
     
 @admin.register (models.TopDailyPoint)
 class AdminTopDailyPoint (admin.ModelAdmin):
@@ -149,7 +149,7 @@ class AdminTopDailyPoint (admin.ModelAdmin):
     list_display = ('position', 'user', 'datetime')
     ordering = ('position', 'user', 'datetime')
     list_filter = ('user', 'datetime')
-    search_fields = ('user',)
+    search_fields = ('user__user_name',)
     
 @admin.register (models.StreamExtra)
 class AdminStreamExtra (admin.ModelAdmin):
@@ -157,7 +157,7 @@ class AdminStreamExtra (admin.ModelAdmin):
     list_display = ('id', 'user', 'amount')
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
-    search_fields = ('user',)
+    search_fields = ('user__user_name',)
     
 @admin.register (models.AdminType)
 class AdminAdminType (admin.ModelAdmin):
@@ -165,4 +165,4 @@ class AdminAdminType (admin.ModelAdmin):
     list_display = ('id', 'name', 'ranking')
     ordering = ('id', 'name', 'ranking')
     list_filter = ('name', 'ranking')
-    search_fields = ('name', 'ranking')
+    search_fields = ('name', 'ranking__name')

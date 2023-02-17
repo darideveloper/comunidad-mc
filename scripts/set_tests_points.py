@@ -3,8 +3,6 @@ import os
 import sys
 import random
 from django.utils import timezone
-from datetime import datetime
-from dotenv import load_dotenv
 parent_folder = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(parent_folder)
 

@@ -358,7 +358,7 @@ class TwitchApi:
                 
                 # Subtract point to streamer (except rankings: admin and free streams)
                 if not streamer.admin_type and not stream.is_free:
-                    tools.add_point (streamer, 1, "viwer asistió a stream")
+                    tools.set_negative_point (streamer, 1, "viwer asistió a stream")
                 
                 # Calculate time for stream ends
                 stream_datetime = stream.datetime
@@ -367,9 +367,7 @@ class TwitchApi:
                 wait_seconds = wait_minutes.total_seconds()
                 
                 # Add point in background
-                logger.info (f"Starting thread to add point to user {user}. Waiting time: {int(wait_seconds)} seconds")
-                thread_obj = threading.Thread(target=self.add_point_bg, args=(user, stream, wait_seconds))
-                thread_obj.start ()
+                self.add_point_bg ()
                 
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)

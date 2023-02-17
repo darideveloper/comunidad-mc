@@ -303,6 +303,13 @@ def points(request):
     general_points, weekly_points, daily_points, \
         general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
+    # Filter general points of the date before current hour
+    last_hour_datetime = timezone.now() - datetime.timedelta(minutes=timezone.now().minute - 2)
+    general_points = general_points.filter(datetime__lte=last_hour_datetime)
+    
+    # todo: Merge points of type "viwer asistió a stream"
+    
+    
     # Get only last 60 points
     general_points_table = general_points
     if general_points_table.count() > 20:
