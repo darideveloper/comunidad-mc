@@ -355,14 +355,10 @@ class TwitchApi:
                 
                 # Get point of the current streamer
                 streamer = stream.user
-                _, general_points_num_streamer = tools.get_general_points (streamer)                
                 
                 # Subtract point to streamer (except rankings: admin and free streams)
-                if not streamer.admin_type and not stream.is_free and general_points_num_streamer > 0:
-                    info_point = models.InfoPoint.objects.get (info="viwer asistió a stream")
-                    general_point = models.GeneralPoint (
-                        user=streamer, stream=stream, datetime=timezone.now(), amount=-1, info=info_point)
-                    general_point.save ()
+                if not streamer.admin_type and not stream.is_free:
+                    tools.add_point (streamer, 1, "viwer asistió a stream")
                 
                 # Calculate time for stream ends
                 stream_datetime = stream.datetime

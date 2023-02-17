@@ -27,22 +27,12 @@ for stream in streams:
     user = stream.user
     is_live = twitch.is_user_live (user)
     
-    # Calculate negative points
-    negative_points = 50
-    _, general_points_num_streamer = tools.get_general_points (user)
-    if general_points_num_streamer < 50:
-        negative_points = general_points_num_streamer
-    
     # Add negative points if stream is not live
-    if not is_live and general_points_num_streamer:
+    if not is_live:
         
-        print (f"Adding {negative_points} negative points to {user} for not opening stream in time, and removing from list")
-        
-        info_point = models.InfoPoint.objects.get (info="penalización por no abrir stream a tiempo")
-        general_point = models.GeneralPoint (
-            user=user, datetime=timezone.now(), amount=-negative_points, info=info_point)
-        general_point.save ()
-        
+        # Add negative points
+        tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo")
+                
         # Delete stream
         stream.delete()
     

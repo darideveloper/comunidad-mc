@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.db.models import Sum
 from .logs import logger
 from django.utils import timezone
+from . import tools
 
 def get_cookies_data (request, delete_data:bool=True):
     
@@ -124,3 +125,42 @@ def is_stream_cancelable (stream):
     """
     
     return stream.datetime > ( timezone.now() + timedelta(hours=1) )
+
+def set_negative_point (user:models.User, amount:int, reason:str):
+    """ Set negative point to user if it is possible
+
+    Args:
+        user (models.User): user to set points
+        amount (int): number of negative points to set
+        reason (str): info_point text
+        
+    Returns:
+        bool: True if point was set, False if not
+    """
+    
+    # Force convert points to negative
+    amount = -abs(amount)
+    
+    # Validate if user has enough points
+    _, general_points_num_streamer = tools.get_general_points (user)
+    if general_points_num_streamer < amount:
+        amount = general_points_num_streamer
+        
+    if amount <= 0:
+        return False
+        
+    print (f"Adding {amount} negative points to {user} for not opening stream in time, and removing from list")
+    
+    # Get info point
+    info_point = models.InfoPoint.objects.get (info=reason)
+    if not info_point:
+        info_point = models.InfoPoint (info=reason)
+        info_point.save ()
+    
+    # Add points
+    general_point = models.GeneralPoint (
+        user=user, datetime=timezone.now(), amount=amount, info=info_point)
+    general_point.save ()
+    
+    return True
+    

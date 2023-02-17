@@ -698,10 +698,8 @@ def cancel_stream (request, id):
     if stream.user == user:
         
         # Discount points to user
-        if not is_cancellable:
-            info_point = info_point = models.InfoPoint.objects.get (info="penalización por cancelar stream")
-            negative_points = models.GeneralPoint(user=user, datetime=timezone.now(), info=info_point, amount=-50)
-            negative_points.save()
+        if not is_cancellable:            
+            tools.set_negative_point (user, 50, "penalización por cancelar stream")
         
         # Delete stream
         stream.delete()
