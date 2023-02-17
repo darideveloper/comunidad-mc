@@ -10,10 +10,16 @@ copy_buttons.forEach (function (button) {
     const copy_text = button.parentNode.querySelector ("p.name").innerText
     navigator.clipboard.writeText(copy_text)
 
-    // Change button text
+    // Change button
     button.classList.add ("active")
     const inner_span = button.querySelector ("span")
     inner_span.innerText = "Copiado!"
+
+    // Reset button 
+    setTimeout(() => {
+      button.classList.remove ("active")
+      inner_span.innerText = "Copiar"
+    }, 2000)
 
   })
 })
