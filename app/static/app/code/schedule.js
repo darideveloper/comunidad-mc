@@ -143,10 +143,10 @@ cancel_buttons.forEach (cancel_button => {
         title: '¿Estás seguro?',
         text: "Queda muy poco tiempo que este estream inicie, si lo borras ahora perderás puntos.",
         showDenyButton: true,
-        confirmButtonText: 'Sí, cancelar y perder puntos',
-        denyButtonText: 'No, mantener mis puntos',
+        denyButtonText: 'Sí, cancelar y perder puntos',
+        confirmButtonText: 'No, mantener mis puntos',
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (! result.isConfirmed) {
           // Show loading
           loading_wrapper.classList.remove ('hide')
 
