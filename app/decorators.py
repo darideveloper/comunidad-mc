@@ -6,22 +6,23 @@ def validate_login (function):
     """ View wrapper for show page only if user is logged in. """
     @wraps(function)
     def wrap (request, *args, **kwargs):
-        if "user_id" in request.session:
+        user, *other = tools.get_cookies_data(request, delete_data=False)
+        if user:
             return function(request, *args, **kwargs)
         else:
             return redirect ("landing")
         
     return wrap
 
-def validate_whatsapp (function):
-    """ View wrapper for show page only if user have been validated whatsapp. """
+def validate_login_active (function):
+    """ View wrapper for show page only if user have been validated by whatsapp. """
     @wraps(function)
     def wrap (request, *args, **kwargs):
         user, *other = tools.get_cookies_data(request, delete_data=False)
-        if user.is_active:
+        if user and user.is_active:
             return function(request, *args, **kwargs)
         else:
-            return redirect ("whatsapp")
+            return redirect ("home")
         
     return wrap
 

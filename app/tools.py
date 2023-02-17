@@ -1,9 +1,9 @@
 from . import models
+from . import tools
 from datetime import datetime, timedelta
 from django.db.models import Sum
 from .logs import logger
 from django.utils import timezone
-from . import tools
 
 def get_cookies_data (request, delete_data:bool=True):
     
@@ -14,8 +14,15 @@ def get_cookies_data (request, delete_data:bool=True):
     """
 
     # Get user data from cookies
-    user_id = request.session["user_id"]
-    user = models.User.objects.filter(id=user_id).first()
+    user_id = request.session.get("user_id", 0)
+    users = models.User.objects.filter(id=user_id)
+    
+    # Delete cookies if user not exist and return None
+    if users.count() == 0:
+        request.session[user_id] = 0
+        return None, "", ""
+    
+    user = users.first()
     
     # Get message from cookies
     message = request.session.get("message", "")

@@ -121,7 +121,8 @@ def landing(request):
         "error": error,
         "current_page": "landing"
     })
-    
+
+@decorators.validate_login
 def whatsapp (request):
     """ Page for request whatsapp validation """
     return render(request, 'app/whatsapp.html', {
@@ -150,8 +151,7 @@ def home(request):
     # Redirect to Apoyar page
     return redirect("support")
 
-@decorators.validate_whatsapp
-@decorators.validate_login
+@decorators.validate_login_active
 def register(request):
     """ Page for complete register, after login with twitcyh the first time """
 
@@ -293,8 +293,7 @@ def refresh_token(request):
         "success": True
     })
 
-@decorators.validate_whatsapp
-@decorators.validate_login
+@decorators.validate_login_active
 def points(request):
     """ Page for show the points of the user """
     
@@ -355,8 +354,7 @@ def points(request):
         "points": points_data,
     })
     
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def schedule(request):
     """ Page for schedule stream """
     
@@ -495,8 +493,7 @@ def schedule(request):
         "today_week_name": today_week_name,
     })
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def support(request):
     """ Page for show live streamers and copy link to stream """
     
@@ -574,8 +571,7 @@ def support(request):
         "referral_link": referral_link
     })
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def ranking(request):
     """ Page for show the live ranking of the users based in points """
     
@@ -615,8 +611,7 @@ def ranking(request):
         "ranking_global_other": ranking_global_other,
     })
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def profile(request):
     """ Page for show and update the user data """
     
@@ -629,8 +624,7 @@ def profile(request):
         "current_page": "profile"
     })
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def wallet(request):
     """ Page for withdraw bits to wallet """
     
@@ -652,8 +646,7 @@ def testing (request):
     
     return HttpResponse(live)
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 @decorators.validate_admin
 def user_points (request):
     """ Display points for all users, to admins only """
@@ -681,8 +674,7 @@ def user_points (request):
         "users": users_data,
     })
 
-@decorators.validate_login
-@decorators.validate_whatsapp
+@decorators.validate_login_active
 def cancel_stream (request, id):
     
     # Get stream
