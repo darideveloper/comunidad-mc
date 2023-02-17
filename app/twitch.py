@@ -1,14 +1,13 @@
 import os
-import pytz
 import json
 import requests
 import datetime
 import threading
 from . import models
-from time import sleep
 from .logs import logger
 from dotenv import load_dotenv
 from django.utils import timezone
+from . import tools
 
 class TwitchApi:
 
@@ -354,9 +353,12 @@ class TwitchApi:
             # Validate min number of checks and comments
             if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
                 
-                # Subtract point to streamer (except rankings: admin and free streams)
+                # Get point of the current streamer
                 streamer = stream.user
-                if not streamer.admin_type and not stream.is_free:
+                _, general_points_num_streamer = tools.get_general_points (streamer)                
+                
+                # Subtract point to streamer (except rankings: admin and free streams)
+                if not streamer.admin_type and not stream.is_free and general_points_num_streamer > 0:
                     info_point = models.InfoPoint.objects.get (info="viwer asistió a stream")
                     general_point = models.GeneralPoint (
                         user=streamer, stream=stream, datetime=timezone.now(), amount=-1, info=info_point)

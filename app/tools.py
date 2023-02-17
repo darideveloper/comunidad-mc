@@ -28,16 +28,24 @@ def get_cookies_data (request, delete_data:bool=True):
     
     return user, message, error
     
+def get_general_points (user):
+    """ Return the general points (registers and counters) from specific user """
+    general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
+    general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
+    
+    return general_points, general_points_num
+    
 def get_user_points (user):
     """ Get user point, count and register reguister and counters """
     
+    # General points
+    general_points, general_points_num = get_general_points(user)
+    
     # get points registers
-    general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
     weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
     daily_points = models.DailyPoint.objects.filter(general_point__user=user)
     
     # Calculate sums of points
-    general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     weekly_points_num = weekly_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
     daily_points_num = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
     

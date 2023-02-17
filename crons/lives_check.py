@@ -14,6 +14,7 @@ django.setup()
 
 from app.twitch import TwitchApi
 from app import models
+from app import tools
 
 # Get live streams
 twitch = TwitchApi ()
@@ -26,14 +27,20 @@ for stream in streams:
     user = stream.user
     is_live = twitch.is_user_live (user)
     
+    # Calculate negative points
+    negative_points = 50
+    _, general_points_num_streamer = tools.get_general_points (user)
+    if general_points_num_streamer < 50:
+        negative_points = general_points_num_streamer
+    
     # Add negative points if stream is not live
-    if not is_live:
+    if not is_live and general_points_num_streamer:
         
-        print (f"Adding negative points to {user} for not opening stream in time, and removing from list")
+        print (f"Adding {negative_points} negative points to {user} for not opening stream in time, and removing from list")
         
         info_point = models.InfoPoint.objects.get (info="penalización por no abrir stream a tiempo")
         general_point = models.GeneralPoint (
-            user=user, datetime=timezone.now(), amount=-50, info=info_point)
+            user=user, datetime=timezone.now(), amount=-negative_points, info=info_point)
         general_point.save ()
         
         # Delete stream
