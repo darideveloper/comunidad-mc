@@ -1,7 +1,6 @@
 # Add parent folder to path
 import os
 import sys
-import pytz
 import random
 from django.utils import timezone
 from datetime import datetime

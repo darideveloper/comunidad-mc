@@ -138,18 +138,19 @@ def set_negative_point (user:models.User, amount:int, reason:str):
         bool: True if point was set, False if not
     """
     
-    # Force convert points to negative
-    amount = -abs(amount)
-    
     # Validate if user has enough points
     _, general_points_num_streamer = tools.get_general_points (user)
     if general_points_num_streamer < amount:
         amount = general_points_num_streamer
         
+    print (amount)
     if amount <= 0:
         return False
         
     print (f"Adding {amount} negative points to {user} for not opening stream in time, and removing from list")
+    
+    # Force convert points to negative
+    amount = -abs(amount)
     
     # Get info point
     info_point = models.InfoPoint.objects.get (info=reason)
