@@ -19,7 +19,11 @@ def get_cookies_data (request, delete_data:bool=True):
     
     # Delete cookies if user not exist and return None
     if users.count() == 0:
-        request.session[user_id] = 0
+        print (users)
+        try:
+            del request.session[user_id]
+        except:
+            pass
         return None, "", ""
     
     user = users.first()

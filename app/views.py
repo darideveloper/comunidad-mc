@@ -114,12 +114,16 @@ def landing(request):
 
     # Generate tiwtch login url
     twitch_link = twitch.get_twitch_login_link(redirect_path)
+    
+    # Get user from cookies
+    user, *other = tools.get_cookies_data(request)
 
     # Render page with twitch link and error message (is exist)
     return render(request, 'app/landing.html', {
         "twitch_link":  twitch_link,
         "error": error,
-        "current_page": "landing"
+        "current_page": "landing",
+        "user": user,
     })
 
 @decorators.validate_login
@@ -151,7 +155,7 @@ def home(request):
     # Redirect to Apoyar page
     return redirect("support")
 
-@decorators.validate_login_active
+@decorators.validate_login
 def register(request):
     """ Page for complete register, after login with twitcyh the first time """
 
@@ -253,7 +257,7 @@ def add_comment(request):
 
     if not user or not stream:
         return HttpResponseBadRequest("stream id or user id is not valid")
-
+    
     # Create comment
     comment_obj = models.Comment(stream=stream, comment=comment, user=user)
     comment_obj.save()
