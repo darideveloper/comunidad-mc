@@ -151,7 +151,7 @@ def set_negative_point (user:models.User, amount:int, reason:str):
     
     # Validate if user has enough points
     _, general_points_num_streamer = tools.get_general_points (user)
-    if general_points_num_streamer < amount:
+    if general_points_num_streamer and general_points_num_streamer < amount:
         amount = general_points_num_streamer
         
     if amount <= 0:
