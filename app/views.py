@@ -736,9 +736,12 @@ def cancel_stream (request, id):
     # Validtae if the user is the owner of the stream, for delete it
     if stream.user == user:
         
-        # Discount points to user
         if not is_cancellable:            
+            # Discount points to user
             tools.set_negative_point (user, 50, "penalización por cancelar stream")
+            
+            # Add a negative extra stream
+            models.StreamExtra(user=user, amount=-1).save()
         
         # Delete stream
         stream.delete()
