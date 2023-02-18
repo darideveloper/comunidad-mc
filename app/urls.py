@@ -24,7 +24,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('wallet/', views.wallet, name='wallet'),
     path('testing/', views.testing, name='testing'),
-    path('whastapp/', views.whatsapp, name='whatsapp'),
+    path('whatsapp/', views.whatsapp, name='whatsapp'),
     path('users-points/', views.user_points, name='users-points'),
     path('cancel-stream/<int:id>', views.cancel_stream, name='cancel-stream'),
 ]

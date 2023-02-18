@@ -100,7 +100,6 @@ def login(request):
     # Redirect to home page
     return redirect('home')
 
-
 def landing(request):
     """ landing page, for not logged users """
 
@@ -116,21 +115,44 @@ def landing(request):
     twitch_link = twitch.get_twitch_login_link(redirect_path)
     
     # Get user from cookies
+    user_active = False
     user, *other = tools.get_cookies_data(request)
+    if user:
+        user_active = user.is_active
 
     # Render page with twitch link and error message (is exist)
     return render(request, 'app/landing.html', {
         "twitch_link":  twitch_link,
         "error": error,
         "current_page": "landing",
-        "user": user,
+        "user_active": user_active,
     })
 
 @decorators.validate_login
 def whatsapp (request):
     """ Page for request whatsapp validation """
+    
+    # Get user from cookies
+    user_active = False
+    user_registed = True
+    user, *other = tools.get_cookies_data(request)
+    if user:
+        user_active = user.is_active
+        
+        if not user.first_name or user.first_name.strip() == "":
+            user_registed = False
+        
+    # redirect to home
+    if user_active:
+        return redirect("home")
+    
+    # redirect to register
+    if not user_registed:
+        return redirect("register")
+    
     return render(request, 'app/whatsapp.html', {
         "current_page": "whatsapp",
+        "user_active": False,
     })
 
 @decorators.validate_login
@@ -173,7 +195,8 @@ def register(request):
             "email": user.email,
             "picture": user.picture,
             "user_name": user.user_name,
-            "current_page": "register"
+            "current_page": "register",
+            "user_active": False,
         })
 
     elif request.method == "POST":
@@ -193,7 +216,8 @@ def register(request):
                 "picture": user.picture,
                 "user_name": user.user_name,
                 "error": "Algo salió mal, intente de nuevo",
-                "current_page": "register"
+                "current_page": "register",
+                "user_active": False,
             })
 
         # Create country and time zone objects
@@ -340,7 +364,8 @@ def points(request):
             "time": time,
             "my_points": current_points,
             "points": point.amount, 
-            "details": point.info.info + channel
+            "details": point.info.info + channel,
+            "user_active": True,
         })
         
         # Decress punits counter
@@ -352,6 +377,7 @@ def points(request):
         "name": user.user_name,
         "message": message,
         "current_page": "points",
+        "user_active": True,
         
         # User profile context
         "profile_image": profile_image,
@@ -490,6 +516,7 @@ def schedule(request):
         "message": message,
         "error": error,
         "current_page": "schedule",
+        "user_active": True,
         
         # User profile context
         "profile_image": profile_image,
@@ -568,6 +595,7 @@ def support(request):
         "message": message,
         "current_page": "support",
         "error": error,
+        "user_active": True,
         
         # User profile context
         "profile_image": profile_image,
@@ -610,6 +638,7 @@ def ranking(request):
         # General context
         "name": user.user_name,
         "message": message,
+        "user_active": True,
         
         # User profile context
         "current_page": "ranking",
@@ -636,7 +665,8 @@ def profile(request):
     return render(request, 'app/profile.html', {
         "name": user.user_name,
         "message": message,
-        "current_page": "profile"
+        "current_page": "profile",
+        "user_active": True,
     })
 
 @decorators.validate_login_active
@@ -649,7 +679,8 @@ def wallet(request):
     return render(request, 'app/wallet.html', {
         "name": user.user_name,
         "message": message,
-        "current_page": "wallet"
+        "current_page": "wallet",
+        "user_active": True,
     })
     
 def testing (request):
@@ -687,6 +718,7 @@ def user_points (request):
     return render(request, 'app/users_points.html', {
         "current_page": "users-points",
         "users": users_data,
+        "user_active": True,
     })
 
 @decorators.validate_login_active
