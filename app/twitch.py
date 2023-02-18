@@ -364,10 +364,39 @@ class TwitchApi:
                 stream_datetime = stream.datetime
                 now = timezone.now ()
                 wait_minutes = stream_datetime + timezone.timedelta(minutes=60 + self.wait_minutes_points) - now
-                wait_seconds = wait_minutes.total_seconds()
                 
                 # Add point in background
-                self.add_point_bg ()
+                logger.info(f"Added general point to user: {user}")
+        
+                # Save general point
+                new_general_point = models.GeneralPoint (user=user, stream=stream)
+                new_general_point.save ()
+                
+                # Validate if the user have less than the max number of daily points
+                current_daily_points = models.DailyPoint.objects.filter(general_point__user=user).count()
+                if current_daily_points < self.max_daily_points:
+                    
+                    # Save daily point
+                    new_daily_point = models.DailyPoint (general_point=new_general_point)
+                    new_daily_point.save()
+                    
+                    # save weekly point
+                    new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
+                    new_weekly_point.save()
+                    
+                    logger.info(f"Added daily and weekly point to user: {user}")
+                    
+                    # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
+                    current_tops = models.TopDailyPoint.objects.all().count()
+                    current_points = current_daily_points + 1
+                    if current_tops < 10 and current_points == 10:
+                        
+                        # Add user to Ranking of daily points if there isnt in table
+                        user_in_top = models.TopDailyPoint.objects.filter(user=user).count()
+                        if user_in_top == 0:
+                            logger.info (f"User {user} already have 10 points. Added to Ranking of daily points")      
+                            new_top_daily_point = models.TopDailyPoint (position=current_tops+1, user=user)
+                            new_top_daily_point.save ()
                 
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)
@@ -378,49 +407,6 @@ class TwitchApi:
                 for comment in user_comments:
                     comment.status = done_status
                     comment.save ()
-                        
-    def add_point_bg (self, user:models.User, stream:models.Stream, wait_time:int):
-        """ Add point in background using threads 
-        
-        Args:
-            user (models.User): user instance
-            stream (models.Stream): stream instance.
-            wait_time (int): wait time in seconds before add point 
-        """
-        
-        # sleep (wait_time)
-        
-        logger.info(f"Added general point to user: {user}")
-        
-        # Save general point
-        new_general_point = models.GeneralPoint (user=user, stream=stream)
-        new_general_point.save ()
-        
-        # Validate if the user have less than the max number of daily points
-        current_daily_points = models.DailyPoint.objects.filter(general_point__user=user).count()
-        if current_daily_points < self.max_daily_points:
-            
-            # Save daily point
-            new_daily_point = models.DailyPoint (general_point=new_general_point)
-            new_daily_point.save()
-            
-            # save weekly point
-            new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
-            new_weekly_point.save()
-            
-            logger.info(f"Added daily and weekly point to user: {user}")
-            
-            # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
-            current_tops = models.TopDailyPoint.objects.all().count()
-            current_points = current_daily_points + 1
-            if current_tops < 10 and current_points == 10:
-                
-                # Add user to Ranking of daily points if there isnt in table
-                user_in_top = models.TopDailyPoint.objects.filter(user=user).count()
-                if user_in_top == 0:
-                    logger.info (f"User {user} already have 10 points. Added to Ranking of daily points")      
-                    new_top_daily_point = models.TopDailyPoint (position=current_tops+1, user=user)
-                    new_top_daily_point.save ()
             
     def is_user_live (self, user: models.User):
         """ Return if user is live or not

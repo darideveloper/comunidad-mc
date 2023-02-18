@@ -150,11 +150,10 @@ def set_negative_point (user:models.User, amount:int, reason:str):
     if general_points_num_streamer < amount:
         amount = general_points_num_streamer
         
-    print (amount)
     if amount <= 0:
         return False
         
-    print (f"Adding {amount} negative points to {user} for not opening stream in time, and removing from list")
+    print (f"Adding {amount} negative points to {user} for {reason}")
     
     # Force convert points to negative
     amount = -abs(amount)
