@@ -328,7 +328,7 @@ class TwitchApi:
         logger.info (f"User token updated: {user}")
         return True
 
-    def add_point (self, user: models.User, stream: models.Stream = None):
+    def add_point (self, user: models.User, stream: models.Stream = None, force: bool = False):
         """ Add point to user after watch stream and comment in chat
 
         Args:
@@ -351,7 +351,7 @@ class TwitchApi:
             user_comments = models.Comment.objects.filter(user=user, stream=stream, status=1)
             
             # Validate min number of checks and comments
-            if len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments:
+            if (len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments) or force:
                 
                 # Get point of the current streamer
                 streamer = stream.user

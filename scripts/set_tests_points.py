@@ -64,7 +64,7 @@ for user_name in users:
     
     # add 10 points today
     for _ in range (10):
-        twitch_api.add_point_bg(user, stream, 2)
+        twitch_api.add_point(user, stream, force=True)
         print ()
 
 
