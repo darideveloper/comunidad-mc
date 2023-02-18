@@ -491,6 +491,7 @@ main.register .content .right h1 {
   font-weight: bold;
   font-size: 2rem;
   margin-bottom: 0;
+  text-align: center;
 }
 main.register .content .right form {
   display: flex;
@@ -563,6 +564,14 @@ main.register .content .right form label.phone .input-wrapper span {
 }
 main.register .content .right form label.phone .input-wrapper input {
   width: calc(100% - 30px);
+}
+@media screen and (max-width: 750px) {
+  main.register .content .left {
+    display: none;
+  }
+  main.register .content .right {
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=register.css.map */

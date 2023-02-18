@@ -52,6 +52,7 @@ main.register
                 font-weight: bold
                 font-size: 2rem
                 margin-bottom: 0
+                text-align: center
 
             form 
                 display: flex
@@ -130,6 +131,10 @@ main.register
                             input
                                 width: calc(100% - 30px)
 
-                        
+        @media screen and (max-width: 750px)
+            .left
+                display: none
 
+            .right
+                width: 100%
 
