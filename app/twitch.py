@@ -46,21 +46,6 @@ class TwitchApi:
             return []
         
         return current_streams
-    
-
-    def submit_streams_node_bg(self):
-        """ run funtion "submit_streams_node" in background with threads
-
-        Args:
-            self.node_api (str): url of node.js api
-        """
-
-        # Create thread and start it
-        logger.info("Starting thread for submit streams to node.js api")
-        thread_obj = threading.Thread(
-            target=self.submit_streams_node)
-        thread_obj.start()
-
 
     def submit_streams_node(self):
         """ Submit streams to node.js api for start reading comments
@@ -358,12 +343,7 @@ class TwitchApi:
                 
                 # Subtract point to streamer (except rankings: admin and free streams)
                 if not streamer.admin_type and not stream.is_free:
-                    tools.set_negative_point (streamer, 1, "viwer asistió a stream")
-                
-                # Calculate time for stream ends
-                stream_datetime = stream.datetime
-                now = timezone.now ()
-                wait_minutes = stream_datetime + timezone.timedelta(minutes=60 + self.wait_minutes_points) - now
+                    tools.set_negative_point (streamer, 1, "viwer asistió a stream", stream)
                 
                 # Add point in background
                 logger.info(f"Added general point to user: {user}")

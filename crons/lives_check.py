@@ -31,7 +31,7 @@ for stream in streams:
     if not is_live:
         
         # Add negative points
-        tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo")
+        tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo", stream)
                 
         # Delete stream
         stream.delete()

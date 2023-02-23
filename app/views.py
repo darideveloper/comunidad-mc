@@ -738,7 +738,7 @@ def cancel_stream (request, id):
         
         if not is_cancellable:            
             # Discount points to user
-            tools.set_negative_point (user, 50, "penalización por cancelar stream")
+            tools.set_negative_point (user, 50, "penalización por cancelar stream", stream)
             
             # Add a negative extra stream
             models.StreamExtra(user=user, amount=-1).save()

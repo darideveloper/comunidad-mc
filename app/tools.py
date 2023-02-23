@@ -26,8 +26,13 @@ def get_cookies_data (request, delete_data:bool=True):
             pass
         return None, "", ""
     
+    # Get user and use default profile image if not exist
     user = users.first()
-    
+    user_picture = user.picture
+    if not (user_picture or user_picture.endswith(".jpg")):
+        user.picture = "/static/img/profile.png"
+        user.save()
+
     # Get message from cookies
     message = request.session.get("message", "")
     if message and delete_data:
@@ -45,6 +50,9 @@ def get_general_points (user):
     general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
+    if not general_points_num:
+        general_points_num = 0
+    
     return general_points, general_points_num
     
 def get_user_points (user):
@@ -60,9 +68,6 @@ def get_user_points (user):
     # Calculate sums of points
     weekly_points_num = weekly_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
     daily_points_num = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
-    
-    if not general_points_num:
-        general_points_num = 0
         
     if not weekly_points_num:
         weekly_points_num = 0
@@ -137,7 +142,7 @@ def is_stream_cancelable (stream):
     
     return stream.datetime > ( timezone.now() + timedelta(hours=1) )
 
-def set_negative_point (user:models.User, amount:int, reason:str):
+def set_negative_point (user:models.User, amount:int, reason:str, stream:models.Stream):
     """ Set negative point to user if it is possible
 
     Args:
@@ -149,18 +154,17 @@ def set_negative_point (user:models.User, amount:int, reason:str):
         bool: True if point was set, False if not
     """
     
+    amount = abs(amount)
+    
     # Validate if user has enough points
     _, general_points_num_streamer = tools.get_general_points (user)
-    if general_points_num_streamer and general_points_num_streamer < amount:
+    if not general_points_num_streamer or general_points_num_streamer < amount:
         amount = general_points_num_streamer
-        
+                
     if amount <= 0:
         return False
         
-    print (f"Adding {amount} negative points to {user} for {reason}")
-    
-    # Force convert points to negative
-    amount = -abs(amount)
+    logger.info (f"Adding {amount} negative points to {user} for: {reason}")
     
     # Get info point
     info_point = models.InfoPoint.objects.get (info=reason)
@@ -168,10 +172,20 @@ def set_negative_point (user:models.User, amount:int, reason:str):
         info_point = models.InfoPoint (info=reason)
         info_point.save ()
     
-    # Add points
-    general_point = models.GeneralPoint (
-        user=user, datetime=timezone.now(), amount=amount, info=info_point)
-    general_point.save ()
+    # Search if already exist nevative a point for the stream
+    general_points = models.GeneralPoint.objects.filter (user=user, info=info_point, stream=stream)
+    if general_points:
+        
+        # Incress negative point
+        general_point = general_points.first()
+        general_point.amount -= amount
+        general_point.save()
+        
+    else:
+                
+        # Add new point
+        general_point = models.GeneralPoint (user=user, datetime=timezone.now(), amount=-amount, info=info_point, stream=stream)
+        general_point.save ()
     
     return True
     
