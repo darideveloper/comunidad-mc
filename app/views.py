@@ -333,10 +333,7 @@ def points(request):
     
     # Filter general points of the date before current hour
     last_hour_datetime = timezone.now() - datetime.timedelta(minutes=timezone.now().minute - 2)
-    general_points = general_points.filter(datetime__lte=last_hour_datetime)
-    
-    # todo: Merge points of type "viwer asistió a stream"
-    
+    general_points = general_points.filter(datetime__lte=last_hour_datetime)    
     
     # Get only last 60 points
     general_points_table = general_points
@@ -354,7 +351,7 @@ def points(request):
         # Calculate datetime with time zone of the user
         datetime_user = point.datetime.astimezone(pytz.timezone(user_time_zone))
         date = datetime_user.strftime("%d/%m/%Y")
-        time = datetime_user.strftime("%I:%M %p")
+        time = datetime_user.strftime("%I %p")
         channel = ""
         if point.stream:
             channel = f" ({point.stream.user.user_name})"
