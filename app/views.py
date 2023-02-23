@@ -555,7 +555,8 @@ def support(request):
     current_streams = twitch.get_current_streams()
     if not current_streams:
         current_streams = []
-    streams = [{"user": stream.user.user_name, "picture": stream.user.picture} for stream in current_streams]
+    streams = list(map(lambda stream: tools.get_fix_user(stream.user), current_streams))
+    streams = [{"user": stream.user_name, "picture": stream.picture} for stream in streams]
     
     # Culate time of the user
     user_timezone = user.time_zone.time_zone

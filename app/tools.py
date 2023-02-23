@@ -1,9 +1,35 @@
 from . import models
 from . import tools
-from datetime import datetime, timedelta
-from django.db.models import Sum
+import requests as req
 from .logs import logger
+from django.db.models import Sum
 from django.utils import timezone
+from datetime import datetime, timedelta
+
+def get_fix_user (user:models.User):
+    """ get user and fix profile image if not exist """
+    
+    user_picture = user.picture
+    valid_picture = True
+    
+    if not "static" in user_picture:
+        
+        # Try to get image from url
+        try:
+            res = req.get (user_picture)
+        except:
+            valid_picture = False
+        else:        
+            if not res.status_code == 200:
+                valid_picture = False
+        
+        # Use profile image if error
+        if not user_picture or not user_picture.endswith(".jpg") or not valid_picture:
+            user.picture = "/static/app/imgs/profile.png"
+            user.save()
+            
+    # Return user with new profile image
+    return user
 
 def get_cookies_data (request, delete_data:bool=True):
     
@@ -27,12 +53,8 @@ def get_cookies_data (request, delete_data:bool=True):
         return None, "", ""
     
     # Get user and use default profile image if not exist
-    user = users.first()
-    user_picture = user.picture
-    if not (user_picture or user_picture.endswith(".jpg")):
-        user.picture = "/static/img/profile.png"
-        user.save()
-
+    user = get_fix_user(users.first())
+    
     # Get message from cookies
     message = request.session.get("message", "")
     if message and delete_data:
