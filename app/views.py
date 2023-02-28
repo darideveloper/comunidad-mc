@@ -712,7 +712,11 @@ def cancel_stream (request, id):
     # Validtae if the user is the owner of the stream, for delete it
     if stream.user == user:
         
-        if not is_cancellable:            
+        if is_cancellable:
+            # Remove negative vip
+            negative_vip = models.StreamVip.objects.filter(user=user, amount=-1).first()
+            negative_vip.delete()
+        else:      
             # Discount points to user
             tools.set_negative_point (user, 50, "penalización por cancelar stream", stream)
             
