@@ -191,6 +191,9 @@ form.addEventListener ("submit", event => {
       }
     })
   } else {
+    // Show loading
+    loading_wrapper.classList.remove ('hide')
+    
     // Submit form directly
     form.submit ()
   }
