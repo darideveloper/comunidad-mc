@@ -166,3 +166,11 @@ class AdminAdminType (admin.ModelAdmin):
     ordering = ('id', 'name', 'ranking')
     list_filter = ('name', 'ranking')
     search_fields = ('name', 'ranking__name')
+    
+@admin.register (models.Vips)
+class AdminVips (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'amount')
+    ordering = ('id', 'user', 'amount')
+    list_filter = ('user',)
+    search_fields = ('user',)

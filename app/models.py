@@ -225,7 +225,7 @@ class TopDailyPoint (models.Model):
         
 class StreamExtra (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream extra", null=False, blank=False, editable=False)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario al que se le ha asignado el stream extra", null=False, blank=False)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de estreams extra", null=False, blank=False, default=1)
     
     def __str__(self):
@@ -234,3 +234,16 @@ class StreamExtra (models.Model):
     class Meta:
         verbose_name = "Stream extra"
         verbose_name_plural = "Streams extra"
+        
+class Vips (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del vip extra", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario  al que se le ha asignado el vip", null=False, blank=False)
+    amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de vips", null=False, blank=False, default=1)
+    
+    def __str__(self):
+        return f"({self.amount}) {self.user}"
+    
+    class Meta:
+        verbose_name = "Vip"
+        verbose_name_plural = "Vips"
+    
