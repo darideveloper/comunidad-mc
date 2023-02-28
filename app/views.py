@@ -355,6 +355,9 @@ def schedule(request):
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     
+    # Get if the user has vips
+    has_vips = tools.get_vips_num (user) > 0
+    
     # Validate if stream can be saved, in post 
     if request.method == "POST":
         
@@ -368,6 +371,7 @@ def schedule(request):
         # Get stream data
         form_date = request.POST.get("date", "")
         form_hour = request.POST.get("hour", "")
+        form_vip = request.POST.get("vip", "")
         
         # Convert to datetime
         selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour, "%Y-%m-%d %H")
@@ -398,11 +402,25 @@ def schedule(request):
             if streams_match.count() > 1:
                 error = "Lo sentimos. Esa fecha y hora ya está agendada."
                 
+        # Vips validation
+        if not error and form_vip:
+            if has_vips:
+                # Decress vips
+                negative_vip = models.StreamVip (user=user, amount=-1)
+                negative_vip.save()    
+                
+                # Get if the user has vips (again)
+                has_vips = tools.get_vips_num (user) > 0            
+            else:
+                # Raise error if user dont have vips
+                error = "Error al guardar el stream, no tienes vips disponibles"
+                
         # Schedule stream
         if not error:
-            new_stream = models.Stream (user=user, datetime=selected_datetime)
+            new_stream = models.Stream (user=user, datetime=selected_datetime, is_vip=True if form_vip else False)
             new_stream.save ()
             message = "Stream agendado!"
+            
             
     # Get next streams of the user in the next 7 days
     user_streams, streams = tools.get_user_streams(user, user_time_zone)
@@ -460,7 +478,7 @@ def schedule(request):
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
-                
+    
     # Render page
     return render(request, 'app/schedule.html', {
         # General context
@@ -485,6 +503,7 @@ def schedule(request):
         "time_zone": tools.get_time_zone_text(user),
         "hours": hours,
         "today_week_name": today_week_name,
+        "has_vips": has_vips,
     })
 
 @decorators.validate_login_active

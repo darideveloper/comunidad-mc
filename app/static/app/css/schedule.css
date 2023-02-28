@@ -547,6 +547,34 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   }
 }
 
+.select, .checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: cneter;
+  flex-direction: column;
+}
+.select label, .checkbox-wrapper label {
+  width: 150px;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.select label.disabled, .checkbox-wrapper label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.select label.active, .checkbox-wrapper label.active {
+  font-weight: bold;
+  background-color: #7a70b3;
+}
+.select label:hover:not(.disabled):not(.active), .checkbox-wrapper label:hover:not(.disabled):not(.active) {
+  background-color: #3f3b59;
+}
+.select label input, .checkbox-wrapper label input {
+  display: none;
+}
+
 .profile-card-wrapper {
   width: 550px;
   margin: 0 auto;
@@ -590,33 +618,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   padding: 20px 0;
   max-height: 275px;
   overflow-y: scroll;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select {
-  display: flex;
-  align-items: center;
-  justify-content: cneter;
-  flex-direction: column;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label {
-  width: 150px;
-  display: inline-block;
-  text-transform: uppercase;
-  padding: 10px 0;
-  cursor: pointer;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label.active {
-  font-weight: bold;
-  background-color: #7a70b3;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label:hover:not(.disabled):not(.active) {
-  background-color: #3f3b59;
-}
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper .select label input {
-  display: none;
 }
 .my-streams-shedule-form-wrapper .shedule-form form .date, .my-streams-shedule-form-wrapper .shedule-form form .time, .my-streams-shedule-form-wrapper .shedule-form form .confirmation {
   text-align: center;

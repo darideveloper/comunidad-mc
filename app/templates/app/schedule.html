@@ -89,6 +89,15 @@
             <span class="time-zone">(Zona horaria: {{time_zone}})</span>
           </p>
 
+          {% if has_vips %}
+          <div class="checkbox-wrapper">
+            <label class="">
+              Stream VIP
+              <input type="checkbox" name="vip" id="vip">
+            </label>
+          </div>
+          {% endif %}
+
           <input type="submit" class="btn form regular" value="confirmar" id="submit-btn" disabled>
         </div>
 
@@ -105,8 +114,8 @@
   const hours = {{hours|safe}};
   const today_week_name = "{{today_week_name}}";
   const streams = {{streams|safe}}
-  console.log ({available_hours, hours, today_week_name, streams})
 </script>
 <script src="{% static 'app/code/profile-card.js' %}"></script>
 <script src="{% static 'app/code/schedule.js' %}" type="module"></script>
+<script src="{% static 'app/code/checkbox.js' %}" type="module"></script>
 {% endblock %}

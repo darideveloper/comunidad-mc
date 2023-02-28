@@ -62,9 +62,9 @@ class AdminTimeZone (admin.ModelAdmin):
 @admin.register (models.Stream)
 class AdminStream (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'datetime')
+    list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free')
     ordering = ('id', 'user', 'datetime')
-    list_filter = ('user', 'datetime')
+    list_filter = ('user', 'datetime', 'is_vip', 'is_free')
     search_fields = ('user__user_name', )
     
 @admin.register (models.Comment)
@@ -154,7 +154,7 @@ class AdminTopDailyPoint (admin.ModelAdmin):
 @admin.register (models.StreamExtra)
 class AdminStreamExtra (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'amount')
+    list_display = ('id', 'user', 'amount',)
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user__user_name',)
@@ -167,7 +167,7 @@ class AdminAdminType (admin.ModelAdmin):
     list_filter = ('name', 'ranking')
     search_fields = ('name', 'ranking__name')
     
-@admin.register (models.Vips)
+@admin.register (models.StreamVip)
 class AdminVips (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'amount')

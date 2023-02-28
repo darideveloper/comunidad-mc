@@ -24,7 +24,14 @@ MONTHS = {
 }
 
 def get_fix_user (user:models.User):
-    """ get user and fix profile image if not exist """
+    """ get user and fix profile image if not exist
+
+    Args:
+        user (models.User): User object
+
+    Returns:
+        user: user object with fixed profile image
+    """
         
     user_picture = user.picture
     valid_picture = True
@@ -51,7 +58,6 @@ def get_fix_user (user:models.User):
     return user
 
 def get_cookies_data (request, delete_data:bool=True):
-    
     """ Get user and message from cookies
 
     Returns:
@@ -85,9 +91,33 @@ def get_cookies_data (request, delete_data:bool=True):
         del request.session["error"]
     
     return user, message, error
+
+def get_vips_num (user:models.User):
+    """ return the number of vip (only counter) streams of the user
+
+    Args:
+        user (models.User): user object
+
+    Returns:
+        int: counter of vips
+    """
     
-def get_general_points (user):
-    """ Return the general points (registers and counters) from specific user """
+    vips = models.StreamVip.objects.filter(user=user)
+    vips_num = vips.aggregate(Sum('amount'))['amount__sum']
+    
+    return vips_num
+    
+    
+def get_general_points (user:models.User):
+    """ Return the general points (registers and counters) from specific user
+
+    Args:
+        user (:models.User): user object
+
+    Returns:
+        touple: general_points (registers), general_points_num (counter)
+    """
+    
     general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
@@ -96,8 +126,15 @@ def get_general_points (user):
     
     return general_points, general_points_num
     
-def get_user_points (user):
-    """ Get user point, count and register reguister and counters """
+def get_user_points (user:models.User):
+    """ Get user point, count and register reguister and counters
+
+    Args:
+        user (models.User): user object
+
+    Returns:
+        touple: general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num
+    """
     
     # General points
     general_points, general_points_num = get_general_points(user)
