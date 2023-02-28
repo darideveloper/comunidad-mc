@@ -24,22 +24,6 @@ HOST = os.environ.get("HOST")
 # Twitch instance
 twitch = TwitchApi ()
 
-WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
-MONTHS = {
-    "January": "Enero",
-    "February": "Febrero",
-    "March": "Marzo",
-    "April": "Abril",
-    "May": "Mayo",
-    "June": "Junio",
-    "July": "Julio",
-    "August": "Agosto",
-    "September": "Septiembre",
-    "October": "Octubre",
-    "November": "Noviembre",
-    "December": "Diciembre"
-}
-
 # Create your views here.
 def login(request):
     """ Manage login with twitch """
@@ -453,16 +437,16 @@ def schedule(request):
     # Get available days of the week
     today = datetime.datetime.today().astimezone(user_time_zone)
     today_week = today.weekday()
-    today_week_name = WEEK_DAYS[today_week]
+    today_week_name = tools.WEEK_DAYS[today_week]
     available_days = []
     for day_num in range (0, 7):
         
         # Calculate dates
-        day_name = WEEK_DAYS[day_num]
+        day_name = tools.WEEK_DAYS[day_num]
         date = today + datetime.timedelta(days=day_num-today_week)
         date_text_day = date.strftime("%d")
         date_text_month = date.strftime("%B")
-        date_text_month_spanish = MONTHS[date_text_month]
+        date_text_month_spanish = tools.MONTHS[date_text_month]
         date_text = f"{date_text_day} de {date_text_month_spanish}"
         date_formatted = date.strftime("%Y-%m-%d")
         
@@ -489,7 +473,6 @@ def schedule(request):
     disabled_hours = [2, 3, 4, 5, 6]
     hours = list(filter(lambda hour: hour not in disabled_hours, hours))
     hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
-    print (hours)  
     
     # Calculate free hours for streams
     available_hours = {}
@@ -504,7 +487,6 @@ def schedule(request):
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
-        
     
     # Render page
     return render(request, 'app/schedule.html', {

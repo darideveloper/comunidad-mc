@@ -89,7 +89,7 @@
             <span class="time-zone">(Zona horaria: {{time_zone}})</span>
           </p>
 
-          <input type="submit" class="btn form regular" value="confirmar" id="submit" disabled>
+          <input type="submit" class="btn form regular" value="confirmar" id="submit-btn" disabled>
         </div>
 
       </form>
@@ -104,6 +104,8 @@
   const available_hours = {{available_hours|safe}};
   const hours = {{hours|safe}};
   const today_week_name = "{{today_week_name}}";
+  const streams = {{streams|safe}}
+  console.log ({available_hours, hours, today_week_name, streams})
 </script>
 <script src="{% static 'app/code/profile-card.js' %}"></script>
 <script src="{% static 'app/code/schedule.js' %}" type="module"></script>

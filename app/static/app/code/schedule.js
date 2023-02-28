@@ -1,10 +1,8 @@
 import {loading_wrapper} from './loading.js'
 
 // css selectors
-const selector_time_wrapper = ".time .select"
 const selector_time_item = ".time .select label"
 const selector_day_item = ".date .select label"
-const selector_confirmation = ".confirmation .info"
 const selector_confirmation_day = ".confirmation .day"
 const selector_confirmation_date = ".confirmation .date"
 const selector_confirmation_time = ".confirmation .time"
@@ -71,7 +69,7 @@ function show_available_hours () {
 function toggle_submit (activate) {
   // Enable or disable submit button
 
-  const submit = document.querySelector ("#submit")
+  const submit = document.querySelector ("#submit-btn")
   if (activate) {
     submit.removeAttribute ("disabled")
   } else {
@@ -159,6 +157,40 @@ cancel_buttons.forEach (cancel_button => {
       window.location.href = cancel_url
     }
   })
+})
+
+// Detect when try to submit form
+const form = document.querySelector ("form")
+form.addEventListener ("submit", event => {
+  event.preventDefault ()
+
+  // Validate if the selected date and time, its already shcedule for the same user
+  const selected_date = document.querySelector (`${selector_day_item}.active > input`).value
+  const selected_time = document.querySelector (`${selector_time_item}.active > input`).value
+  const match_streams = streams.filter (stream => {
+    return stream.date == selected_date && stream.hour == selected_time
+  })
+
+  if (match_streams.length > 0) {
+    // Show alert
+    Swal.fire({
+      title: 'Advertencia',
+      text: "Ya tienes un stream agendado para esta fecha y hora. Si agendas otro stream, serás la única persona a quien apoye la comunidad, pero perderás el doble de puntos",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'No, no agendar doble stream',
+      denyButtonText: `Sí, agendar y perder el doble de puntos`,
+      showCancelButton: false,
+    }).then((result) => {
+      if (result.isDenied) {
+        // Submit form after conformation
+        form.submit ()
+      }
+    })
+  } else {
+    // Submit form directly
+    form.submit ()
+  }
 })
 
 // Set available hours when page loads

@@ -6,6 +6,23 @@ from django.db.models import Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+# Shared const
+WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+MONTHS = {
+    "January": "Enero",
+    "February": "Febrero",
+    "March": "Marzo",
+    "April": "Abril",
+    "May": "Mayo",
+    "June": "Junio",
+    "July": "Julio",
+    "August": "Agosto",
+    "September": "Septiembre",
+    "October": "Octubre",
+    "November": "Noviembre",
+    "December": "Diciembre"
+}
+
 def get_fix_user (user:models.User):
     """ get user and fix profile image if not exist """
     
@@ -140,14 +157,16 @@ def get_user_streams (user, user_time_zone):
     for stream in user_streams:
         id = stream.id
         stream_datetime = stream.datetime.astimezone(user_time_zone)
-        date = stream_datetime.strftime("%d/%m/%Y")
+        date = stream_datetime.strftime("%Y-%m-%d")
         time = stream_datetime.strftime("%I:%M %p")
+        hour = stream_datetime.strftime("%H")
         is_cancellable = is_stream_cancelable(stream)
         user_streams_data.append ({
             "id": id,
             "date": date, 
             "time": time, 
             "is_cancellable": "regular" if is_cancellable else "warning",
+            "hour": hour,
         })
         
     return user_streams, user_streams_data
