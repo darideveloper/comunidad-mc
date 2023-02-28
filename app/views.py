@@ -483,11 +483,11 @@ def schedule(request):
             current_date = day["date"]
             day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
             day_streams = day_streams.filter(dcount__gt=1)
-            day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).hour, day_streams))
+            day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).strftime("%H"), day_streams))
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
-    
+                
     # Render page
     return render(request, 'app/schedule.html', {
         # General context

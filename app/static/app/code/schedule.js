@@ -183,6 +183,9 @@ form.addEventListener ("submit", event => {
       showCancelButton: false,
     }).then((result) => {
       if (result.isDenied) {
+        // Show loading
+        loading_wrapper.classList.remove ('hide')
+        
         // Submit form after conformation
         form.submit ()
       }

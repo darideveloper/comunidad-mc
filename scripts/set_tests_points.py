@@ -15,15 +15,15 @@ from app.twitch import TwitchApi
 
 # Users to add points
 users = [
-    "darideveloper4",
+    # "darideveloper4",
     "DariDeveloper", 
-    "minecuak", 
-    "danigempleis", 
-    "Lucifer__TV__", 
-    "yarawtm", 
-    "sauromplays", 
-    "el_lenniin", 
-    "Raven__gg", 
+    # "minecuak", 
+    # "danigempleis", 
+    # "Lucifer__TV__", 
+    # "yarawtm", 
+    # "sauromplays", 
+    # "el_lenniin", 
+    # "Raven__gg", 
 ]
 
 # get last stream 
@@ -42,7 +42,7 @@ for user_name in users:
     for back_days in range (1, 7):
         
         # Randsom number of points in each day
-        points_day = random.randrange(1, 11)
+        points_day = random.randrange(10, 50)
         
         # Loop for save each user point
         info_point = models.InfoPoint.objects.get (info="ver stream")
@@ -63,8 +63,8 @@ for user_name in users:
                 
             print (f"Point {user} - {stream} - {back_date}")
     
-    # add 10 points today
-    for _ in range (10):
-        twitch_api.add_point(user, stream, force=True)
+    # # add 10 points today
+    # for _ in range (10):
+    #     twitch_api.add_point(user, stream, force=True)
 
     
