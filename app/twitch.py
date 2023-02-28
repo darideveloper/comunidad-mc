@@ -62,6 +62,17 @@ class TwitchApi:
         if not current_streams:
             return None
         
+        # Detect unique user of the streams
+        users = list(set(map(lambda current_stream: current_stream.user, current_streams)))
+        users_names = list(map(lambda user: user.user_name, users))
+        
+        # Refresh tokens
+        logger.info (f"Refreshing tokens for users: {','.join(users_names)}")
+        for user in users:
+            token_updated = self.update_token (user)
+            if not token_updated:
+                logger.error (f"Error updating token for user: {user}")
+        
         streams_data = {"streams": []}
         for stream in current_streams:
             # Get and stremer data
@@ -73,7 +84,7 @@ class TwitchApi:
             
         if not streams_data:
             return None
-
+        
         # Send data to node.js api for start readding comments, and catch errors
         try:
             logger.info("Sending streams to node.js api")

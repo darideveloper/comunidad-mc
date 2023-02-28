@@ -278,33 +278,6 @@ def add_comment(request):
         "success": True
     })
 
-
-@csrf_exempt
-def refresh_token(request):
-    """ Update access token of user, from node.js api """
-
-    # Get data from request
-    json_data = json.loads(request.body)
-    stream_id = json_data.get("stream_id", "")
-    if not stream_id:
-        return HttpResponseBadRequest("stream_id is required")
-
-    # Find user with expired token
-    find_stream = models.Stream.objects.filter(id=stream_id).first()
-    if not find_stream:
-        return HttpResponseBadRequest("stream_id is not valid")
-    find_user = id=find_stream.user
-
-    token_updated = twitch.update_token(find_user)
-    if not token_updated:
-        return HttpResponseBadRequest("error updateding token")
-
-    # Submit again data to node.js api
-    twitch.submit_streams_node_bg()    
-    return JsonResponse({
-        "success": True
-    })
-
 @decorators.validate_login_active
 def points(request):
     """ Page for show the points of the user """
