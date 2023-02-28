@@ -541,7 +541,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   font-weight: bold;
   margin-top: 0;
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
   .profile-card.horizontal .points-wrapper .point {
     padding: 0 10px;
   }
@@ -598,6 +598,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .my-streams-shedule-form-wrapper .my-streams table {
   width: 100%;
+  position: relative;
 }
 .my-streams-shedule-form-wrapper .my-streams table td, .my-streams-shedule-form-wrapper .my-streams table th {
   text-align: center;
@@ -639,6 +640,60 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .my-streams-shedule-form-wrapper .shedule-form form .confirmation .btn {
   margin-top: 20px;
   font-size: 1.2rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .my-streams-shedule-form-wrapper {
+    flex-direction: column;
+  }
+  .my-streams-shedule-form-wrapper .my-streams {
+    width: 60%;
+    margin-bottom: 50px;
+  }
+  .my-streams-shedule-form-wrapper .shedule-form {
+    width: 60%;
+  }
+  .my-streams-shedule-form-wrapper .shedule-form form {
+    justify-content: center;
+    gap: 15px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 750px) {
+  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 650px) {
+  .profile-card-wrapper {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 580px) {
+  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+    width: 60%;
+  }
+  .my-streams-shedule-form-wrapper .my-streams table th {
+    display: none;
+  }
+  .my-streams-shedule-form-wrapper .my-streams table tr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .my-streams-shedule-form-wrapper .shedule-form form {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 420px) {
+  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+    width: 80%;
+  }
 }
 
 /*# sourceMappingURL=schedule.css.map */

@@ -1,4 +1,5 @@
 import {loading_wrapper} from './loading.js'
+import {update_profile_card_small} from './profile-card-responsive.js'
 
 // css selectors
 const selector_time_item = ".time .select label"
@@ -193,7 +194,7 @@ form.addEventListener ("submit", event => {
   } else {
     // Show loading
     loading_wrapper.classList.remove ('hide')
-    
+
     // Submit form directly
     form.submit ()
   }
@@ -201,3 +202,7 @@ form.addEventListener ("submit", event => {
 
 // Set available hours when page loads
 show_available_hours ()
+
+// Update profile card when resize
+update_profile_card_small ()
+window.addEventListener ("resize", () => update_profile_card_small())
