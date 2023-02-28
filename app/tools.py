@@ -25,11 +25,11 @@ MONTHS = {
 
 def get_fix_user (user:models.User):
     """ get user and fix profile image if not exist """
-    
+        
     user_picture = user.picture
     valid_picture = True
-    
-    if not "static" in user_picture:
+        
+    if not "/static/" in user_picture:
         
         # Try to get image from url
         try:
@@ -39,6 +39,8 @@ def get_fix_user (user:models.User):
         else:        
             if not res.status_code == 200:
                 valid_picture = False
+                
+        print (user_picture, user_picture.endswith(".jpg"), valid_picture)
         
         # Use profile image if error
         if not user_picture or not user_picture.endswith(".jpg") or not valid_picture:
@@ -55,7 +57,7 @@ def get_cookies_data (request, delete_data:bool=True):
     Returns:
         touple: user object, menssaje text, error text
     """
-
+    
     # Get user data from cookies
     user_id = request.session.get("user_id", 0)
     users = models.User.objects.filter(id=user_id)
