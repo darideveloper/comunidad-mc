@@ -167,7 +167,7 @@ form.addEventListener ("submit", event => {
   // Validate if the selected date and time, its already shcedule for the same user
   const selected_date = document.querySelector (`${selector_day_item}.active > input`).value
   const selected_time = document.querySelector (`${selector_time_item}.active > input`).value
-  const match_streams = streams.filter (stream => {
+  const match_streams = streams_date_times.filter (stream => {
     return stream.date == selected_date && stream.hour == selected_time
   })
 

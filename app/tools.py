@@ -200,12 +200,14 @@ def get_user_streams (user, user_time_zone):
         time = stream_datetime.strftime("%I:%M %p")
         hour = stream_datetime.strftime("%H")
         is_cancellable = is_stream_cancelable(stream)
+        is_vip = stream.is_vip
         user_streams_data.append ({
             "id": id,
             "date": date, 
             "time": time, 
             "is_cancellable": "regular" if is_cancellable else "warning",
             "hour": hour,
+            "is_vip": is_vip,
         })
         
     return user_streams, user_streams_data

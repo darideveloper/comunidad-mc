@@ -603,6 +603,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   text-align: center;
   padding: 10px 0;
 }
+.my-streams-shedule-form-wrapper .my-streams table td img.vip, .my-streams-shedule-form-wrapper .my-streams table th img.vip {
+  width: 20px;
+  opacity: 0.5;
+}
 .my-streams-shedule-form-wrapper .shedule-form {
   width: 550px;
 }

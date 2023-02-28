@@ -17,6 +17,7 @@
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>FECHA</th>
             <th>HORA</th>
             <th></th>
@@ -25,6 +26,11 @@
         <tbody>
           {% for stream in streams %}
           <tr>
+            <td>
+              {% if stream.is_vip %}
+                <img class="vip" src="{% static 'app/imgs/icon_oro.png' %}" alt="icono stream vip" title="Stream VIP">
+              {% endif %}
+            </td>
             <td>{{stream.date}}</td>
             <td>{{stream.time}}</td>
             <td>
@@ -113,7 +119,7 @@
   const available_hours = {{available_hours|safe}};
   const hours = {{hours|safe}};
   const today_week_name = "{{today_week_name}}";
-  const streams = {{streams|safe}}
+  const streams_date_times = {{streams_date_times|safe}}
 </script>
 <script src="{% static 'app/code/profile-card.js' %}"></script>
 <script src="{% static 'app/code/schedule.js' %}" type="module"></script>

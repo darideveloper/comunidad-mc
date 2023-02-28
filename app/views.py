@@ -423,7 +423,7 @@ def schedule(request):
             
             
     # Get next streams of the user in the next 7 days
-    user_streams, streams = tools.get_user_streams(user, user_time_zone)
+    _, streams = tools.get_user_streams(user, user_time_zone)
         
     # Get available days of the week
     today = datetime.datetime.today().astimezone(user_time_zone)
@@ -478,6 +478,9 @@ def schedule(request):
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
             available_hours[day_name] = day_available_hours
+            
+    # Format streams date times
+    streams_date_times = list(map(lambda stream: {"date": stream["date"], "time": stream["time"]}, streams))
     
     # Render page
     return render(request, 'app/schedule.html', {
@@ -498,6 +501,7 @@ def schedule(request):
         
         # Specific context
         "streams": streams,
+        "streams_date_times": streams_date_times,
         "available_days": available_days,
         "available_hours": available_hours,
         "time_zone": tools.get_time_zone_text(user),
