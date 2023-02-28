@@ -218,7 +218,7 @@ class TwitchApi:
         
         for stream in current_streams:
             
-            # Loopf ror get data and update token
+            # Loop for get data and update token
             while True:
                 
                 # Get current stream
@@ -358,9 +358,14 @@ class TwitchApi:
                 
                 # Add point in background
                 logger.info(f"Added general point to user: {user}")
+                
+                # Set tripple point if stream is vip
+                amount = 1
+                if stream.is_vip:
+                    amount = 3
         
                 # Save general point
-                new_general_point = models.GeneralPoint (user=user, stream=stream)
+                new_general_point = models.GeneralPoint (user=user, stream=stream, amount=amount)
                 new_general_point.save ()
                 
                 # Validate if the user have less than the max number of daily points

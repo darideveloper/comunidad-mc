@@ -16,14 +16,14 @@ from app.twitch import TwitchApi
 # Users to add points
 users = [
     # "darideveloper4",
-    "DariDeveloper", 
+    # "DariDeveloper", 
     # "minecuak", 
     # "danigempleis", 
-    # "Lucifer__TV__", 
-    # "yarawtm", 
-    # "sauromplays", 
-    # "el_lenniin", 
-    # "Raven__gg", 
+    "Lucifer__TV__", 
+    "yarawtm", 
+    "sauromplays", 
+    "el_lenniin", 
+    "Raven__gg", 
 ]
 
 # get last stream 
@@ -38,11 +38,15 @@ for user_name in users:
     # Get user
     user = models.User.objects.filter(user_name=user_name).first()
     
+    # Skip if user not found
+    if not user:
+        continue
+    
     # Loop for the last 6 days of the week
     for back_days in range (1, 7):
         
         # Randsom number of points in each day
-        points_day = random.randrange(10, 50)
+        points_day = random.randrange(1, 50)
         
         # Loop for save each user point
         info_point = models.InfoPoint.objects.get (info="ver stream")

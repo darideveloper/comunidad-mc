@@ -13,9 +13,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 # Django imports
+from app import tools
 from django.utils import timezone
 from app.models import User, Ranking, WeeklyPoint, DailyPoint, \
-    PointsHistory, GeneralPoint, Bits, TopDailyPoint, StreamExtra
+    PointsHistory, GeneralPoint, Bits, TopDailyPoint, StreamExtra, StreamVip
 from app.logs import logger
 
 # Get ranbkings and required points
@@ -44,14 +45,16 @@ if today == RESTART_POINTS_WEEK_DAY:
     
     # Delete extra streams
     StreamExtra.objects.all().delete()
+    
+    # Delete vips
+    StreamVip.objects.all().delete()
         
     # Get and loop all users to update ranking
     users = User.objects.all()
     for user in users:
         
         # Get user week points
-        week_points = WeeklyPoint.objects.filter(general_point__user=user).count ()
-        general_points = GeneralPoint.objects.filter(user=user).count ()
+        *other, general_points_num, weekly_points_num, _ = tools.get_user_points (user)
         
         # Set ranking to admins
         if user.admin_type:
@@ -59,7 +62,7 @@ if today == RESTART_POINTS_WEEK_DAY:
         else:
             # Found new ranking
             for ranking in rankings:
-                if week_points >= ranking.points:
+                if weekly_points_num >= ranking.points:
                     user.ranking = ranking
                     break
                 
@@ -69,13 +72,14 @@ if today == RESTART_POINTS_WEEK_DAY:
         user.save()
         
         # Save pouints history
-        PointsHistory (user=user, general_points=general_points, week_points=week_points).save()
+        PointsHistory (user=user, general_points=general_points_num, week_points=general_points_num).save()
         
         # Show status
-        logger.info (f"Ranking updated: user: {user}, week points: {week_points}, ranking: {user.ranking}")
+        logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking}")
     
     # Add bits to first, second and third users in points table
-    points_history_all = PointsHistory.objects.all().order_by("general_points")
+    points_history_all = PointsHistory.objects.all().order_by("general_points").reverse()
+    print (points_history_all)
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user
@@ -84,9 +88,17 @@ if today == RESTART_POINTS_WEEK_DAY:
     Bits (user=third_user, amount=RANKING_THIRD_BITS).save ()
     print ("Bits added to first, second and third users")
     
+    # Add a vip to first user
+    StreamVip (user=first_user).save ()
+    print ("Vips added to first user")
+    
     # Delete top daily points
     TopDailyPoint.objects.all().delete()
     print ("top daily points deleted")
+    
+    # Delete week points
+    WeeklyPoint.objects.all().delete()
+    print ("week points deleted")
     
     # Delete all points
     GeneralPoint.objects.all().delete()
