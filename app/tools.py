@@ -1,3 +1,4 @@
+import os
 from . import models
 from . import tools
 import requests as req
@@ -5,6 +6,10 @@ from .logs import logger
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
+
+# Get enviroment variables
+TRIPLE_POINTS_START = os.environ.get("TRIPLE_POINTS_START")
+TRIPLE_POINTS_END = os.environ.get("TRIPLE_POINTS_END")
 
 # Shared const
 WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
@@ -180,8 +185,12 @@ def get_user_streams (user, user_time_zone):
     
     logger.debug (f"Getting next streams of the user {user}")
     now = timezone.now()
+    hour = now.hour
+    hour += 1
+    if hour == 24:
+        hour = 0        
     start_datetime = datetime(
-        now.year, now.month, now.day, now.hour + 1, 0, 0, tzinfo=timezone.utc)
+        now.year, now.month, now.day, hour, 0, 0, tzinfo=timezone.utc)
     end_datetime = start_datetime + timedelta(days=7)
 
     # Get current streams
@@ -274,3 +283,24 @@ def set_negative_point (user:models.User, amount:int, reason:str, stream:models.
     
     return True
     
+def is_triple_time ():
+    """ Check if the current time (with time zone of the project) is triple time
+
+    Returns:
+        bool: True if triple time, False if not
+    """
+    
+    # Get current time
+    now_str = timezone.localtime().strftime ("%H:%M")
+    now_time = datetime.strptime(now_str, "%H:%M")
+    
+    # Convert triple points times
+    triple_time_start = datetime.strptime(TRIPLE_POINTS_START, "%H:%M")
+    triple_end_time = datetime.strptime(TRIPLE_POINTS_END, "%H:%M")
+    
+    # add extra day to end time if its less than start time
+    if triple_end_time < triple_time_start:
+        triple_end_time = triple_end_time + timedelta(days=1)
+        
+    # Validate if the current time its in triple time
+    return triple_time_start <= now_time <= triple_end_time

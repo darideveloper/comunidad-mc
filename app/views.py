@@ -489,12 +489,19 @@ def schedule(request):
     # Remove friday at 7p from available hours
     available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
     
+    # Validate if is triple time and show message
+    info = ""
+    is_triple_time = tools.is_triple_time()
+    if is_triple_time and not message:
+        info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
+    
     # Render page
     return render(request, 'app/schedule.html', {
         # General context
         "name": user.user_name,
         "message": message,
         "error": error,
+        "info": info,
         "current_page": "schedule",
         "user_active": True,
         

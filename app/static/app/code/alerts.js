@@ -34,10 +34,23 @@ export function show_message (message) {
     })
 }
 
+export function show_info (message) {
+  // Create alert
+  Swal.fire({
+    icon: 'info',
+    title: 'Importante',
+    text: message,
+  })
+}
+
 if (error) {
     show_error(error)
 }
 
 if (message) {
   show_message(message)
+}
+
+if (info) {
+  show_info(info)
 }
