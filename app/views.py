@@ -7,15 +7,13 @@ from . import models
 from . import decorators
 from .twitch import TwitchApi
 from .logs import logger
-from collections import OrderedDict
 from dotenv import load_dotenv
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Count
-from django.db.models import Sum
+from django.db.models import Count, Sum, Q
+
 
 # Get credentials
 load_dotenv()
@@ -469,11 +467,17 @@ def schedule(request):
     available_hours = {}
     for day in available_days:
         if day["disabled"] == False:
+            
+            # Day variables
             day_name = day["name"]
             day_num = day["num"]
             current_date = day["date"]
+            
+            # get streams of the day 
             day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
-            day_streams = day_streams.filter(dcount__gt=1)
+            day_streams = day_streams.filter(Q(dcount__gt=1) | Q(is_vip=True))
+            
+            # Calculate free hours
             day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).strftime("%H"), day_streams))
             day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
             day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
