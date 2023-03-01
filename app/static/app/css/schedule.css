@@ -621,7 +621,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   background-color: #0e1119;
   border-radius: 10px;
   padding: 20px 0;
-  max-height: 275px;
+  max-height: 235px;
   overflow-y: scroll;
 }
 .my-streams-shedule-form-wrapper .shedule-form form .date, .my-streams-shedule-form-wrapper .shedule-form form .time, .my-streams-shedule-form-wrapper .shedule-form form .confirmation {

@@ -430,7 +430,7 @@ def schedule(request):
     today_week = today.weekday()
     today_week_name = tools.WEEK_DAYS[today_week]
     available_days = []
-    for day_num in range (0, 7):
+    for day_num in range (0, 6):
         
         # Calculate dates
         day_name = tools.WEEK_DAYS[day_num]
