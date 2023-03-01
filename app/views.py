@@ -482,6 +482,9 @@ def schedule(request):
     # Format streams date times
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "time": stream["time"]}, streams))
     
+    # Remove friday at 7p from available hours
+    available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
+    
     # Render page
     return render(request, 'app/schedule.html', {
         # General context
