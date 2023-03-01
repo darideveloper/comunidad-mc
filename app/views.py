@@ -715,7 +715,6 @@ def cancel_stream (request, id):
     if not stream:
         request.session["error"] = error
         return redirect('schedule')
-        
     
     # Get current user
     user, *other = tools.get_cookies_data(request)

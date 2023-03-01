@@ -45,10 +45,6 @@ function show_available_hours () {
     // Get item hour
     const hour = time_item.querySelector ("input").value
 
-    // Remove disabled class
-    time_item.classList.remove ("disabled")
-    time_item.classList.remove ("active")
-
     // Disable hours before current time
     let disabled = false
     if (today_week_name == current_day) {
@@ -60,9 +56,21 @@ function show_available_hours () {
       disabled = day_hours.includes (hour) ? false : true
     }
 
-    // Disable item
+    // Disable or enable item
+    const input = time_item.querySelector ("input")
     if (disabled) {
+      // Add disabled class
       time_item.classList.add ("disabled")
+
+      // Add disabled attribute from input child
+      input.setAttribute ("disabled", true)
+    } else {
+      // Remove disabled class
+      time_item.classList.remove ("disabled")
+      time_item.classList.remove ("active")
+
+      // Remove disabled attribute from input child
+      input.removeAttribute ("disabled")
     }
   })
 }
@@ -83,6 +91,12 @@ const day_items = document.querySelectorAll (selector_day_item)
 day_items.forEach(day_item => {
   // Add lister to item
   day_item.addEventListener ("click", event => {
+
+    // Validate if item its not disabled
+    if (day_item.classList.contains ("disabled")) {
+      return ""
+    }
+
     // Activate item
     activate_item (day_item, selector_day_item)
 
@@ -104,6 +118,12 @@ const time_items = document.querySelectorAll (selector_time_item)
 time_items.forEach(time_item => {
   // Add lister to item
   time_item.addEventListener ("click", event => {
+
+    // Validate if item its not disabled
+    if (time_item.classList.contains ("disabled")) {
+      return ""
+    }
+
     // Activate item
     activate_item (time_item, selector_time_item)
 
