@@ -181,7 +181,7 @@ def get_user_streams (user, user_time_zone):
     logger.debug (f"Getting next streams of the user {user}")
     now = timezone.now()
     start_datetime = datetime(
-        now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+        now.year, now.month, now.day, now.hour + 1, 0, 0, tzinfo=timezone.utc)
     end_datetime = start_datetime + timedelta(days=7)
 
     # Get current streams
