@@ -222,7 +222,10 @@ def is_stream_cancelable (stream):
         bool: True if stream is cancelable, False if not
     """
     
-    return stream.datetime > ( timezone.now() + timedelta(hours=1) )
+    if stream:
+        return stream.datetime > ( timezone.now() + timedelta(hours=1) )
+    else:
+        return False
 
 def set_negative_point (user:models.User, amount:int, reason:str, stream:models.Stream):
     """ Set negative point to user if it is possible

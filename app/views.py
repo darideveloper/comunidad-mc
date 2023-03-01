@@ -706,8 +706,16 @@ def user_points (request):
 @decorators.validate_login_active
 def cancel_stream (request, id):
     
+    error = "Ha ocurrido un error al borrar el stream. Intente de nuevo mas tarde."
+    
     # Get stream
     stream = models.Stream.objects.filter(id=id).first()
+    
+    # Validate if stream exists
+    if not stream:
+        request.session["error"] = error
+        return redirect('schedule')
+        
     
     # Get current user
     user, *other = tools.get_cookies_data(request)
@@ -721,7 +729,8 @@ def cancel_stream (request, id):
         if is_cancellable:
             # Remove negative vip
             negative_vip = models.StreamVip.objects.filter(user=user, amount=-1).first()
-            negative_vip.delete()
+            if negative_vip:
+                negative_vip.delete()
         else:      
             # Discount points to user
             tools.set_negative_point (user, 50, "penalización por cancelar stream", stream)
@@ -733,7 +742,7 @@ def cancel_stream (request, id):
         stream.delete()
         request.session["message"] = "Stream elminado."  
     else:  
-        request.session["error"] = "Ha ocurrido un error al borrar el stream. Intente de nuevo mas tarde."
+        request.session["error"] = error
     
     # redirect
     return redirect('schedule')
