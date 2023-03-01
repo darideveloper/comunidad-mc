@@ -143,7 +143,7 @@ class InfoPoint (models.Model):
     
     class Meta:
         verbose_name = "Información de punto"
-        verbose_name_plural = "Información de puntos"
+        verbose_name_plural = "Puntos información"
 
 class GeneralPoint (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
@@ -209,7 +209,7 @@ class PointsHistory (models.Model):
     
     class Meta:
         verbose_name = "Historial de puntos generales y semanales"
-        verbose_name_plural = "Historial de puntos"
+        verbose_name_plural = "Puntos historial"
         
 class TopDailyPoint (models.Model):
     position = models.IntegerField(name='position', verbose_name="posición", help_text="posición del usuario en el top diario", null=False, blank=False, default=10)
@@ -221,7 +221,7 @@ class TopDailyPoint (models.Model):
     
     class Meta:
         verbose_name = "Top"
-        verbose_name_plural = "Top puntos diarios"
+        verbose_name_plural = "Puntos diarios top"
         
 class StreamExtra (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream extra", null=False, blank=False, editable=False)

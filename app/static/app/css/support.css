@@ -541,7 +541,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   font-weight: bold;
   margin-top: 0;
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
   .profile-card.horizontal .points-wrapper .point {
     padding: 0 10px;
   }
@@ -613,12 +613,31 @@ main.support > .content .streams .streams-cards .stream-card {
   position: relative;
   width: 40%;
 }
-main.support > .content .streams .streams-cards .stream-card img {
+main.support > .content .streams .streams-cards .stream-card .wrapper-img {
   width: 100px;
-  border-radius: 50%;
+  height: 100px;
   position: absolute;
   left: 0;
   top: -15px;
+}
+main.support > .content .streams .streams-cards .stream-card .wrapper-img img {
+  border-radius: 50%;
+  width: 90%;
+  height: 90%;
+}
+main.support > .content .streams .streams-cards .stream-card.vip .wrapper-img {
+  animation: zoom 2.5s ease-in-out infinite;
+}
+main.support > .content .streams .streams-cards .stream-card.vip .wrapper-img::after {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 5px solid #7a70b3;
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  animation: border 1s ease-in-out infinite;
 }
 main.support > .content .streams .streams-cards .stream-card p {
   margin-left: 70px;
@@ -751,6 +770,29 @@ main.support > .content .streams .referral span {
   }
   main.support > .content .streams .streams-cards {
     margin-top: 30px;
+  }
+}
+
+@keyframes border {
+  0% {
+    filter: blur(1px);
+  }
+  50% {
+    filter: blur(4px);
+  }
+  100% {
+    filter: blur(1px);
+  }
+}
+@keyframes zoom {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(0.9);
   }
 }
 

@@ -527,11 +527,14 @@ def support(request):
         error = "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
 
     # Get current streams and format
+    streams = []
     current_streams = twitch.get_current_streams()
     if not current_streams:
         current_streams = []
-    streams = list(map(lambda stream: tools.get_fix_user(stream.user), current_streams))
-    streams = [{"user": stream.user_name, "picture": stream.picture} for stream in streams]
+    for stream in current_streams:
+        stream_user = tools.get_fix_user(stream.user)
+        is_vip = stream.is_vip
+        streams.append({"user": stream_user.user_name, "picture": stream_user.picture, "is_vip": is_vip})
     
     # Culate time of the user
     user_timezone = user.time_zone.time_zone
