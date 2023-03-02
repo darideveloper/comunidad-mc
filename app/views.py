@@ -18,7 +18,7 @@ from django.db.models import Count, Sum, Q
 # Get credentials
 load_dotenv()
 HOST = os.environ.get("HOST")
-SCHEDULE_DAY = os.environ.get("SCHEDULE_DAY")
+SCHEDULE_DAY =int(os.environ.get("SCHEDULE_DAY"))
 
 # Twitch instance
 twitch = TwitchApi ()
@@ -429,18 +429,24 @@ def schedule(request):
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
     
     # Get today week day
-    today = datetime.datetime.today().astimezone(user_time_zone)
-    today_week = today.weekday()
+    now = datetime.datetime.now().astimezone(user_time_zone)
+    today_week = now.weekday()
     today_week_name = tools.WEEK_DAYS[today_week]
-    print (today_week)
     
+    # Validate the open hour of the current user
+    ranking_open = False
+    open_hour = user.ranking.open_hour
+    open_hour_datetime = datetime.datetime.combine(now.date(), open_hour, user_time_zone)
+    if now >= open_hour_datetime:
+        ranking_open = True
+            
     # Validate if today isn't sunday
     available_days = []
     available_hours = {}
     hours = []
     visible_schedule_panel = True
     info = ""
-    if today_week != SCHEDULE_DAY:
+    if today_week != SCHEDULE_DAY or (today_week == SCHEDULE_DAY and ranking_open):
         
         # Validate if is triple time and show message
         is_triple_time = tools.is_triple_time()
@@ -452,7 +458,7 @@ def schedule(request):
             
             # Calculate dates
             day_name = tools.WEEK_DAYS[day_num]
-            date = today + datetime.timedelta(days=day_num-today_week)
+            date = now + datetime.timedelta(days=day_num-today_week)
             date_text_day = date.strftime("%d")
             date_text_month = date.strftime("%B")
             date_text_month_spanish = tools.MONTHS[date_text_month]

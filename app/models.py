@@ -8,7 +8,8 @@ class Ranking (models.Model):
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del ranking", null=False, blank=False, max_length=100)
     points = models.IntegerField(name='points', verbose_name="puntos", help_text="puntos requeridos para el ranking", null=False, blank=False)
     max_streams = models.IntegerField(name='max_streams', verbose_name="máximo de streams", help_text="máximo de streams que puede tener el usuario para el ranking", null=False, blank=False, default=0)
-    
+    open_hour = models.TimeField(name='open_hour', verbose_name="hora de schedule", help_text="hora de apertura de agendar stream", null=False, blank=False, default=timezone.now)
+     
     @classmethod
     def get_lower(cls):
         return cls.objects.all().order_by('points').first()
