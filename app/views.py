@@ -18,6 +18,7 @@ from django.db.models import Count, Sum, Q
 # Get credentials
 load_dotenv()
 HOST = os.environ.get("HOST")
+SCHEDULE_DAY = os.environ.get("SCHEDULE_DAY")
 
 # Twitch instance
 twitch = TwitchApi ()
@@ -423,78 +424,90 @@ def schedule(request):
             
     # Get next streams of the user in the next 7 days
     _, streams = tools.get_user_streams(user, user_time_zone)
-        
-    # Get available days of the week
-    today = datetime.datetime.today().astimezone(user_time_zone)
-    today_week = today.weekday()
-    today_week_name = tools.WEEK_DAYS[today_week]
-    available_days = []
-    for day_num in range (0, 6):
-        
-        # Calculate dates
-        day_name = tools.WEEK_DAYS[day_num]
-        date = today + datetime.timedelta(days=day_num-today_week)
-        date_text_day = date.strftime("%d")
-        date_text_month = date.strftime("%B")
-        date_text_month_spanish = tools.MONTHS[date_text_month]
-        date_text = f"{date_text_day} de {date_text_month_spanish}"
-        date_formatted = date.strftime("%Y-%m-%d")
-        
-        # Date status
-        disabled = False
-        active = False
-        if day_num == today_week:
-            active = True
-        elif day_num < today_week:
-            disabled = True
-           
-        # Add date 
-        available_days.append({
-            "name": day_name, 
-            "num": day_num, 
-            "disabled": disabled, 
-            "active": active, 
-            "date": date_formatted, 
-            "date_text": date_text
-        })   
-        
-    # Calculate and format hours
-    hours = list(range(0, 24))
-    disabled_hours = [2, 3, 4, 5, 6]
-    hours = list(filter(lambda hour: hour not in disabled_hours, hours))
-    hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
     
-    # Calculate free hours for streams
-    available_hours = {}
-    for day in available_days:
-        if day["disabled"] == False:
-            
-            # Day variables
-            day_name = day["name"]
-            day_num = day["num"]
-            current_date = day["date"]
-            
-            # get streams of the day 
-            day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
-            day_streams = day_streams.filter(Q(dcount__gt=1) | Q(is_vip=True))
-            
-            # Calculate free hours
-            day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).strftime("%H"), day_streams))
-            day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
-            day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
-            available_hours[day_name] = day_available_hours
-            
     # Format streams date times
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
     
-    # Remove friday at 7p from available hours
-    available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
+    # Get today week day
+    today = datetime.datetime.today().astimezone(user_time_zone)
+    today_week = today.weekday()
+    today_week_name = tools.WEEK_DAYS[today_week]
+    print (today_week)
     
-    # Validate if is triple time and show message
+    # Validate if today isn't sunday
+    available_days = []
+    available_hours = {}
+    hours = []
+    visible_schedule_panel = True
     info = ""
-    is_triple_time = tools.is_triple_time()
-    if is_triple_time and not message:
-        info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
+    if today_week != SCHEDULE_DAY:
+        
+        # Validate if is triple time and show message
+        is_triple_time = tools.is_triple_time()
+        if is_triple_time and not message:
+            info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
+                        
+        # Get available days of the week
+        for day_num in range (0, 6):
+            
+            # Calculate dates
+            day_name = tools.WEEK_DAYS[day_num]
+            date = today + datetime.timedelta(days=day_num-today_week)
+            date_text_day = date.strftime("%d")
+            date_text_month = date.strftime("%B")
+            date_text_month_spanish = tools.MONTHS[date_text_month]
+            date_text = f"{date_text_day} de {date_text_month_spanish}"
+            date_formatted = date.strftime("%Y-%m-%d")
+            
+            # Date status
+            disabled = False
+            active = False
+            if day_num == today_week:
+                active = True
+            elif day_num < today_week:
+                disabled = True
+            
+            # Add date 
+            available_days.append({
+                "name": day_name, 
+                "num": day_num, 
+                "disabled": disabled, 
+                "active": active, 
+                "date": date_formatted, 
+                "date_text": date_text
+            })   
+            
+        # Calculate and format hours
+        hours = list(range(0, 24))
+        disabled_hours = [2, 3, 4, 5, 6]
+        hours = list(filter(lambda hour: hour not in disabled_hours, hours))
+        hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
+        
+        # Calculate free hours for streams
+        for day in available_days:
+            if day["disabled"] == False:
+                
+                # Day variables
+                day_name = day["name"]
+                day_num = day["num"]
+                current_date = day["date"]
+                
+                # get streams of the day 
+                day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
+                day_streams = day_streams.filter(Q(dcount__gt=1) | Q(is_vip=True))
+                
+                # Calculate free hours
+                day_streams_hours = list(map(lambda stream: stream["datetime"].astimezone(user_time_zone).strftime("%H"), day_streams))
+                day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
+                day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
+                available_hours[day_name] = day_available_hours
+                
+        # Remove friday at 7p from available hours
+        available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
+    
+    else:
+        visible_schedule_panel = False
+        
     
     # Render page
     return render(request, 'app/schedule.html', {
@@ -523,6 +536,7 @@ def schedule(request):
         "hours": hours,
         "today_week_name": today_week_name,
         "has_vips": has_vips,
+        "visible_schedule_panel": visible_schedule_panel,
     })
 
 @decorators.validate_login_active

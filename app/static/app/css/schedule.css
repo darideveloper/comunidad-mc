@@ -641,6 +641,21 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin-top: 20px;
   font-size: 1.2rem;
 }
+.my-streams-shedule-form-wrapper .shedule-form .no-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.my-streams-shedule-form-wrapper .shedule-form .no-form p {
+  margin-top: 20px;
+  text-align: center;
+  width: 90%;
+  font-size: 1.2rem;
+}
+.my-streams-shedule-form-wrapper .shedule-form .no-form img {
+  width: 60%;
+}
 
 @media screen and (max-width: 1100px) {
   .my-streams-shedule-form-wrapper {

@@ -49,6 +49,7 @@
         <div class="decorator"></div>
       </div>
 
+      {% if visible_schedule_panel %}
       <form action="." method="post">
         {% csrf_token %}
 
@@ -101,13 +102,19 @@
               Stream VIP
               <input type="checkbox" name="vip" id="vip">
             </label>
-          </div>
+          </div>          
           {% endif %}
 
           <input type="submit" class="btn form regular" value="confirmar" id="submit-btn" disabled>
         </div>
 
       </form>
+      {% else %}
+      <div class="no-form">
+        <p>No puedes agendar streams en este momento</p>
+        <img src="{% static 'app/imgs/icon_ups.png' %}" alt="panel de agendar no disponible">
+      </div>
+      {% endif %}
 
     </div>
   </div>
