@@ -114,8 +114,10 @@ def get_vips_num (user:models.User):
         int: counter of vips
     """
     
+    vips_num = 0
     vips = models.StreamVip.objects.filter(user=user)
-    vips_num = vips.aggregate(Sum('amount'))['amount__sum']
+    if vips:
+        vips_num = vips.aggregate(Sum('amount'))['amount__sum']
     
     return vips_num
     
