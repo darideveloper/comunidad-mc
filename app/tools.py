@@ -304,3 +304,36 @@ def is_triple_time ():
         
     # Validate if the current time its in triple time
     return triple_time_start <= now_time <= triple_end_time
+
+def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
+    """ Return admin type of the user, related with an user_auth
+
+    Args:
+        user (models.User): _description_
+
+    Returns:
+        str: name of the admin type if its admin, None if not
+    """
+    
+    # Validate if there is the user or the user_auth
+    if not user and not user_auth:
+        return None
+    
+    # Get user auth
+    if not user_auth:
+        user_auth = user.user_auth
+        
+    # Get user groups
+    user_groups = user_auth.groups
+    
+    # Validate if user has groups
+    if user_groups:
+        user_group_name = user_groups.first().name
+        
+        # Validate if user is admin
+        if "admin" in user_group_name:
+            return user_group_name
+        
+    # Default return
+    return None
+    

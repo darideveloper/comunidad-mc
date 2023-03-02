@@ -2,22 +2,6 @@ import pytz
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User as UserAuth
-# from django.contrib.auth import get_user_model
-
-# UserAuth = get_user_model()
-
-
-class AdminType (models.Model):
-    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del tipo de administrador", null=False, blank=False, editable=False)
-    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del tipo de administrador", null=False, blank=False, max_length=100)
-    ranking = models.ForeignKey('Ranking', on_delete=models.CASCADE, name='ranking', verbose_name="ranking", help_text="ranking asignado al tipo de administrador", null=False, blank=False)
-    
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        verbose_name = "Tipo de admin"
-        verbose_name_plural = "Tipos de admins"
 
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
@@ -51,7 +35,7 @@ class User (models.Model):
     time_zone = models.ForeignKey('TimeZone', on_delete=models.CASCADE, name='time_zone', verbose_name="zona horaria", help_text="zona horaria", null=True, blank=True)
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
-    admin_type = models.ForeignKey('AdminType', on_delete=models.SET_NULL, name='admin_type', verbose_name="tipo de administrador", help_text="tipo de administrador del usuario", null=True, blank=True)
+    user_auth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, name='user_auth', verbose_name="usuario de autenticación", help_text="usuario del dashboard", null=True, blank=True, default="")
     
     def __str__(self):
         return f"{self.user_name}"
@@ -250,15 +234,3 @@ class StreamVip (models.Model):
     class Meta:
         verbose_name = "Stream Vip"
         verbose_name_plural = "Streams Vip"
-        
-class UserStaff (models.Model):
-    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del usuario staff", null=False, blank=False, editable=False)
-    user_auth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, name='user_auth', verbose_name="usuario de autenticación", help_text="usuario del dashboard", null=False, blank=False)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario de twitch", null=False, blank=False)
-    
-    def __str__(self):
-        return f"{self.user_auth.username} - {self.user}"
-    
-    class Meta:
-        verbose_name = "Usuario staff relacion"
-        verbose_name_plural = "Usuarios staff relaciones"

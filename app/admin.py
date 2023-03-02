@@ -1,5 +1,6 @@
 from . import models 
 from django.contrib import admin
+from . import tools
 
 # Filter classes
 class FilterWeeklyDailyPoints (admin.SimpleListFilter):
@@ -38,9 +39,9 @@ class FilterWeeklyDailyPoints (admin.SimpleListFilter):
 class AdminUser (admin.ModelAdmin):
     
     change_form_template = 'admin/change_form_users.html'    
-    list_display = ('id', 'user_name', 'is_active', 'ranking', 'first_name', 'last_name', 'email', 'phone', 'admin_type')
-    list_filter = ('country', 'time_zone', 'is_active', 'ranking', 'admin_type')
-    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'admin_type')
+    list_display = ('id', 'user_name', 'is_active', 'ranking', 'first_name', 'last_name', 'email', 'phone', 'user_auth')
+    list_filter = ('country', 'time_zone', 'is_active', 'ranking', 'user_auth')
+    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'user_auth')
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
     ordering = ['user_name']
@@ -66,6 +67,23 @@ class AdminStream (admin.ModelAdmin):
     ordering = ('id', 'user', 'datetime')
     list_filter = ('user', 'datetime', 'is_vip', 'is_free')
     search_fields = ('user__user_name', )
+
+    def get_queryset(self, request):
+        
+        # Get admin type
+        user_auth = request.user
+        admin_type = tools.get_admin_type(user_auth=user_auth)
+        print (admin_type)
+
+        if admin_type == "admin platino":
+            # Get all users of the current admin
+            users = models.User.objects.filter(user_auth=user_auth)
+            
+            # Render only streams of the current user
+            return models.Stream.objects.filter(user__in=users)
+            
+        # Render all streams
+        return models.Stream.objects.all()        
     
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
@@ -159,14 +177,6 @@ class AdminStreamExtra (admin.ModelAdmin):
     list_filter = ('user',)
     search_fields = ('user__user_name',)
     
-@admin.register (models.AdminType)
-class AdminAdminType (admin.ModelAdmin):
-    
-    list_display = ('id', 'name', 'ranking')
-    ordering = ('id', 'name', 'ranking')
-    list_filter = ('name', 'ranking')
-    search_fields = ('name', 'ranking__name')
-    
 @admin.register (models.StreamVip)
 class AdminVips (admin.ModelAdmin):
     
@@ -174,11 +184,3 @@ class AdminVips (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
-    
-@admin.register (models.UserStaff)
-class AdminUserStaff (admin.ModelAdmin):
-    
-    list_display = ('id', 'user_auth', 'user')
-    ordering = ('id', 'user_auth', 'user')
-    list_filter = ('user_auth', 'user')
-    search_fields = ('user_auth', 'user')
