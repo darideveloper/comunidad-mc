@@ -360,7 +360,7 @@ class TwitchApi:
                 logger.info(f"Added general point to user: {user}")
                 
                 # Set tripple point if stream is vip of if triple time
-                is_triple_time = self.is_triple_time()
+                is_triple_time = tools.is_triple_time()
                 amount = 1
                 if stream.is_vip or is_triple_time:
                     amount = 3

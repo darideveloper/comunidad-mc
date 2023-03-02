@@ -174,3 +174,11 @@ class AdminVips (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
+    
+@admin.register (models.UserStaff)
+class AdminUserStaff (admin.ModelAdmin):
+    
+    list_display = ('id', 'user_auth', 'user')
+    ordering = ('id', 'user_auth', 'user')
+    list_filter = ('user_auth', 'user')
+    search_fields = ('user_auth', 'user')

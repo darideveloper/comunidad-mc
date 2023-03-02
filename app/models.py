@@ -1,7 +1,11 @@
 import pytz
-import datetime
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User as UserAuth
+# from django.contrib.auth import get_user_model
+
+# UserAuth = get_user_model()
+
 
 class AdminType (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del tipo de administrador", null=False, blank=False, editable=False)
@@ -246,4 +250,15 @@ class StreamVip (models.Model):
     class Meta:
         verbose_name = "Stream Vip"
         verbose_name_plural = "Streams Vip"
+        
+class UserStaff (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del usuario staff", null=False, blank=False, editable=False)
+    user_auth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, name='user_auth', verbose_name="usuario de autenticación", help_text="usuario del dashboard", null=False, blank=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario de twitch", null=False, blank=False)
     
+    def __str__(self):
+        return f"{self.user_auth.username} - {self.user}"
+    
+    class Meta:
+        verbose_name = "Usuario staff relacion"
+        verbose_name_plural = "Usuarios staff relaciones"
