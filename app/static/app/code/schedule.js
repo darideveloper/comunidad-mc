@@ -192,6 +192,8 @@ form.addEventListener ("submit", event => {
     return stream.date == selected_date && stream.hour == selected_time
   })
 
+  // console.log ({selected_date, selected_time, match_streams, streams_date_times})
+
   if (match_streams.length > 0) {
     // Show alert
     Swal.fire({

@@ -485,7 +485,7 @@ def schedule(request):
             available_hours[day_name] = day_available_hours
             
     # Format streams date times
-    streams_date_times = list(map(lambda stream: {"date": stream["date"], "time": stream["time"]}, streams))
+    streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
     
     # Remove friday at 7p from available hours
     available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
