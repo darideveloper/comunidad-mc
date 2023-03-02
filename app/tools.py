@@ -39,7 +39,7 @@ def get_fix_user (user:models.User):
     """
         
     user_picture = user.picture
-    valid_picture = True
+    online_picture = True
         
     if not "/static/" in user_picture:
         
@@ -47,17 +47,24 @@ def get_fix_user (user:models.User):
         try:
             res = req.get (user_picture)
         except:
-            valid_picture = False
+            online_picture = False
         else:        
             if not res.status_code == 200:
-                valid_picture = False
-                
-        print (user_picture, user_picture.endswith(".jpg"), valid_picture)
+                online_picture = False
         
+        # Check picture extension 
+        valid_extension = False
+        valid_extensions = [".jpg", ".png", ".jpeg", ".gif"]
+        for ext in valid_extensions:
+            if ext in user_picture:
+                valid_extension = True
+                break
+                        
         # Use profile image if error
-        if not user_picture or not user_picture.endswith(".jpg") or not valid_picture:
+        if not valid_extension or not online_picture:
+            print (user_picture)
             user.picture = "/static/app/imgs/profile.png"
-            user.save()
+            # user.save()
             
     # Return user with new profile image
     return user
