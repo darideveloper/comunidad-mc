@@ -353,7 +353,8 @@ class TwitchApi:
                 streamer = stream.user
                 
                 # Subtract point to streamer (except rankings: admin and free streams)
-                if not streamer.admin_type and not stream.is_free:
+                admin_type = tools.get_admin_type(user=streamer)
+                if not admin_type and not stream.is_free:
                     tools.set_negative_point (streamer, 1, "viwer asistió a stream", stream)
                 
                 # Add point in background

@@ -324,16 +324,17 @@ def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
         user_auth = user.user_auth
         
     # Get user groups
-    user_groups = user_auth.groups
-    
-    # Validate if user has groups
-    if user_groups:
-        user_group_name = user_groups.first().name
+    if user_auth:
+        user_groups = user_auth.groups
         
-        # Validate if user is admin
-        if "admin" in user_group_name:
-            return user_group_name
-        
+        # Validate if user has groups
+        if user_groups:
+            user_group_name = user_groups.first().name
+            
+            # Validate if user is admin
+            if "admin" in user_group_name:
+                return user_group_name
+            
     # Default return
     return None
     

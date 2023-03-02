@@ -31,7 +31,8 @@ def validate_admin (function):
     @wraps(function)
     def wrap (request, *args, **kwargs):
         user, *other = tools.get_cookies_data(request, delete_data=False)
-        if user.admin_type:
+        admin_type = tools.get_admin_type (user=user)
+        if admin_type:
             return function(request, *args, **kwargs)
         else:
             return redirect ("support")
