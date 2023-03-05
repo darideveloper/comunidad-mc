@@ -59,7 +59,8 @@ if today == RESTART_POINTS_WEEK_DAY:
         # Set ranking to admins
         admin_type = tools.get_admin_type (user)
         if admin_type:
-            ranking = user.admin_type.ranking
+            admin_name = admin_type.replace ("admin", "").strip()
+            ranking = Ranking.objects.get (name=admin_name)
         else:
             # Found new ranking
             for ranking in rankings:
@@ -80,7 +81,6 @@ if today == RESTART_POINTS_WEEK_DAY:
     
     # Add bits to first, second and third users in points table
     points_history_all = PointsHistory.objects.all().order_by("general_points").reverse()
-    print (points_history_all)
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user
@@ -91,7 +91,7 @@ if today == RESTART_POINTS_WEEK_DAY:
     
     # Add a vip to first user
     StreamVip (user=first_user).save ()
-    print ("Vips added to first user")
+    print ("Vip added to first user")
     
     # Delete top daily points
     TopDailyPoint.objects.all().delete()
@@ -102,8 +102,8 @@ if today == RESTART_POINTS_WEEK_DAY:
     print ("week points deleted")
     
     # Delete all points
-    GeneralPoint.objects.all().delete()
-    print ("all points deleted")
+    # GeneralPoint.objects.all().delete()
+    # print ("all points deleted")
     
 else:        
     # delete all daily points
