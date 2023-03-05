@@ -18,9 +18,7 @@
       </label>
 
       <a href="{{twitch_refresh_link}}" class="btn form regular">Actualizar</a>
-
     </div>
-
 
     <div class="referral-table card">
       <div class="title-card">
@@ -28,9 +26,9 @@
         <div class="decorator"></div>
       </div>
 
-      <div class="referrals">
+      <div class="referral-rows">
         {% for referral in referrals %}
-          <div class="referral">
+          <div class="referral-row">
             <span class="user">{{referral.user}}</span>
             <span class="points">{{referral.points}}</span>
           </div>

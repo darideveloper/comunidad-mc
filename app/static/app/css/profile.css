@@ -645,27 +645,31 @@ main.profile .content .card.info .profile {
 main.profile .content .card.referral-table .title-card {
   margin-left: -30px;
 }
-main.profile .content .card.referral-table .referrals {
+main.profile .content .card.referral-table .referral-rows {
   width: 100%;
   position: relative;
   margin-top: 25px;
 }
-main.profile .content .card.referral-table .referrals .referral {
+main.profile .content .card.referral-table .referral-rows .referral-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px 0;
 }
-main.profile .content .card.referral-table .referrals .referral span {
+main.profile .content .card.referral-table .referral-rows .referral-row span {
   color: #cfd5dc;
   font-size: 1.1rem;
   font-weight: bold;
 }
-main.profile .content .card.referral-table .referrals .referral span.user {
+main.profile .content .card.referral-table .referral-rows .referral-row span.user {
   text-align: left;
 }
-main.profile .content .card.referral-table .referrals .referral span.points {
+main.profile .content .card.referral-table .referral-rows .referral-row span.points {
   text-align: right;
+}
+main.profile .content .referral {
+  display: flex;
+  flex-direction: column;
 }
 @media screen and (max-width: 1050px) {
   main.profile .content .left, main.profile .content .right {

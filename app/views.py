@@ -695,7 +695,7 @@ def profile(request):
     ]
     
     # Get referral link
-    referral_link = "/"
+    referral_link = tools.get_referral_link (user)
 
     # Render page
     return render(request, 'app/profile.html', {

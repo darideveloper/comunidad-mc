@@ -8,8 +8,9 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 # Get enviroment variables
-TRIPLE_POINTS_START = os.environ.get("TRIPLE_POINTS_START")
+HOST = os.environ.get("HOST")
 TRIPLE_POINTS_END = os.environ.get("TRIPLE_POINTS_END")
+TRIPLE_POINTS_START = os.environ.get("TRIPLE_POINTS_START")
 
 # Shared const
 WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
@@ -346,4 +347,13 @@ def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
             
     # Default return
     return None
+
+def get_referral_link (user:models.User):
+    """ 
+
+    Args:
+        user (models.User): _description_
+    """
     
+    referral_link = f"{HOST}landing?referred={user.user_name}"
+    return referral_link
