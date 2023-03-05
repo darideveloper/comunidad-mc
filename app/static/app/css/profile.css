@@ -101,6 +101,9 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.btn.form.primary {
+  background-color: #7a70b3;
+}
 
 ::-webkit-scrollbar {
   width: 4px;

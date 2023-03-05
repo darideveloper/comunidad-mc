@@ -39,6 +39,8 @@
   </div>
   <div class="right">
     <form action="." method="POST" class="card form">
+
+      {% csrf_token %}
       
       <label class="country">
         <span>País</span>
@@ -54,7 +56,7 @@
         </select>
       </label>
       
-      <button class="btn form green" type="submit" disabled>Guardar</button>
+      <button class="btn form primary" type="submit" disabled>Guardar</button>
 
     </form>
 
@@ -73,9 +75,9 @@
 <script>
   const current_contry = "{{country}}"
   const current_time_zone = "{{time_zone}}"
-  console.log ({current_contry, current_time_zone})
 </script>
 
 <script src="{% static 'app/code/select-country.js' %}"></script>
 <script src="{% static 'app/code/select-time-zone.js' %}"></script>
+<script src="{% static 'app/code/profile.js' %}"></script>
 {% endblock %}

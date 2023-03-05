@@ -349,7 +349,7 @@ def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
     return None
 
 def get_referral_link (user:models.User):
-    """ 
+    """ Generate referral link for the user
 
     Args:
         user (models.User): _description_
@@ -357,3 +357,41 @@ def get_referral_link (user:models.User):
     
     referral_link = f"{HOST}/landing?referred={user.user_name}"
     return referral_link
+
+def get_create_country (country_name:str):
+    """ Return or create (if not exists) a country
+
+    Args:
+        country_name (str): country name
+        
+    Returns:
+        models.Country: country instance
+    """
+    
+    countries = models.Country.objects.filter(country=country_name)
+    if countries:
+        country = countries.first()
+    else:
+        country = models.Country (country=country_name)
+        country.save()
+    
+    return country
+        
+def get_create_time_zone (time_zone_name:str):
+    """ Return or create (if not exists) a time zone
+
+    Args:
+        time_zone_name (str): time zone name
+        
+    Returns:
+        models.Country: country instance
+    """
+    
+    time_zones = models.TimeZone.objects.filter(time_zone=time_zone_name)
+    if time_zones:
+        time_zone = time_zones.first()
+    else:
+        time_zone = models.TimeZone (time_zone=time_zone_name)
+        time_zone.save()
+    
+    return time_zone

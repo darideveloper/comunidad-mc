@@ -187,8 +187,8 @@ def register(request):
         # Get user data from form
         first_name = request.POST.get("first-name", "")
         last_name = request.POST.get("last-name", "")
-        country = request.POST.get("country", "")
-        time_zone = request.POST.get("time-zone", "")
+        country_name = request.POST.get("country", "")
+        time_zone_name = request.POST.get("time-zone", "")
         phone = request.POST.get("full-phone", "")
         
         if not first_name or not last_name or not country or not time_zone or not phone:
@@ -204,21 +204,14 @@ def register(request):
             })
 
         # Create country and time zone objects
-        country_obj = models.Country.objects.filter(country=country).first()
-        time_zone_obj = models.TimeZone.objects.filter(
-            time_zone=time_zone).first()
-        if not country_obj:
-            country_obj = models.Country(country=country)
-            country_obj.save()
-        if not time_zone_obj:
-            time_zone_obj = models.TimeZone(time_zone=time_zone)
-            time_zone_obj.save()
+        country = tools.get_create_country(country_name)
+        time_zone = tools.get_create_time_zone(time_zone_name)
 
         # Update user data
         user.first_name = first_name
         user.last_name = last_name
-        user.country = country_obj
-        user.time_zone = time_zone_obj
+        user.country = country
+        user.time_zone = time_zone
         user.phone = phone
         user.save()
 
@@ -673,7 +666,27 @@ def ranking(request):
 def profile(request):
     """ Page for show and update the user data """
     
-    user, message, _ = tools.get_cookies_data(request)
+    user, *other = tools.get_cookies_data(request)
+    
+    # Update user data in post
+    message = ""
+    if request.method == "POST":
+        
+        # Get country and time zone from form
+        country_name = request.POST.get("country")
+        time_zone_name = request.POST.get("time-zone")
+                
+        # Create country and time zone objects
+        country = tools.get_create_country(country_name)
+        time_zone = tools.get_create_time_zone(time_zone_name)
+        
+        # Update user data
+        user.country = country
+        user.time_zone = time_zone
+        user.save ()
+        
+        # Confirmation message
+        message = "Datos actualziados correctamente"
     
     # Get user data
     twitch_id = user.id
@@ -696,6 +709,8 @@ def profile(request):
     
     # Get referral link
     referral_link = tools.get_referral_link (user)
+
+    print (message)
 
     # Render page
     return render(request, 'app/profile.html', {
