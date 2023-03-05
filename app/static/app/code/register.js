@@ -18,3 +18,11 @@ function update_full_number () {
 }
 country.addEventListener("change", update_full_number)
 phone.addEventListener("change", update_full_number)
+
+// Show loading when the form is submitted
+const form = document.querySelector("form")
+form.addEventListener("submit", e => {
+  e.preventDefault()
+  document.querySelector(".loading-wrapper").classList.remove("hide")
+  form.submit ()
+})
