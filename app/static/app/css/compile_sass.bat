@@ -8,4 +8,5 @@ sass register.sass register.css & ^
 sass schedule.sass schedule.css & ^
 sass support.sass support.css & ^
 sass whatsapp.sass whatsapp.css & ^
-sass users-points.sass users-points.css
+sass users-points.sass users-points.css & ^
+sass profile.sass profile.css

@@ -356,6 +356,24 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   z-index: -1;
 }
 
+.referral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 50px;
+  width: 100%;
+}
+.referral p {
+  text-transform: uppercase;
+}
+.referral span {
+  background-color: #17181D;
+  padding: 5px 10px;
+  margin-left: 20px;
+  color: #cfd5dc;
+}
+
 .loading-wrapper {
   width: 100vw;
   height: 100vh;
@@ -439,30 +457,31 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   box-sizing: content-box;
 }
 
-.profile-card.vertical {
-  position: relative;
-  width: 250px;
-  text-align: center;
-  padding-bottom: 10px;
-}
-.profile-card.vertical .profile {
+.profile {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-.profile-card.vertical .profile img.ranking {
+.profile img.ranking {
   width: 80px;
   margin: 0 auto;
   margin-bottom: -9px;
   margin-left: 35px;
   transform: rotate(-30deg);
 }
-.profile-card.vertical .profile img.profile-image {
+.profile img.profile-image {
   width: 150px;
   border-radius: 50%;
   margin: 0 auto;
   margin-bottom: 10px;
+}
+
+.profile-card.vertical {
+  position: relative;
+  width: 250px;
+  text-align: center;
+  padding-bottom: 10px;
 }
 .profile-card.vertical .bg {
   z-index: -1;
@@ -650,22 +669,6 @@ main.support > .content .streams .streams-cards .stream-card .btn.cta {
 }
 main.support > .content .streams .streams-cards .stream-card .btn.cta span {
   font-weight: bold;
-}
-main.support > .content .streams .referral {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  margin-top: 50px;
-}
-main.support > .content .streams .referral p {
-  text-transform: uppercase;
-}
-main.support > .content .streams .referral span {
-  background-color: #17181D;
-  padding: 5px 10px;
-  margin-left: 20px;
-  color: #cfd5dc;
 }
 @media screen and (max-width: 1100px) {
   main.support > .content .streams .streams-cards {

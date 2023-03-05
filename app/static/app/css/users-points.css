@@ -27,11 +27,11 @@
   display: inline-block;
   font-weight: bold;
 }
-.btn.cta:hover .content {
+.btn.cta:hover .content, .btn.cta.active .content {
   background-color: rgba(122, 112, 179, 0.1);
   gap: 0px;
 }
-.btn.cta:hover .content svg {
+.btn.cta:hover .content svg, .btn.cta.active .content svg {
   width: 0px;
 }
 .btn.cta:active .content {
@@ -354,6 +354,24 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   top: 10px;
   left: 0px;
   z-index: -1;
+}
+
+.referral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 50px;
+  width: 100%;
+}
+.referral p {
+  text-transform: uppercase;
+}
+.referral span {
+  background-color: #17181D;
+  padding: 5px 10px;
+  margin-left: 20px;
+  color: #cfd5dc;
 }
 
 .loading-wrapper {

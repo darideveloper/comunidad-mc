@@ -1,0 +1,9 @@
+{% load static %}
+
+<div class="profile">
+  {% with 'app/imgs/icon_'|add:ranking|add:'.png' as ranking_image %}
+    <img src="{% static ranking_image %}" alt="icono de rango: {{ranking}}" title="rango {{ranking}}"
+    class="ranking">
+  {% endwith %}
+  <img src="{{profile_image}}" alt="imagen de perfil de {{name}}" class="profile-image" title="{{name}}">
+</div>

@@ -457,139 +457,261 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   box-sizing: content-box;
 }
 
-main.register {
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.profile img.ranking {
+  width: 80px;
+  margin: 0 auto;
+  margin-bottom: -9px;
+  margin-left: 35px;
+  transform: rotate(-30deg);
+}
+.profile img.profile-image {
+  width: 150px;
+  border-radius: 50%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.profile-card.vertical {
   position: relative;
+  width: 250px;
+  text-align: center;
+  padding-bottom: 10px;
 }
-main.register img {
-  width: 50px;
-}
-main.register img.decoration {
-  height: 300px;
-  position: absolute;
-  width: auto;
+.profile-card.vertical .bg {
   z-index: -1;
+  position: absolute;
+  background-color: #17181D;
+  border-radius: 10px;
 }
-main.register img.decoration.top-left {
-  top: 0;
+.profile-card.vertical h1, .profile-card.vertical h2 {
+  text-transform: uppercase;
+}
+.profile-card.vertical p {
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding: 10px 0;
+  margin: 0;
+}
+.profile-card.vertical .bg {
+  width: 100%;
+  height: calc(100% - 100px);
+  bottom: 0;
   left: 0;
 }
-main.register img.decoration.bottom-right {
-  bottom: 0;
-  right: 0;
-}
-main.register .content {
+.profile-card.horizontal {
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 50px;
+  justify-content: flex-start;
 }
-main.register .content .left, main.register .content .right {
-  width: 50%;
+.profile-card.horizontal.small .points-wrapper .point:nth-child(2) {
+  display: none;
 }
-main.register .content .left img {
-  width: 80%;
+.profile-card.horizontal .profile {
+  position: relative;
 }
-main.register .content .right {
+.profile-card.horizontal .profile img.ranking {
+  margin-left: -16px;
+  width: 40px;
+  position: absolute;
+  top: -32px;
+  left: 5px;
+  transform: rotate(-30deg);
+}
+.profile-card.horizontal .profile img.profile-image {
+  width: 90px;
+  border-radius: 50%;
+}
+.profile-card.horizontal .bg {
+  width: calc(100% - 30px);
+  height: 60px;
+  bottom: 16px;
+  left: 30px;
+  position: absolute;
+  background-color: #17181D;
+  z-index: -1;
+}
+.profile-card.horizontal .points-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 100px;
-  margin-top: 30px;
+  justify-content: space-evenly;
+  width: calc(100% - 100px);
 }
-main.register .content .right img.logo {
-  width: 150px;
-}
-main.register .content .right img.profile {
-  border-radius: 50px;
-  margin-top: 20px;
+.profile-card.horizontal .points-wrapper .point {
   width: 50px;
-}
-main.register .content .right h1 {
-  font-weight: bold;
-  font-size: 2rem;
-  margin-bottom: 0;
+  height: 70px;
+  background-color: #0e1119;
+  padding: 0 20px;
+  background-color: #3f3b59;
   text-align: center;
 }
-main.register .content .right form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
+.profile-card.horizontal .points-wrapper .point h2 {
+  font-size: 0.7rem;
 }
-main.register .content .right form label {
-  width: 80%;
-  margin-top: 20px;
-}
-main.register .content .right form label:hover span {
-  opacity: 1;
-}
-main.register .content .right form label span {
-  font-size: 0.9rem;
-  color: #cfd5dc;
-  margin: 10px 0;
-  display: inline-block;
-  margin-left: 10px;
-  opacity: 0.7;
-  transition-duration: 0.3s;
-}
-main.register .content .right form label input.text {
-  width: calc(100% - 50px - 8px);
-}
-main.register .content .right form label input.text:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-main.register .content .right form label select {
-  width: 100%;
-}
-main.register .content .right form label input, main.register .content .right form label select {
-  border: none;
-  background: #17181D;
-  padding: 8px 25px;
-  color: #cfd5dc;
-  border-radius: 5px;
-  transition-duration: 0.3s;
-  border: 4px solid #17181D;
+.profile-card.horizontal .points-wrapper .point p {
   font-size: 1rem;
+  font-weight: bold;
+  margin-top: 0;
 }
-main.register .content .right form label input:focus, main.register .content .right form label select:focus {
-  background: #0e1119;
-}
-main.register .content .right form label.btn.cta {
-  margin-top: 40px;
-}
-main.register .content .right form label.btn.cta .content {
-  padding: 5px 0;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-main.register .content .right form label.btn.cta .content span {
-  font-size: 1.5rem;
-}
-main.register .content .right form label.phone .input-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  font-size: 1.2rem;
-}
-main.register .content .right form label.phone .input-wrapper span {
-  display: inline-block;
-  width: 30px;
-}
-main.register .content .right form label.phone .input-wrapper input {
-  width: calc(100% - 30px);
-}
-@media screen and (max-width: 750px) {
-  main.register .content .left {
-    display: none;
-  }
-  main.register .content .right {
-    width: 100%;
+@media screen and (max-width: 480px) {
+  .profile-card.horizontal .points-wrapper .point {
+    padding: 0 10px;
   }
 }
 
-/*# sourceMappingURL=register.css.map */
+main.profile .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 100px);
+  gap: 30px;
+  margin-bottom: 20px;
+}
+main.profile .content .left {
+  width: 400px;
+}
+main.profile .content .right {
+  width: calc(100% - 400px);
+  max-width: 600px;
+}
+main.profile .content .left, main.profile .content .right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 180px;
+}
+main.profile .content .left > *, main.profile .content .right > * {
+  width: 100%;
+}
+main.profile .content .card {
+  background-color: #17181D;
+  position: relative;
+  padding: 30px;
+  width: calc(100% - 60px);
+  border-radius: 12px;
+}
+main.profile .content .card label {
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #cfd5dc;
+  display: block;
+  display: flex;
+  flex-direction: column;
+}
+main.profile .content .card label input, main.profile .content .card label select {
+  width: calc(100% - 40px);
+  padding: 5px 20px;
+  border: 1px solid #cfd5dc;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #0e1119;
+  background-color: #cfd5dc;
+  display: inline-block;
+}
+main.profile .content .card label input[readonly], main.profile .content .card label select[readonly] {
+  color: rgba(14, 17, 25, 0.6);
+  background-color: rgab(#cfd5dc, 0.8);
+  cursor: not-allowed;
+}
+main.profile .content .card label select {
+  width: 100%;
+}
+main.profile .content .card .btn.form {
+  font-size: 1rem;
+  margin: 0 auto;
+  display: table;
+}
+main.profile .content .card.info {
+  padding-top: 80px;
+}
+main.profile .content .card.info .profile {
+  width: 260px;
+  position: absolute;
+  top: -160px;
+  left: -80px;
+}
+main.profile .content .card.referral-table .title-card {
+  margin-left: -30px;
+}
+main.profile .content .card.referral-table .referrals {
+  width: 100%;
+  position: relative;
+  margin-top: 25px;
+}
+main.profile .content .card.referral-table .referrals .referral {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+main.profile .content .card.referral-table .referrals .referral span {
+  color: #cfd5dc;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+main.profile .content .card.referral-table .referrals .referral span.user {
+  text-align: left;
+}
+main.profile .content .card.referral-table .referrals .referral span.points {
+  text-align: right;
+}
+@media screen and (max-width: 1050px) {
+  main.profile .content .left, main.profile .content .right {
+    margin-top: 20px;
+  }
+  main.profile .content .card.info {
+    padding-top: 20px;
+  }
+  main.profile .content .card.info .profile {
+    position: initial;
+    margin: 0 auto;
+  }
+}
+@media screen and (max-width: 950px) {
+  main.profile .content {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+  main.profile .content .left, main.profile .content .right {
+    width: 450px;
+  }
+}
+@media screen and (max-width: 550px) {
+  main.profile .content {
+    width: 80%;
+  }
+  main.profile .content .left, main.profile .content .right {
+    width: 100%;
+  }
+  main.profile .content .card {
+    width: calc(100% - 60px);
+  }
+  main.profile .content .card.info .profile {
+    width: 150px;
+  }
+  main.profile .content .card.info .profile img {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  main.profile .content .card.info .profile .ranking {
+    display: none;
+  }
+  main.profile .content .right .referral {
+    margin-top: 10px;
+  }
+}
+
+/*# sourceMappingURL=profile.css.map */

@@ -674,6 +674,28 @@ def profile(request):
     """ Page for show and update the user data """
     
     user, message, _ = tools.get_cookies_data(request)
+    
+    # Get user data
+    twitch_id = user.id
+    phone = user.phone
+    twitch_refresh_link = "/"
+    country = user.country
+    time_zone = user.time_zone
+    
+    # TODO: Get referrals
+    referrals = [
+        {
+            "user": "Sample User 1",
+            "points": 10
+        },
+        {
+            "user": "Sample User 2",
+            "points": 0
+        }
+    ]
+    
+    # Get referral link
+    referral_link = "/"
 
     # Render page
     return render(request, 'app/profile.html', {
@@ -681,6 +703,21 @@ def profile(request):
         "message": message,
         "current_page": "profile",
         "user_active": True,
+        
+        # User profile context
+        "current_page": "profile",
+        "profile_image": user.picture,
+        "ranking": user.ranking.name,
+        
+        # Specific context
+        "twitch_id": twitch_id,
+        "phone": phone,
+        "twitch_refresh_link": twitch_refresh_link,
+        "country": country,
+        "time_zone": time_zone,
+        "referrals": referrals,
+        "referral_link": referral_link,
+        
     })
 
 @decorators.validate_login_active

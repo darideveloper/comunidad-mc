@@ -1,0 +1,150 @@
+@import 'base'
+@import 'profile-card'
+
+main.profile .content
+    display: flex
+    align-items: center
+    justify-content: center
+    width: calc(100% - 100px)
+    gap: 30px
+    margin-bottom: 20px
+
+    .left
+        width: 400px
+
+    .right
+        width: calc(100% - 400px)
+        max-width: 600px
+
+    .left, .right
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        gap: 30px
+        margin-top: 180px
+
+        > *
+            width: 100%
+
+    .card
+        background-color: $color-bg-light
+        position: relative
+        padding: 30px
+        width: calc(100% - 60px)
+        border-radius: 12px
+
+        label
+            width: 100%
+            font-size: 1.2rem
+            font-weight: bold
+            color: $color-text
+            display: block
+            display: flex
+            flex-direction: column
+
+            input, select
+                width: calc(100% - 40px)
+                padding: 5px 20px
+                border: 1px solid $color-text
+                border-radius: 5px
+                margin-top: 10px
+                font-size: 1.2rem
+                margin-bottom: 30px
+                color: $color-bg
+                background-color: $color-text
+                display: inline-block
+
+                &[readonly]
+                    color: rgba($color-bg, 0.6)
+                    background-color: rgab($color-text, 0.8)
+                    cursor: not-allowed
+
+            select
+                width: 100%
+
+
+        .btn.form
+            font-size: 1rem
+            margin: 0 auto
+            display: table
+
+        &.info
+            padding-top: 80px
+
+            .profile
+                width: 260px
+                position: absolute
+                top: -160px
+                left: -80px
+
+        &.referral-table
+
+            .title-card
+                margin-left: -30px
+
+            .referrals
+                width: 100%
+                position: relative
+                margin-top: 25px
+
+                .referral
+                    display: flex
+                    align-items: center
+                    justify-content: space-between
+                    margin: 10px 0
+
+                    span
+                        color: $color-text
+                        font-size: 1.1rem
+                        font-weight: bold
+
+                        &.user
+                            text-align: left
+
+                        &.points
+                            text-align: right
+
+    @media screen and (max-width: 1050px)
+
+        .left, .right
+            margin-top: 20px
+
+        .card.info
+            padding-top: 20px
+
+            .profile
+                position: initial
+                margin: 0 auto
+
+    @media screen and (max-width: 950px)
+        flex-direction: column
+        gap: 0
+        padding: 0
+        
+        .left, .right
+            width: 450px
+
+    @media screen and (max-width: 550px)     
+        width: 80%
+
+        .left, .right
+            width: 100%
+
+        .card
+            width: calc(100% - 60px)
+
+            &.info .profile
+                width: 150px
+
+                img
+                    width: 100%
+                    margin-bottom: 10px
+
+                .ranking
+                    display: none
+
+        .right
+            .referral
+                margin-top: 10px
+

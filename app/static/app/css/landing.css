@@ -356,6 +356,24 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   z-index: -1;
 }
 
+.referral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 50px;
+  width: 100%;
+}
+.referral p {
+  text-transform: uppercase;
+}
+.referral span {
+  background-color: #17181D;
+  padding: 5px 10px;
+  margin-left: 20px;
+  color: #cfd5dc;
+}
+
 .loading-wrapper {
   width: 100vw;
   height: 100vh;

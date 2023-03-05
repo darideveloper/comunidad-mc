@@ -2,8 +2,74 @@
 {% load static %}
 
 {% block main %}
-<div class="regular-width content">
-  <h1>Hola {{name}}</h1>
-  <p>{{current_page}}</p>
+<div class="content regular-width">
+  <div class="left">
+    <div class="info card">
+      {% include 'app/components/profile.html' %}
+
+      <label>
+        <span>ID Twitch</span>
+        <input type="text" name="twitch-id" value="{{twitch_id}}" readonly>
+      </label>
+
+      <label>
+        <span>Felefono</span>
+        <input type="text" name="phone" value="{{phone}}" readonly>
+      </label>
+
+      <a href="{{twitch_refresh_link}}" class="btn form regular">Actualizar</a>
+
+    </div>
+
+
+    <div class="referral-table card">
+      <div class="title-card">
+        <h2>REFERIDOS</h2>
+        <div class="decorator"></div>
+      </div>
+
+      <div class="referrals">
+        {% for referral in referrals %}
+          <div class="referral">
+            <span class="user">{{referral.user}}</span>
+            <span class="points">{{referral.points}}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+  <div class="right">
+    <form action="." method="POST" class="card form">
+      
+      <label class="country">
+        <span>País</span>
+        <select name="country" id="country">
+          <option value=""></option>
+        </select>
+      </label>
+
+      <label class="time-zone">
+        <span>Zona horaria</span>
+        <select name="time-zone" id="time-zone">
+          <option value=""></option>
+        </select>
+      </label>
+      
+      <button class="btn form green" type="submit" disabled>Guardar</button>
+
+    </form>
+
+    <div class="referral">
+      <p>Invita a un amigo a unirse</p>
+      <span>{{referral_link}}</span>
+    </div>
+
+  </div>  
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/profile-card.js' %}"></script>
+<script src="{% static 'app/code/support.js' %}" type="module"></script>
 {% endblock %}
