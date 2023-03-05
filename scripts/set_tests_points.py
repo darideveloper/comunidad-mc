@@ -15,10 +15,10 @@ from app.twitch import TwitchApi
 
 # Users to add points
 users = [
-    # "darideveloper4",
-    # "DariDeveloper", 
-    # "minecuak", 
-    # "danigempleis", 
+    "darideveloper4",
+    "DariDeveloper", 
+    "minecuak", 
+    "danigempleis", 
     "Lucifer__TV__", 
     "yarawtm", 
     "sauromplays", 

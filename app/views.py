@@ -502,7 +502,8 @@ def schedule(request):
                 available_hours[day_name] = day_available_hours
                 
         # Remove friday at 7p from available hours
-        available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
+        if "viernes" in available_hours:
+            available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
     
     else:
         visible_schedule_panel = False
@@ -674,6 +675,10 @@ def profile(request):
         # Get country and time zone from form
         country_name = request.POST.get("country")
         time_zone_name = request.POST.get("time-zone")
+        phone = request.POST.get("phone")
+        
+        # Clean phgone number
+        phone = tools.clean_phone (phone)
                 
         # Create country and time zone objects
         country = tools.get_create_country(country_name)
@@ -682,6 +687,7 @@ def profile(request):
         # Update user data
         user.country = country
         user.time_zone = time_zone
+        user.phone = phone
         user.save ()
         
         # Confirmation message

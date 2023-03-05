@@ -395,3 +395,20 @@ def get_create_time_zone (time_zone_name:str):
         time_zone.save()
     
     return time_zone
+
+def clean_phone (phone:str):
+    """ Clean extra chars from phone number
+
+    Args:
+        phone (str): input phone number
+
+    Returns:
+        str: clean phone number
+    """
+    
+    clean_number = ""
+    for char in phone:
+        if char.isdigit():
+            clean_number += char
+    
+    return clean_number

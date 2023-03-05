@@ -57,7 +57,8 @@ if today == RESTART_POINTS_WEEK_DAY:
         *other, general_points_num, weekly_points_num, _ = tools.get_user_points (user)
         
         # Set ranking to admins
-        if user.admin_type:
+        admin_type = tools.get_admin_type (user)
+        if admin_type:
             ranking = user.admin_type.ranking
         else:
             # Found new ranking
