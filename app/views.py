@@ -192,7 +192,7 @@ def register(request):
             user.last_name = last_name
             user.country = country
             user.time_zone = time_zone
-            user.phone = phone
+            user.phone = tools.clean_phone(phone)
             user.save()
             
             # Save message for show in home page
