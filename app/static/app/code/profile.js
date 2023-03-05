@@ -1,11 +1,17 @@
-const button = document.querySelector(".btn.form.primary")
-console.log (button)
+const submit_button = document.querySelector(".btn.form.primary")
 
 // Activate update button when country or time zone is changed
 country.addEventListener('change', () => {
-  button.disabled = false
+  submit_button.disabled = false
 })
 
 time_zone.addEventListener('change', () => {
-  button.disabled = false
+  submit_button.disabled = false
+})
+
+// Show animation when click submit buttons
+document.querySelectorAll(".btn").forEach ((button) => {
+  button.addEventListener('click', () => {
+    document.querySelector(".loading-wrapper").classList.remove("hide")
+  })
 })
