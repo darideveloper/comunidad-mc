@@ -1,5 +1,4 @@
 // Nodes
-const country = document.querySelector("#country")
 const country_code = document.querySelector("#country-code")
 const phone = document.querySelector("#phone")
 const full_number = document.querySelector("#full-phone")

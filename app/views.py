@@ -171,18 +171,8 @@ def register(request):
     if not user or (user.first_name and user.first_name.strip() != ""):
         return redirect("home")
 
-    # Retrurn template in get method with user data
-    if request.method == "GET":
-        return render(request, 'app/register.html', {
-            "id": user.id,
-            "email": user.email,
-            "picture": user.picture,
-            "user_name": user.user_name,
-            "current_page": "register",
-            "user_active": False,
-        })
-
-    elif request.method == "POST":
+    error = ""
+    if request.method == "POST":
 
         # Get user data from form
         first_name = request.POST.get("first-name", "")
@@ -191,35 +181,42 @@ def register(request):
         time_zone_name = request.POST.get("time-zone", "")
         phone = request.POST.get("full-phone", "")
         
-        if not first_name or not last_name or not country or not time_zone or not phone:
+        if first_name and last_name and country_name and time_zone_name and phone:
+            
+            # Create country and time zone objects
+            country = tools.get_create_country(country_name)
+            time_zone = tools.get_create_time_zone(time_zone_name)
+
+            # Update user data
+            user.first_name = first_name
+            user.last_name = last_name
+            user.country = country
+            user.time_zone = time_zone
+            user.phone = phone
+            user.save()
+            
+            # Save message for show in home page
+            request.session["message"] = "Registro completado con éxito"
+
+            # Redirect to home
+            return redirect("home")
+
+        else:
             # Show error if data is not valid
-            return render(request, 'app/register.html', {
-                "id": user.id,
-                "email": user.email,
-                "picture": user.picture,
-                "user_name": user.user_name,
-                "error": "Algo salió mal, intente de nuevo",
-                "current_page": "register",
-                "user_active": False,
-            })
+            error = "Algo salió mal, intente de nuevo"
 
-        # Create country and time zone objects
-        country = tools.get_create_country(country_name)
-        time_zone = tools.get_create_time_zone(time_zone_name)
-
-        # Update user data
-        user.first_name = first_name
-        user.last_name = last_name
-        user.country = country
-        user.time_zone = time_zone
-        user.phone = phone
-        user.save()
-
-        # Save message for show in home page
-        request.session["message"] = "Registro completado con éxito"
-
-        return redirect("home")
-
+    # Default response
+    return render(request, 'app/register.html', {
+        "id": user.id,
+        "email": user.email,
+        "picture": user.picture,
+        "user_name": user.user_name,
+        "current_page": "register",
+        "user_active": False,
+        "country": "México",
+        "time_zone": "America/Mexico_City",
+        "error": error,
+    })
 
 def error404(request, exception):
     return render(request, 'app/404.html')
