@@ -666,10 +666,9 @@ def ranking(request):
 def profile(request):
     """ Page for show and update the user data """
     
-    user, *other = tools.get_cookies_data(request)
+    user, message, _ = tools.get_cookies_data(request)
     
     # Update user data in post
-    message = ""
     if request.method == "POST":
         
         # Get country and time zone from form
@@ -690,10 +689,14 @@ def profile(request):
     
     # Get user data
     twitch_id = user.id
-    phone = user.phone
-    twitch_refresh_link = "/"
+    email = user.email
+    user_name = user.user_name
+    
+    
+    twitch_refresh_link = "/update-twitch-data/"
     country = user.country
     time_zone = user.time_zone
+    phone = user.phone
     
     # TODO: Get referrals
     referrals = [
@@ -732,7 +735,8 @@ def profile(request):
         "time_zone": time_zone,
         "referrals": referrals,
         "referral_link": referral_link,
-        
+        "user_name": user_name,
+        "email": email,
     })
 
 @decorators.validate_login_active
@@ -830,3 +834,15 @@ def cancel_stream (request, id):
     # redirect
     return redirect('schedule')
     
+@csrf_exempt
+def update_twitch_data (request):
+    """ Update user data from twitch """
+    
+    # Get user data
+    user, *other = tools.get_cookies_data(request)
+    
+    twitch.update_twitch_data (user)
+    
+    # Redirect
+    request.session["message"] = "Datos actualizados desde Twitch."
+    return redirect('profile')

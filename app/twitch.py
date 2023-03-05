@@ -432,3 +432,24 @@ class TwitchApi:
             is_live = True
             
         return is_live
+    
+    def update_twitch_data (self, user: models.User):
+        """ Update twitch user name, profile image and id
+
+        Args:
+            user (models.User): user object
+        """
+        
+        # Refresh token
+        self.update_token (user)
+        token = user.access_token
+        
+        # Get user data
+        user_id, user_email, user_picture, user_name = self.get_user_info (token)
+        
+        # Save new data
+        user.id = user_id
+        user.email = user_email
+        user.picture = user_picture
+        user.name = user_name
+        user.save ()

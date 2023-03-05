@@ -26,4 +26,5 @@ urlpatterns = [
     path('whatsapp/', views.whatsapp, name='whatsapp'),
     path('users-points/', views.user_points, name='users-points'),
     path('cancel-stream/<int:id>', views.cancel_stream, name='cancel-stream'),
+    path('update-twitch-data/', views.update_twitch_data, name='update-twitch-data'),
 ]
