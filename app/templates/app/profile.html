@@ -67,7 +67,15 @@
 </div>
 {% endblock %}
 
+
 {% block js %}
-<script src="{% static 'app/code/profile-card.js' %}"></script>
-<script src="{% static 'app/code/support.js' %}" type="module"></script>
+<!-- Set variables from backend -->
+<script>
+  const current_contry = "{{country}}"
+  const current_time_zone = "{{time_zone}}"
+  console.log ({current_contry, current_time_zone})
+</script>
+
+<script src="{% static 'app/code/select-country.js' %}"></script>
+<script src="{% static 'app/code/select-time-zone.js' %}"></script>
 {% endblock %}

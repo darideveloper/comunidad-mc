@@ -355,5 +355,5 @@ def get_referral_link (user:models.User):
         user (models.User): _description_
     """
     
-    referral_link = f"{HOST}landing?referred={user.user_name}"
+    referral_link = f"{HOST}/landing?referred={user.user_name}"
     return referral_link
