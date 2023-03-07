@@ -1,4 +1,4 @@
-const submit_button = document.querySelector(".btn.form.primary")
+const submit_button = document.querySelector(".content .btn.form.primary")
 
 
 // Activate update button when country or time zone or phone changed
@@ -11,7 +11,7 @@ inputs.forEach(input => {
 })
 
 // Show animation when click submit buttons
-document.querySelectorAll(".btn").forEach ((button) => {
+document.querySelectorAll(".content .btn").forEach ((button) => {
   button.addEventListener('click', () => {
     document.querySelector(".loading-wrapper").classList.remove("hide")
   })
