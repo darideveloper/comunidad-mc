@@ -1,0 +1,112 @@
+@import 'base'
+@import 'profile-card'
+
+main.wallet .content
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    .bits-card, .history
+        background-color: $color-bg-light
+        margin-top: 200px
+
+    .bits-card
+        width: 250px
+        position: relative
+        padding-top: 85px
+
+        .profile
+            position: absolute
+            top: -145px
+            left: -10px
+            width: 270px
+
+        .bits
+            position: relative
+            color: $color-text
+            display: flex
+            align-items: center
+            justify-content: center
+
+            img
+                padding: 10px
+                width: 40px
+                padding-left: 0
+                opacity: 0.7
+
+            span
+                font-size: 1.3rem
+                font-weight: bold
+            
+
+        form
+            width: calc(100% - 20px)
+            padding: 20px 10px
+            display: flex
+            align-items: center
+            justify-content: center
+            flex-direction: column
+
+            select
+                width: 90%
+                font-size: 1rem
+                padding: 5px 10px
+                border-radius: 5px
+                margin-bottom: 20px
+                text-align: center
+                background-color: rgba($color-primary, 0.6)
+                border: none
+                color: $color-text
+                font-weight: bold
+
+                option
+                    background-color: $color-bg
+                    color: $color-text
+
+            .btn.form
+                font-size: 1rem
+
+    .history
+        width: calc(100% - 350px)
+        padding-bottom: 20px
+
+        table
+            color: $color-text
+            width: 80%
+            margin: 0 auto
+            font-size: 1.1rem
+
+            thead
+                font-size: 1.3rem
+                th
+                    padding: 15px
+
+            td
+                text-align: center
+                padding: 10px
+
+    @media screen and (max-width: 950px)
+        .history
+            width: calc(100% - 300px)
+
+            table
+                width: 100%
+
+    @media screen and (max-width: 800px)
+        flex-direction: column
+        justify-content: flex-start
+
+        .bits-card
+            margin-top: 150px
+
+        .history
+            margin-top: 40px
+            margin-bottom: 20px
+            width: 400px
+
+    @media screen and (max-width: 480px)
+        .history
+            width: 90%
+
+            th:last-child, td:last-child
+                display: none

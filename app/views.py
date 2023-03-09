@@ -754,6 +754,21 @@ def wallet(request):
         "message": message,
         "current_page": "wallet",
         "user_active": True,
+        
+        # User profile context
+        "profile_image": user.picture,
+        "ranking": user.ranking.name,
+        
+        # Specific context
+        "bits": 200,
+        "streams": [
+            {"id": 1, "name": "Sample stream 1"},
+            {"id": 2, "name": "Sample stream 2"},
+        ],
+        "history": [
+            {"date": "2023/01/01", "bits": 100, "description": "1er rango semanal"},
+            {"date": "2023/01/02", "bits": 100, "description": "1er rango semanal"},
+        ]
     })
     
 def testing (request):

@@ -3,7 +3,64 @@
 
 {% block main %}
 <div class="regular-width content">
-  <h1>Hola {{name}}</h1>
-  <p>{{current_page}}</p>
+
+  <div class="bits-card">
+    {% include 'app/components/profile.html' %}
+
+    <div class="title-card">
+      <h2>BITS DISPONIBLES</h2>
+      <div class="decorator"></div>
+    </div>
+
+    <div class="bits">
+      <img src="{% static 'app/imgs/icon_bits.png' %}" alt="icono de bits">
+      <span class="bits-amount">{{bits}} Bits</span>
+    </div>
+
+    <form action="." method="POST">
+      <select name="stream" id="stream">
+        <option value="" selected class="default">Stream</option>
+        {% for stream in streams %}
+          <option value="{{stream.id}}">{{stream.name}}</option>
+        {% endfor %}
+      </select>
+
+      <input type="submit" value="RECLAMAR" class="btn form regular" disabled>
+    </form>
+  </div>
+
+  <div class="history">
+    <div class="title-card">
+      <h2>HISTORIAL DE BITS</h2>
+      <div class="decorator"></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Bits</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bit in history %}
+        <tr>
+          <td>{{bit.date}}</td>
+          <td>{{bit.bits}}</td>
+          <td>{{bit.description}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
 </div>
+{% endblock %}
+
+{% block js %}
+<!-- Set variables from backend -->
+<script>
+</script>
+
+<script src="{% static 'app/code/wallet.js' %}"></script>
 {% endblock %}
