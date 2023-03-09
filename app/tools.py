@@ -412,3 +412,19 @@ def clean_phone (phone:str):
             clean_number += char
     
     return clean_number
+
+def get_bits (user:models.User):
+    """ get the current bits of the user
+
+    Args:
+        user (models.User): user object
+
+    Returns:
+        querySet: querySet of the user bits
+        int: current balance of the user
+    """
+    
+    bits = models.Bit.objects.filter(user=user)
+    bits_num = bits.aggregate(Sum('amount'))['amount__sum']
+    
+    return bits, bits_num

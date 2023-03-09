@@ -747,6 +747,18 @@ def wallet(request):
     """ Page for withdraw bits to wallet """
     
     user, message, _ = tools.get_cookies_data(request)
+    
+    # Get bits of the current user
+    bits, bits_num = tools.get_bits (user)
+    
+    # Format bits history
+    bits_history = list(map(lambda bit: {"date": bit.date.strftime("%d/%m/%Y"), "bits": bit.amount, "description": bit.details}, bits))
+    
+    # Get streams of the current user
+    user_time_zone = pytz.timezone(user.time_zone.time_zone)
+    streams, _ = tools.get_user_streams (user, user_time_zone)
+    streams = list(map(lambda stream: {"id": stream.id, "datetime": stream.datetime.strftime ("%d/%m/%Y %H:%M")}, streams))
+    print (streams)
 
     # Render page
     return render(request, 'app/wallet.html', {
@@ -760,15 +772,9 @@ def wallet(request):
         "ranking": user.ranking.name,
         
         # Specific context
-        "bits": 200,
-        "streams": [
-            {"id": 1, "name": "Sample stream 1"},
-            {"id": 2, "name": "Sample stream 2"},
-        ],
-        "history": [
-            {"date": "2023/01/01", "bits": 100, "description": "1er rango semanal"},
-            {"date": "2023/01/02", "bits": 100, "description": "1er rango semanal"},
-        ]
+        "bits": bits_num,
+        "streams": streams,
+        "history": bits_history
     })
     
 def testing (request):
