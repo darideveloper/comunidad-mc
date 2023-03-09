@@ -178,6 +178,7 @@ class DailyPoint (models.Model):
 class Bit (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de los bits", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
+    date = models.DateField(name='date', verbose_name="fecha", help_text="fecha de los bits", null=False, blank=False, default=timezone.now)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de bits", null=False, blank=False)
     details = models.CharField(name='details', verbose_name="detalles", help_text="detalles de los bits", null=False, blank=True, max_length=100)
     

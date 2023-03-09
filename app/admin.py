@@ -153,13 +153,13 @@ class AdminPointsHistory (admin.ModelAdmin):
     ordering = ('id', 'user', 'general_points', 'week_points')
     search_fields = ('user__user_name',)
     
-@admin.register (models.Bits)
-class AdminBits (admin.ModelAdmin):
+@admin.register (models.Bit)
+class AdminBit (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'amount')
-    ordering = ('id', 'user', 'amount')
-    list_filter = ('user',)
-    search_fields = ('user__user_name',)
+    list_display = ('id', 'user', 'date', 'amount', 'details')
+    ordering = ('id', 'user', 'date', 'amount')
+    list_filter = ('user', 'date')
+    search_fields = ('user__user_name', 'details')
     
 @admin.register (models.TopDailyPoint)
 class AdminTopDailyPoint (admin.ModelAdmin):
