@@ -175,7 +175,7 @@ class DailyPoint (models.Model):
         verbose_name = "Punto diarios"
         verbose_name_plural = "Puntos diarios"
         
-class Bits (models.Model):
+class Bit (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de los bits", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de bits", null=False, blank=False)
