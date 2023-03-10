@@ -583,6 +583,7 @@ main.wallet .content .bits-card {
   width: 250px;
   position: relative;
   padding-top: 85px;
+  padding-bottom: 10px;
 }
 main.wallet .content .bits-card .profile {
   position: absolute;

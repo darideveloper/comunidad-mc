@@ -17,19 +17,23 @@
       <span class="bits-amount">{{bits}} Bits</span>
     </div>
 
-    <form action="." method="POST">
 
-      {% csrf_token %}
+    {% if streams|length > 0 and bits > 0 %}
+      <form action="." method="POST">
 
-      <select name="stream" id="stream">
-        <option value="" selected class="default">Stream</option>
-        {% for stream in streams %}
-          <option value="{{stream.id}}" name="stream">{{stream.datetime}}</option>
-        {% endfor %}
-      </select>
+        {% csrf_token %}
 
-      <input type="submit" value="RECLAMAR" class="btn form regular" disabled>
-    </form>
+        <select name="stream" id="stream">
+          <option value="" selected class="default">Stream</option>
+          {% for stream in streams %}
+            <option value="{{stream.id}}" name="stream">{{stream.datetime}}</option>
+          {% endfor %}
+        </select>
+
+        <input type="submit" value="RECLAMAR" class="btn form regular" disabled>
+      </form>
+    {% endif %}
+
   </div>
 
   <div class="history">

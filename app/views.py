@@ -751,7 +751,7 @@ def wallet(request):
     # Get bits of the current user
     bits, bits_num = tools.get_bits (user)
     
-    if request.method == "POST":
+    if request.method == "POST" and bits_num > 0:
         
         # Add bits to stream
         stream_id = request.POST.get("stream")
