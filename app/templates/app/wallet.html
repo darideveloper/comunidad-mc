@@ -18,10 +18,13 @@
     </div>
 
     <form action="." method="POST">
+
+      {% csrf_token %}
+
       <select name="stream" id="stream">
         <option value="" selected class="default">Stream</option>
         {% for stream in streams %}
-          <option value="{{stream.id}}">{{stream.datetime}}</option>
+          <option value="{{stream.id}}" name="stream">{{stream.datetime}}</option>
         {% endfor %}
       </select>
 

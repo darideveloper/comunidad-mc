@@ -74,6 +74,7 @@ class Stream (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
     is_free = models.BooleanField(name='is_free', verbose_name="free", help_text="indica si el stream es free (no restará puntos)", default=False)
     is_vip = models.BooleanField(name='is_vip', verbose_name="vip", help_text="indica si el stream es vip (único en su hora)", default=False)
+    claimed_bits = models.IntegerField(name='claimed_bits', verbose_name="bits reclamados", help_text="bits reclamados para este stream", null=False, blank=True, default=0)
     
     def __str__(self):
         formated_date = str(timezone.localtime(self.datetime))[0:-12] + "h"

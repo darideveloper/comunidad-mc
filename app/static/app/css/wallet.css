@@ -630,12 +630,13 @@ main.wallet .content .bits-card form select {
 main.wallet .content .bits-card form select option {
   background-color: #0e1119;
   color: #cfd5dc;
+  teex-align: center;
 }
 main.wallet .content .bits-card form .btn.form {
   font-size: 1rem;
 }
 main.wallet .content .history {
-  width: calc(100% - 350px);
+  width: calc(100% - 320px);
   padding-bottom: 20px;
 }
 main.wallet .content .history table {
@@ -671,7 +672,7 @@ main.wallet .content .history table td {
     margin-top: 150px;
   }
   main.wallet .content .history {
-    margin-top: 40px;
+    margin-top: 0px;
     margin-bottom: 20px;
     width: 400px;
   }

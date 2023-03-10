@@ -751,6 +751,20 @@ def wallet(request):
     # Get bits of the current user
     bits, bits_num = tools.get_bits (user)
     
+    if request.method == "POST":
+        
+        # Add bits to stream
+        stream_id = request.POST.get("stream")
+        stream = models.Stream.objects.get(id=stream_id)
+        stream.claimed_bits = bits_num
+        stream.save ()
+        
+        # Add register for claim bits
+        models.Bit (user=user, amount=-bits_num, details="Bits reclamados").save()
+        
+        # Update bits of the user
+        bits, bits_num = tools.get_bits (user)    
+    
     # Format bits history
     bits_history = list(map(lambda bit: {"date": bit.date.strftime("%d/%m/%Y"), "bits": bit.amount, "description": bit.details}, bits))
     
@@ -758,7 +772,6 @@ def wallet(request):
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     streams, _ = tools.get_user_streams (user, user_time_zone)
     streams = list(map(lambda stream: {"id": stream.id, "datetime": stream.datetime.strftime ("%d/%m/%Y %H:%M")}, streams))
-    print (streams)
 
     # Render page
     return render(request, 'app/wallet.html', {
