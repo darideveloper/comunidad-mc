@@ -576,7 +576,8 @@ main.wallet .content {
 }
 main.wallet .content .bits-card, main.wallet .content .history {
   background-color: #17181D;
-  margin-top: 200px;
+  margin-top: 150px;
+  margin-bottom: 50px;
 }
 main.wallet .content .bits-card {
   width: 250px;
