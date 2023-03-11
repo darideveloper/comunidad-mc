@@ -37,6 +37,7 @@ class User (models.Model):
     is_active = models.BooleanField(name='is_active', verbose_name="activo", help_text="indica si el usuario ha validado su cuenta con whatsapp", default=False)
     ranking = models.ForeignKey('Ranking', on_delete=models.SET_NULL, name='ranking', verbose_name="ranking", help_text="ranking del usuario", null=True, blank=True)
     user_auth = models.ForeignKey(UserAuth, on_delete=models.CASCADE, name='user_auth', verbose_name="usuario de autenticación", help_text="usuario del dashboard", null=True, blank=True, default="")
+    is_donnor = models.BooleanField(name='is_donnor', verbose_name="donador", help_text="indica si el usuario es donador de bits", default=False)
     
     def __str__(self):
         return f"{self.user_name}"
