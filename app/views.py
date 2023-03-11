@@ -546,6 +546,29 @@ def support(request):
     
     # Validate if node server its running
     is_node_working = twitch.is_node_working()
+    
+    # Validate if the current user its admin and donnot
+    is_admin = tools.get_admin_type (user)
+    is_donnor = user.is_donnor
+    is_admin_donnor = is_admin and is_donnor
+    
+    # Save new donation status from post
+    if is_admin_donnor and request.method == "POST":
+        
+        # get variables from form
+        stream_id = request.POST.get("stream")
+        donation = request.POST.get("donation")
+        print ({"stream_id": stream_id, "donation": donation})
+        
+        # Get stream
+        streams_donation = models.Stream.objects.filter(id=stream_id)
+        if not streams_donation:
+            error = "Error al guardar la donación"
+        stream_donation = streams_donation[0]
+        
+        # Update status
+        stream_donation.is_bits_done = True if donation == "on" else False
+        stream_donation.save()
 
     # Valide if node server is working
     error = ""
@@ -558,9 +581,15 @@ def support(request):
     if not current_streams:
         current_streams = []
     for stream in current_streams:
-        stream_user = tools.get_fix_user(stream.user)
-        is_vip = stream.is_vip
-        streams.append({"user": stream_user.user_name, "picture": stream_user.picture, "is_vip": is_vip})
+        stream_user = tools.get_fix_user(stream.user)        
+        streams.append({
+            "id": stream.id,
+            "user": stream_user.user_name, 
+            "picture": stream_user.picture, 
+            "is_vip": stream.is_vip,
+            "claimed_bits": stream.claimed_bits,
+            "is_bits_done": stream.is_bits_done,
+        })
     
     # Culate time of the user
     user_timezone = user.time_zone.time_zone
@@ -592,7 +621,7 @@ def support(request):
     
     # Gerate referral link
     referral_link = f"{HOST}landing?referred={user.user_name}"
-
+    
     # Render page
     return render(request, 'app/support.html', {
         # General context
@@ -616,7 +645,8 @@ def support(request):
         "user_time": user_time,
         "user_timezone": tools.get_time_zone_text(user),
         "user_streaming": user_streaming,
-        "referral_link": referral_link
+        "referral_link": referral_link,
+        "is_admin_donnor": is_admin_donnor,
     })
 
 @decorators.validate_login_active

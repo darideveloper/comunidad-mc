@@ -57,9 +57,9 @@
           {% for stream in streams %}
 
             {% if stream.is_vip %}
-              <div class="stream-card vip" title="Stream VIP (recibirás el tripe de puntos)">
+            <div class="stream-card vip" title="Stream VIP (recibirás el tripe de puntos)">
             {% else %}
-              <div class="stream-card" title="Stream regular">
+            <div class="stream-card" title="Stream regular">
             {% endif %}
 
               <!-- Image with border for vips -->
@@ -68,6 +68,7 @@
               </div>
 
               <p class="name">{{stream.user}}</p>
+
               <button class="btn cta copy">
                 <div class="content">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -82,7 +83,21 @@
                   </span>
                 </div>
               </button>
+
+              <!-- Show bits donned button for admin_donnor users -->
+              {% if stream.claimed_bits > 0 %}
+              <form action="." method="post">
+                {% csrf_token %}
+                <label class="donation {% if stream.is_bits_done %}checked{% endif %}">
+                  <span>{{stream.claimed_bits}} Bits donados</span>
+                  <input type="checkbox" name="donation" id="donation" {% if stream.is_bits_done %}checked{% endif %} >
+                  <input type="hidden" name="stream" value="{{stream.id}}" >
+                </label>
+              </form>
+              {% endif %}
+
             </div>
+
           {% endfor %}
         </div>
 

@@ -101,6 +101,9 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.btn.form.primary {
+  background-color: #7a70b3;
+}
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -669,6 +672,20 @@ main.support > .content .streams .streams-cards .stream-card .btn.cta {
 }
 main.support > .content .streams .streams-cards .stream-card .btn.cta span {
   font-weight: bold;
+}
+main.support > .content .streams .streams-cards .stream-card form {
+  position: absolute;
+  width: 100%;
+}
+main.support > .content .streams .streams-cards .stream-card form .donation {
+  width: 100%;
+  top: -30px;
+  font-size: 1.1rem;
+  color: #cfd5dc;
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 @media screen and (max-width: 1100px) {
   main.support > .content .streams .streams-cards {

@@ -23,3 +23,19 @@ copy_buttons.forEach (function (button) {
 
   })
 })
+
+// Submit data to backend when user update the donations
+const doned_checkboxs = document.querySelectorAll ("label.donation")
+doned_checkboxs.forEach (function (doned_checkbox) {
+  // Activate loading button
+  
+  // Add event listener to each checkbox
+  doned_checkbox.addEventListener ("click", function (event) {
+    
+    document.querySelector (".loading-wrapper").classList.remove ("hide")
+
+    // Get form and submit
+    const form = doned_checkbox.parentNode
+    form.submit ()
+  })
+})
