@@ -13,14 +13,14 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 # Django imports
+from app import models
 from app import tools
-from django.utils import timezone
-from app.models import User, Ranking, WeeklyPoint, DailyPoint, \
-    PointsHistory, GeneralPoint, Bits, TopDailyPoint, StreamExtra, StreamVip
 from app.logs import logger
+from django.utils import timezone
+from django.db.models import Sum
 
 # Get ranbkings and required points
-rankings = Ranking.objects.all().order_by("points").reverse()
+rankings = models.Ranking.objects.all().order_by("points").reverse()
 
 # Load environment variables
 load_dotenv ()
@@ -41,71 +41,72 @@ today = timezone.now().weekday()
 if today == RESTART_POINTS_WEEK_DAY:    
     
     # Delete points history for global ranking
-    PointsHistory.objects.all().delete()
+    models.PointsHistory.objects.all().delete()
     
     # Delete extra streams
-    StreamExtra.objects.all().delete()
+    models.StreamExtra.objects.all().delete()
     
     # Delete vips
-    StreamVip.objects.all().delete()
+    models.StreamVip.objects.all().delete()
         
     # Get and loop all users to update ranking
-    users = User.objects.all()
+    users = models.User.objects.all()
     for user in users:
         
         # Get user week points
-        *other, general_points_num, weekly_points_num, _ = tools.get_user_points (user)
+        general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
         
-        # Set ranking to admins
         admin_type = tools.get_admin_type (user)
         if admin_type:
+            # Found ranking to admins
             admin_name = admin_type.replace ("admin", "").strip()
-            ranking = Ranking.objects.get (name=admin_name)
+            ranking = models.Ranking.objects.get (name=admin_name)
         else:
-            # Found new ranking
+            # Found ranking to normal users
             for ranking in rankings:
                 if weekly_points_num >= ranking.points:
-                    user.ranking = ranking
+                    models.User.ranking = ranking
                     break
                 
-        user.ranking = ranking
-        
-        # Save user ranking
+        # Update ranking
+        user.ranking = ranking        
         user.save()
         
+        general_points_week, general_points_week_num = tools.get_general_points_last_week (user)
+        
         # Save pouints history
-        PointsHistory (user=user, general_points=general_points_num, week_points=general_points_num).save()
+        models.PointsHistory (user=user, general_points=general_points_num, week_points=general_points_week_num).save()
         
         # Show status
-        logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking}")
+        logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {models.User.ranking}")
     
     # Add bits to first, second and third users in points table
-    points_history_all = PointsHistory.objects.all().order_by("general_points").reverse()
+    points_history_all = models.PointsHistory.objects.all().order_by("general_points").reverse()
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user
-    Bits (user=first_user, amount=RANKING_FIRST_BITS).save ()
-    Bits (user=second_user, amount=RANKING_SECOND_BITS).save ()
-    Bits (user=third_user, amount=RANKING_THIRD_BITS).save ()
+    models.Bit (user=first_user, amount=RANKING_FIRST_BITS).save ()
+    models.Bit (user=second_user, amount=RANKING_SECOND_BITS).save ()
+    models.Bit (user=third_user, amount=RANKING_THIRD_BITS).save ()
     print ("Bits added to first, second and third users")
     
     # Add a vip to first user
-    StreamVip (user=first_user).save ()
+    models.StreamVip (user=first_user).save ()
     print ("Vip added to first user")
     
     # Delete top daily points
-    TopDailyPoint.objects.all().delete()
+    models.DailyPoint.objects.all().delete()
     print ("top daily points deleted")
     
     # Delete week points
-    WeeklyPoint.objects.all().delete()
+    models.WeeklyPoint.objects.all().delete()
     print ("week points deleted")
     
     # Delete all points
-    # GeneralPoint.objects.all().delete()
+    # models.GeneralPoint.objects.all().delete()
     # print ("all points deleted")
     
 else:        
     # delete all daily points
-    DailyPoint.objects.all().delete()
+    models.DailyPoint.objects.all().delete()
     print ("today points deleted")

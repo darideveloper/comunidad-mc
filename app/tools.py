@@ -140,6 +140,28 @@ def get_general_points (user:models.User):
         general_points_num = 0
     
     return general_points, general_points_num
+
+def get_general_points_last_week (user:models.User):
+    """ Return the general points (registers and counters) from specific user
+
+    Args:
+        user (:models.User): user object
+
+    Returns:
+        touple: general_points (registers), general_points_num (counter)
+    """
+    
+    # get general points
+    general_points, _ = get_general_points(user)
+    
+    # Calculate general points of the current week
+    general_points_week = models.GeneralPoint.objects.filter(user=user, datetime__week=timezone.now().isocalendar()[1])
+    general_points_week_num = general_points_week.aggregate(Sum('amount'))['amount__sum']
+    
+    if not general_points_week_num:
+        general_points_week_num = 0
+
+    return general_points_week, general_points_week_num
     
 def get_user_points (user:models.User):
     """ Get user point, count and register reguister and counters
@@ -151,7 +173,7 @@ def get_user_points (user:models.User):
         touple: general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num
     """
     
-    # General points
+    # get general points
     general_points, general_points_num = get_general_points(user)
     
     # get points registers
