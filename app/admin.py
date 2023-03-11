@@ -63,9 +63,9 @@ class AdminTimeZone (admin.ModelAdmin):
 @admin.register (models.Stream)
 class AdminStream (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free')
-    ordering = ('id', 'user', 'datetime')
-    list_filter = ('user', 'datetime', 'is_vip', 'is_free')
+    list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free', 'is_bits_done', 'claimed_bits')
+    ordering = ('id', 'user', 'datetime', 'is_bits_done', 'claimed_bits')
+    list_filter = ('user', 'datetime', 'is_vip', 'is_free', 'is_bits_done')
     search_fields = ('user__user_name', )
 
     def get_queryset(self, request):
@@ -156,7 +156,7 @@ class AdminPointsHistory (admin.ModelAdmin):
 @admin.register (models.Bit)
 class AdminBit (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'date', 'amount', 'details')
+    list_display = ('id', 'user', 'date', 'amount', 'details', )
     ordering = ('id', 'user', 'date', 'amount')
     list_filter = ('user', 'date')
     search_fields = ('user__user_name', 'details')
