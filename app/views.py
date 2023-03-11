@@ -725,7 +725,6 @@ def profile(request):
     email = user.email
     user_name = user.user_name
     
-    
     twitch_refresh_link = "/update-twitch-data/"
     country = user.country
     time_zone = user.time_zone
@@ -786,7 +785,7 @@ def wallet(request):
         # Add bits to stream
         stream_id = request.POST.get("stream")
         stream = models.Stream.objects.get(id=stream_id)
-        stream.claimed_bits = bits_num
+        stream.claimed_bits += bits_num
         stream.save ()
         
         # Add register for claim bits
