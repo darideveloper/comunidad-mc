@@ -101,6 +101,9 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.btn.form.primary {
+  background-color: #7a70b3;
+}
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -646,7 +649,7 @@ main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card .pro
   width: 30px;
   position: absolute;
   top: -23px;
-  left: 0;
+  left: -44px;
   transform: rotate(-30deg);
 }
 main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card span {
