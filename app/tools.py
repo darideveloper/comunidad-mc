@@ -449,4 +449,7 @@ def get_bits (user:models.User):
     bits = models.Bit.objects.filter(user=user)
     bits_num = bits.aggregate(Sum('amount'))['amount__sum']
     
+    if not bits_num:
+        bits_num = 0
+    
     return bits, bits_num
