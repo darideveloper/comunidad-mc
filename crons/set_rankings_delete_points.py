@@ -85,9 +85,9 @@ if today == RESTART_POINTS_WEEK_DAY:
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user
-    models.Bit (user=first_user, amount=RANKING_FIRST_BITS).save ()
-    models.Bit (user=second_user, amount=RANKING_SECOND_BITS).save ()
-    models.Bit (user=third_user, amount=RANKING_THIRD_BITS).save ()
+    models.Bit (user=first_user, amount=RANKING_FIRST_BITS, details="1er lugar del Ranking Semanal").save ()
+    models.Bit (user=second_user, amount=RANKING_SECOND_BITS, details="2do lugar del Ranking Semanal").save ()
+    models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
     print ("Bits added to first, second and third users")
     
     # Add a vip to first user
