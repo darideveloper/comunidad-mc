@@ -435,13 +435,7 @@ def schedule(request):
     available_hours = {}
     hours = []
     visible_schedule_panel = True
-    info = ""
     if today_week != SCHEDULE_DAY or (today_week == SCHEDULE_DAY and ranking_open):
-        
-        # Validate if is triple time and show message
-        is_triple_time = tools.is_triple_time()
-        if is_triple_time and not message:
-            info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
                         
         # Get available days of the week
         for day_num in range (0, 6):
@@ -498,7 +492,7 @@ def schedule(request):
                 day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
                 available_hours[day_name] = day_available_hours
                 
-        # Remove friday at 7p from available hours
+        # Remove friday at 7pm from available hours
         if "viernes" in available_hours:
             available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
     
@@ -512,7 +506,6 @@ def schedule(request):
         "name": user.user_name,
         "message": message,
         "error": error,
-        "info": info,
         "current_page": "schedule",
         "user_active": True,
         
@@ -620,13 +613,20 @@ def support(request):
         user_streaming = True
     
     # Gerate referral link
-    referral_link = f"{HOST}landing?referred={user.user_name}"
+    referral_link = f"{HOST}landing?referred={user.user_name}" 
+    
+    # Validate if is triple time and show message
+    info = ""
+    is_triple_time = tools.is_triple_time()
+    if is_triple_time and not message:
+        info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
     
     # Render page
     return render(request, 'app/support.html', {
         # General context
         "name": user.user_name,
         "message": message,
+        "info": info,
         "current_page": "support",
         "error": error,
         "user_active": True,
