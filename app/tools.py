@@ -377,7 +377,7 @@ def get_referral_link (user:models.User):
         user (models.User): _description_
     """
     
-    referral_link = f"{HOST}/landing?referred={user.user_name}"
+    referral_link = f"{HOST}/register/{user.id}"
     return referral_link
 
 def get_create_country (country_name:str):

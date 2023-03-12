@@ -186,6 +186,7 @@ def register(request):
             # Create country and time zone objects
             country = tools.get_create_country(country_name)
             time_zone = tools.get_create_time_zone(time_zone_name)
+            
 
             # Update user data
             user.first_name = first_name
@@ -193,6 +194,16 @@ def register(request):
             user.country = country
             user.time_zone = time_zone
             user.phone = tools.clean_phone(phone)
+            
+            # Update referred user from
+            user_from_id = request.session.get("user_from_id", "")        
+            if user_from_id:
+                user_froms = models.User.objects.filter(id=user_from_id)
+                if user_froms:
+                    user_from = user_froms.first()
+                    user.referred_user_from = user_from
+            
+            # Save
             user.save()
             
             # Save message for show in home page
@@ -912,3 +923,17 @@ def update_twitch_data (request):
     # Redirect
     request.session["message"] = "Datos actualizados desde Twitch."
     return redirect('profile')
+
+def register_referred_user_from (request, user_from_id):
+    """ Save cookie from user that referred, and reciredt to home """
+    
+    # Get referred user from
+    referred_users = models.User.objects.filter(id=user_from_id)
+    if referred_users:
+        referred_user = referred_users.first()
+        
+        # Save cookie with id
+        request.session["user_from_id"] = referred_user.id
+        
+        # Redirect to landing
+        return redirect('landing')
