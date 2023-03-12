@@ -613,7 +613,7 @@ def support(request):
         user_streaming = True
     
     # Gerate referral link
-    referral_link = f"{HOST}landing?referred={user.user_name}" 
+    referral_link = tools.get_referral_link (user)
     
     # Validate if is triple time and show message
     info = ""
