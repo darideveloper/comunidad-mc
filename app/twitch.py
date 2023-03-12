@@ -252,6 +252,27 @@ class TwitchApi:
             valid_users = models.User.objects.filter(id__in=users_active)
             if len(valid_users) == 1:
                 logger.info (f"No users in stream: {stream}")
+                
+            # Update first_stream_done from user
+            referred_user_from = streamer.referred_user_from
+            first_stream_done = streamer.first_stream_done
+            if valid_users and not first_stream_done and referred_user_from:
+                
+                logger.info (f"First stream detected from referred user {streamer}")
+                
+                # Get ranking "diamente"
+                ranking = models.Ranking.objects.get(name="diamante")
+                
+                # Update streamer data
+                streamer.first_stream_done = True
+                streamer.save ()
+                
+                # Update referred_user_from data
+                referred_user_from.ranking = ranking
+                referred_user_from.save ()
+                
+                # Add bits to streamer
+                models.Bit.objects.create(user=referred_user_from, amount=100, details=f"Referido {streamer}")
             
             # Save in each watch in database
             for user in valid_users:
