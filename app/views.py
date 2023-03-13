@@ -271,8 +271,11 @@ def add_comment(request):
     comment_obj.save()
     logger.info (f"Comment added: {comment_obj.id}")
     
+    # Add cero point (initial default point) to user
+    twitch.add_cero_point (user, stream)
+    
     # Try to add point to user
-    twitch.add_point(user)
+    twitch.add_point(user, stream)
 
     return JsonResponse({
         "success": True

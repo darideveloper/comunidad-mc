@@ -286,6 +286,9 @@ class TwitchApi:
                 new_check.save ()
                 logger.info (f"Check saved. User: {user}, Stream: {stream}")
                 
+                # Add cero point (initial default point) to user
+                self.add_cero_point (user, stream)
+                
                 # Try to add point to user
                 self.add_point(user, stream)
 
@@ -387,8 +390,11 @@ class TwitchApi:
                 if stream.is_vip or is_triple_time:
                     amount = 3
         
-                # Save general point
-                new_general_point = models.GeneralPoint (user=user, stream=stream, amount=amount)
+                # Get and update general point
+                info = models.InfoPoint.objects.get(info="ver stream")
+                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream, amount=0)
+                new_general_point.amount = amount
+                new_general_point.info = info
                 new_general_point.save ()
                 
                 # Validate if the user have less than the max number of daily points
@@ -474,3 +480,19 @@ class TwitchApi:
         user.picture = user_picture
         user.name = user_name
         user.save ()
+
+    def add_cero_point (self, user:models.User, stream:models.Stream):
+        """ Set a point register with amount in 0 when is the first check or comment of the user in the stream """
+        
+        # Validate if the user already have a point in the stream
+        general_points = models.GeneralPoint.objects.filter(user=user, stream=stream)
+        if general_points.count() == 0:
+        
+            # Save general point
+            info = models.InfoPoint.objects.get(info="faltó tiempo de visualización o comentarios")
+            models.GeneralPoint.objects.create(user=user, stream=stream, amount=0, info=info).save()
+        
+        
+        
+        
+        
