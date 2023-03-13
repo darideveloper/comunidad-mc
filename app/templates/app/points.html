@@ -20,16 +20,21 @@
       </thead>
       <tbody>
         {% for point in points %}
-        <tr>
+
+        
+          <tr class="{% if point.points <= 0 %}warnning{% endif %}">
+        
           <td>{{point.date}}</td>
           <td>{{point.time}}</td>
           <td>{{point.my_points}}</td>
+
           {% if point.points > 0 %}
             <td>+ {{point.points}}</td>
           {% else %}
-            <td>{{point.points}}</td>
-          {% endif %}
+            <td >{{point.points}}</td>
+            {% endif %}
           <td>{{point.details}}</td>
+
         </tr>
         {% endfor %}
       </tbody>

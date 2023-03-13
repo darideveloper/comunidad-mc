@@ -101,6 +101,9 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.btn.form.primary {
+  background-color: #7a70b3;
+}
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -596,6 +599,9 @@ main.points .content .points-table table tr {
 }
 main.points .content .points-table table tr:nth-child(even) {
   background-color: #17181D;
+}
+main.points .content .points-table table tr.warnning {
+  background-color: rgba(163, 77, 77, 0.4);
 }
 main.points .content .points-table table tbody {
   display: block;
