@@ -299,7 +299,7 @@ def set_negative_point (user:models.User, amount:int, reason:str, stream:models.
         info_point.save ()
     
     # Search if already exist nevative a point for the stream
-    general_points = models.GeneralPoint.objects.filter (user=user, info=info_point, stream=stream)
+    general_points = models.GeneralPoint.objects.filter (user=user, info=info_point)
     if general_points:
         
         # Incress negative point
@@ -310,7 +310,7 @@ def set_negative_point (user:models.User, amount:int, reason:str, stream:models.
     else:
                 
         # Add new point
-        general_point = models.GeneralPoint (user=user, datetime=timezone.now(), amount=-amount, info=info_point, stream=stream)
+        general_point = models.GeneralPoint (user=user, datetime=timezone.now(), amount=-amount, info=info_point)
         general_point.save ()
     
     return True
