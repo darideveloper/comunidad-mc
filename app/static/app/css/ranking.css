@@ -708,10 +708,10 @@ main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card span
     flex-direction: column;
   }
   main.ranking .content .left {
-    width: 100%;
+    width: 90%;
   }
   main.ranking .content .right.ranking-global {
-    width: calc(100% - 40px);
+    width: calc(90% - 40px);
   }
 }
 
