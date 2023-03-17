@@ -293,7 +293,8 @@ def points(request):
     
     # Filter general points of the date before current hour
     last_hour_datetime = timezone.now() - datetime.timedelta(minutes=timezone.now().minute - 2)
-    general_points = general_points.filter(datetime__lte=last_hour_datetime)    
+    general_points = general_points.filter(datetime__lte=last_hour_datetime)
+    general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
     # Get only last 60 points
     general_points_table = general_points
