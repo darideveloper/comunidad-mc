@@ -816,6 +816,20 @@ def wallet(request):
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     streams, _ = tools.get_user_streams (user, user_time_zone)
     streams = list(map(lambda stream: {"id": stream.id, "datetime": stream.datetime.strftime ("%d/%m/%Y %H:%M")}, streams))
+    
+    # Select bits icon
+    bits_amount_range = {
+        "d": 5000,
+        "c": 1000,
+        "b": 100,
+        "a": 0,
+    }
+    for bit_name, bit_min in bits_amount_range.items():
+        print (bit_name, bit_min, bits_num)
+        if bits_num >= bit_min:
+            bits_icon = f"app/imgs/icon_bits_{bit_name}.gif"
+            print (bits_icon)
+            break
 
     # Render page
     return render(request, 'app/wallet.html', {
@@ -831,7 +845,8 @@ def wallet(request):
         # Specific context
         "bits": bits_num,
         "streams": streams,
-        "history": bits_history
+        "history": bits_history,
+        "bits_icon": bits_icon
     })
     
 def testing (request):
