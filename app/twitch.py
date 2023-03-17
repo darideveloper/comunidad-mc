@@ -39,7 +39,7 @@ class TwitchApi:
 
         # Get current streams
         current_streams = models.Stream.objects.filter(
-            datetime__range=[start_datetime, end_datetime]).all()
+            datetime__range=[start_datetime, end_datetime]).all().order_by('user__user_name')
         
         if not current_streams:
             logger.info("No streams found")
