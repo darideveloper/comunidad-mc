@@ -160,7 +160,7 @@ cancel_buttons.forEach (cancel_button => {
 
       Swal.fire({
         title: '¿Estás seguro?',
-        text: "Queda muy poco tiempo que este estream inicie, si lo borras ahora perderás puntos.",
+        text: "Queda poco para iniciar este stream, si lo cancelas ahora perderás puntos",
         showDenyButton: true,
         denyButtonText: 'Sí, cancelar y perder puntos',
         confirmButtonText: 'No, mantener mis puntos',
