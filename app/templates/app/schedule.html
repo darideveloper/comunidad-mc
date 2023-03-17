@@ -31,7 +31,7 @@
                 <img class="vip" src="{% static 'app/imgs/icon_oro.png' %}" alt="icono stream vip" title="Stream VIP">
               {% endif %}
             </td>
-            <td>{{stream.date}}</td>
+            <td>{{stream.date_formatted}}</td>
             <td>{{stream.time}}</td>
             <td>
               <button data-stream="{{stream.id}}" class="btn cancel form green {{stream.is_cancellable}}">Cancelar</button>

@@ -242,6 +242,14 @@ def get_user_streams (user, user_time_zone):
         hour = stream_datetime.strftime("%H")
         is_cancellable = is_stream_cancelable(stream)
         is_vip = stream.is_vip
+        
+        # Format date like: Lun, 01, Enero
+        date_weekday_num = stream_datetime.weekday()
+        date_month = stream_datetime.strftime("%B")
+        date_day = stream_datetime.strftime("%d")
+        date_formatted = f"{WEEK_DAYS[date_weekday_num].title()} {date_day}, {MONTHS[date_month]}"
+        
+        
         user_streams_data.append ({
             "id": id,
             "date": date, 
@@ -249,6 +257,7 @@ def get_user_streams (user, user_time_zone):
             "is_cancellable": "regular" if is_cancellable else "warning",
             "hour": hour,
             "is_vip": is_vip,
+            "date_formatted": date_formatted,
         })
         
     return user_streams, user_streams_data
