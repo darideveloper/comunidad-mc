@@ -745,17 +745,9 @@ def profile(request):
     time_zone = user.time_zone
     phone = user.phone
     
-    # TODO: Get referrals
-    referrals = [
-        {
-            "user": "Sample User 1",
-            "points": 10
-        },
-        {
-            "user": "Sample User 2",
-            "points": 0
-        }
-    ]
+    # Get referrals
+    referred_users = models.User.objects.filter (referred_user_from=user)
+    referrals = list(map(lambda user: {"user": user.user_name, "points": 100}, referred_users))
     
     # Get referral link
     referral_link = tools.get_referral_link (user)
