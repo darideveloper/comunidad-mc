@@ -67,23 +67,38 @@ class AdminStream (admin.ModelAdmin):
     ordering = ('id', 'user', 'datetime', 'is_bits_done', 'claimed_bits')
     list_filter = ('user', 'datetime', 'is_vip', 'is_free', 'is_bits_done')
     search_fields = ('user__user_name', )
+    
 
     def get_queryset(self, request):
         
         # Get admin type
         user_auth = request.user
         admin_type = tools.get_admin_type(user_auth=user_auth)
-        print (admin_type)
 
         if admin_type == "admin platino":
             # Get all users of the current admin
             users = models.User.objects.filter(user_auth=user_auth)
+            exclude = ('is_vip',)
             
             # Render only streams of the current user
             return models.Stream.objects.filter(user__in=users)
             
         # Render all streams
-        return models.Stream.objects.all()        
+        return models.Stream.objects.all() 
+    
+    def render_change_form (self, request, context, *args, **kwargs):
+        
+        # Get admin type
+        user_auth = request.user
+        admin_type = tools.get_admin_type(user_auth=user_auth)
+
+        if admin_type == "admin platino":
+            
+            # Add streams only for related users
+            context['adminform'].form.fields["user"].queryset = models.User.objects.filter(user_auth=request.user)
+            self.exclude = ('is_vip', 'is_free', 'is_bits_done', 'claimed_bits')
+            return super(AdminStream, self).render_change_form(request, context, *args, **kwargs)
+         
     
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
