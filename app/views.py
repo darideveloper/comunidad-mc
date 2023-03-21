@@ -449,22 +449,33 @@ def schedule(request):
     ranking_open = False
     open_hour = user.ranking.open_hour
     open_hour_datetime = datetime.datetime.combine(now.date(), open_hour, user_time_zone)
-    if now >= open_hour_datetime:
-        ranking_open = True
+    print (today_week, SCHEDULE_DAY, today_week_name)
+    if today_week == SCHEDULE_DAY:
+        ranking_open = False 
+        print ("hello")
+        print (now)
+        print (open_hour_datetime)
+        print ("world")
+        if now >= open_hour_datetime:
+            ranking_open = True
             
     # Validate if today isn't sunday
     available_days = []
     available_hours = {}
     hours = []
     visible_schedule_panel = True
-    if today_week != SCHEDULE_DAY or (today_week == SCHEDULE_DAY and ranking_open):
+    if  ranking_open:
                         
         # Get available days of the week
         for day_num in range (0, 6):
             
+            extra_days = 0
+            if today_week == SCHEDULE_DAY:
+                extra_days = 7
+            
             # Calculate dates
             day_name = tools.WEEK_DAYS[day_num]
-            date = now + datetime.timedelta(days=day_num-today_week)
+            date = now + datetime.timedelta(days=day_num-today_week+extra_days)
             date_text_day = date.strftime("%d")
             date_text_month = date.strftime("%B")
             date_text_month_spanish = tools.MONTHS[date_text_month]

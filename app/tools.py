@@ -221,7 +221,7 @@ def get_user_streams (user, user_time_zone):
         hour = 0        
     start_datetime = datetime(
         now.year, now.month, now.day, hour, 0, 0, tzinfo=timezone.utc)
-    end_datetime = start_datetime + timedelta(days=7)
+    end_datetime = start_datetime + timedelta(days=14)
 
     # Get current streams
     user_streams = models.Stream.objects.filter(
