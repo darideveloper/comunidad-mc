@@ -468,11 +468,16 @@ class TwitchApi:
         """
         
         # Refresh token
-        self.update_token (user)
+        token_updated = self.update_token (user)
+        
+        if not token_updated:
+            return False
+        
         token = user.access_token
         
         # Get user data
         user_id, user_email, user_picture, user_name = self.get_user_info (token)
+        print (user_id, user_email, user_picture, user_name)
         
         # Save new data
         user.id = user_id
@@ -480,6 +485,8 @@ class TwitchApi:
         user.picture = user_picture
         user.name = user_name
         user.save ()
+        
+        return True
 
     def add_cero_point (self, user:models.User, stream:models.Stream):
         """ Set a point register with amount in 0 when is the first check or comment of the user in the stream """

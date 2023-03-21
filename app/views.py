@@ -50,7 +50,6 @@ def login(request):
 
                 # Get lower ranking
                 lower_ranking = models.Ranking.get_lower()
-                
 
                 # Save new user data in database
                 new_user = models.User()
@@ -58,12 +57,12 @@ def login(request):
                 new_user.email = user_email
                 new_user.picture = user_picture
                 new_user.user_name = user_name
-                new_user.access_token = user_token
-                new_user.refresh_token = refresh_token
                 new_user.ranking = lower_ranking
-                new_user.save()
 
-            # Save user id in session
+            # Save user id in session nand tookens
+            new_user.access_token = user_token
+            new_user.refresh_token = refresh_token
+            new_user.save()
             request.session["user_id"] = new_user.id
 
         else:
@@ -731,7 +730,7 @@ def ranking(request):
 def profile(request):
     """ Page for show and update the user data """
     
-    user, message, _ = tools.get_cookies_data(request)
+    user, message, error = tools.get_cookies_data(request)
     
     # Update user data in post
     if request.method == "POST":
@@ -778,6 +777,7 @@ def profile(request):
     return render(request, 'app/profile.html', {
         "name": user.user_name,
         "message": message,
+        "error": error,
         "current_page": "profile",
         "user_active": True,
         
@@ -947,10 +947,16 @@ def update_twitch_data (request):
     # Get user data
     user, *other = tools.get_cookies_data(request)
     
-    twitch.update_twitch_data (user)
+    updated = twitch.update_twitch_data (user)
+    print ()
+    print (updated)
+    print ()
     
     # Redirect
-    request.session["message"] = "Datos actualizados desde Twitch."
+    if updated:
+        request.session["message"] = "Datos actualizados desde Twitch."
+    else:
+        request.session["error"] = "Error al actualizar. Intenta cerrar sesión. Si sigues viendo este mensaje, contacta al administrador."
     return redirect('profile')
 
 def register_referred_user_from (request, user_from_id):

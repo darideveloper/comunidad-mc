@@ -77,13 +77,14 @@ def get_cookies_data (request, delete_data:bool=True):
     """
     
     # Get user data from cookies
+    # request.session["user_id"] = "733167917"
     user_id = request.session.get("user_id", 0)
     users = models.User.objects.filter(id=user_id)
     
     # Delete cookies if user not exist and return None
     if users.count() == 0:
         try:
-            del request.session[user_id]
+            del request.session["user_id"]
         except:
             pass
         return None, "", ""
@@ -190,7 +191,7 @@ def get_user_points (user:models.User):
     
     return general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num
 
-def get_time_zone_text (user):
+def get_time_zone_text (user): 
     """ Return user time zone as clen text
 
     Args:
