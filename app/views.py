@@ -163,6 +163,8 @@ def home(request):
 @decorators.validate_login
 def register(request):
     """ Page for complete register, after login with twitcyh the first time """
+    
+    # timezones = pytz.all_timezones
 
     # Get user from cookies
     user, *other = tools.get_cookies_data(request)
@@ -215,7 +217,7 @@ def register(request):
         else:
             # Show error if data is not valid
             error = "Algo salió mal, intente de nuevo"
-
+            
     # Default response
     return render(request, 'app/register.html', {
         "id": user.id,
@@ -227,6 +229,7 @@ def register(request):
         "country": "México",
         "time_zone": "America/Mexico_City",
         "error": error,
+        # "timezones": timezones
     })
 
 def error404(request, exception):
@@ -378,8 +381,8 @@ def schedule(request):
         form_vip = request.POST.get("vip", "")
         
         # Convert to datetime
-        selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour, "%Y-%m-%d %H")
-        selected_datetime = selected_datetime.astimezone (user_time_zone)
+        selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour+":00", "%Y-%m-%d %H:%M")
+        selected_datetime = user_time_zone.localize(selected_datetime)
         
         # Calculate available points
         available_points = general_points_num - user_streams_num * 50 
@@ -463,7 +466,7 @@ def schedule(request):
             date_text_month_spanish = tools.MONTHS[date_text_month]
             date_text = f"{date_text_day} de {date_text_month_spanish}"
             date_formatted = date.strftime("%Y-%m-%d")
-            
+                        
             # Date status
             disabled = False
             active = False
@@ -482,15 +485,20 @@ def schedule(request):
                 "date_text": date_text
             })   
             
+            
         # Calculate and format hours
-        hours = list(range(0, 24))
         disabled_hours = [2, 3, 4, 5, 6]
-        hours = list(filter(lambda hour: hour not in disabled_hours, hours))
-        hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
         
         # Calculate free hours for streams
         for day in available_days:
             if day["disabled"] == False:
+                
+                # Generate hours
+                hours = list(range(0, 24))
+                if day["num"] == today_week:
+                    hours = list(filter(lambda hour: hour > int(now.hour), hours))
+                hours = list(filter(lambda hour: hour not in disabled_hours, hours))
+                hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), hours))  
                 
                 # Day variables
                 day_name = day["name"]
@@ -506,7 +514,7 @@ def schedule(request):
                 day_available_hours = list(map(lambda hour: str(hour), filter(lambda hour: hour not in day_streams_hours, hours)))
                 day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
                 available_hours[day_name] = day_available_hours
-                
+                                
         # Remove friday at 7pm from available hours
         if "viernes" in available_hours:
             available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
@@ -566,7 +574,6 @@ def support(request):
         # get variables from form
         stream_id = request.POST.get("stream")
         donation = request.POST.get("donation")
-        print ({"stream_id": stream_id, "donation": donation})
         
         # Get stream
         streams_donation = models.Stream.objects.filter(id=stream_id)
@@ -752,8 +759,6 @@ def profile(request):
     # Get referral link
     referral_link = tools.get_referral_link (user)
 
-    print (message)
-
     # Render page
     return render(request, 'app/profile.html', {
         "name": user.user_name,
@@ -817,10 +822,8 @@ def wallet(request):
         "a": 0,
     }
     for bit_name, bit_min in bits_amount_range.items():
-        print (bit_name, bit_min, bits_num)
         if bits_num >= bit_min:
             bits_icon = f"app/imgs/icon_bits_{bit_name}.gif"
-            print (bits_icon)
             break
 
     # Render page
@@ -936,7 +939,7 @@ def update_twitch_data (request):
     return redirect('profile')
 
 def register_referred_user_from (request, user_from_id):
-    """ Save cookie from user that referred, and reciredt to home """
+    """ Save cookie from user that referred, and reciredt to home """    
     
     # Get referred user from
     referred_users = models.User.objects.filter(id=user_from_id)

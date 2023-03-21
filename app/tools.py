@@ -63,7 +63,6 @@ def get_fix_user (user:models.User):
                         
         # Use profile image if error
         if not valid_extension or not online_picture:
-            print (user_picture)
             user.picture = "/static/app/imgs/profile.png"
             # user.save()
             
@@ -83,7 +82,6 @@ def get_cookies_data (request, delete_data:bool=True):
     
     # Delete cookies if user not exist and return None
     if users.count() == 0:
-        print (users)
         try:
             del request.session[user_id]
         except:

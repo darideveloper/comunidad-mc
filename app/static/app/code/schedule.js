@@ -35,10 +35,6 @@ function show_available_hours () {
   // Delete current content of select element
   const time_items = document.querySelectorAll (selector_time_item)
 
-  // Get current hour
-  const now = new Date ()
-  const current_hour = now.getHours ()
-
   // Add new options to select element
   time_items.forEach (time_item => {
 
@@ -46,15 +42,7 @@ function show_available_hours () {
     const hour = time_item.querySelector ("input").value
 
     // Disable hours before current time
-    let disabled = false
-    if (today_week_name == current_day) {
-      disabled = parseInt(hour) <= current_hour ? true : false
-    }
-    
-    // Disable hours already booked
-    if (disabled == false) {
-      disabled = day_hours.includes (hour) ? false : true
-    }
+    let disabled = day_hours.includes (hour) ? false : true
 
     // Disable or enable item
     const input = time_item.querySelector ("input")
@@ -191,8 +179,6 @@ form.addEventListener ("submit", event => {
   const match_streams = streams_date_times.filter (stream => {
     return stream.date == selected_date && stream.hour == selected_time
   })
-
-  // console.log ({selected_date, selected_time, match_streams, streams_date_times})
 
   if (match_streams.length > 0) {
     // Show alert
