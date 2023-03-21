@@ -26,7 +26,7 @@
           fill-rule="evenodd" clip-rule="evenodd" />
       </svg>
       <span>
-        Inicia sesión con twitch
+        {{cta_text}}
       </span>
     </div>
   </a>
@@ -107,9 +107,13 @@
             fill-rule="evenodd" clip-rule="evenodd" />
         </svg>
         <span>
-          Inicia sesión con twitch
+          {{cta_text}}
         </span>
       </div>
     </a>
 </section>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'app/code/landing.js' %}"></script>
 {% endblock %}

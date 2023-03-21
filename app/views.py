@@ -100,8 +100,11 @@ def landing(request):
     # Get user from cookies
     user_active = False
     user, *other = tools.get_cookies_data(request)
+    cta_text = "Inicia sesión con twitch"
     if user:
         user_active = user.is_active
+        cta_text = "Ir a apoyar"
+        twitch_link = f"/support"
 
     # Render page with twitch link and error message (is exist)
     return render(request, 'app/landing.html', {
@@ -109,6 +112,7 @@ def landing(request):
         "error": error,
         "current_page": "landing",
         "user_active": user_active,
+        "cta_text": cta_text,
     })
 
 @decorators.validate_login
