@@ -448,13 +448,8 @@ def schedule(request):
     ranking_open = False
     open_hour = user.ranking.open_hour
     open_hour_datetime = datetime.datetime.combine(now.date(), open_hour, user_time_zone)
-    print (today_week, SCHEDULE_DAY, today_week_name)
     if today_week == SCHEDULE_DAY:
         ranking_open = False 
-        print ("hello")
-        print (now)
-        print (open_hour_datetime)
-        print ("world")
         if now >= open_hour_datetime:
             ranking_open = True
             
@@ -948,10 +943,7 @@ def update_twitch_data (request):
     user, *other = tools.get_cookies_data(request)
     
     updated = twitch.update_twitch_data (user)
-    print ()
-    print (updated)
-    print ()
-    
+
     # Redirect
     if updated:
         request.session["message"] = "Datos actualizados desde Twitch."
