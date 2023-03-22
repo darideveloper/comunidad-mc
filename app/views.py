@@ -445,7 +445,7 @@ def schedule(request):
     today_week_name = tools.WEEK_DAYS[today_week]
     
     # Validate the open hour of the current user
-    ranking_open = False
+    ranking_open = True
     open_hour = user.ranking.open_hour
     open_hour_datetime = datetime.datetime.combine(now.date(), open_hour, user_time_zone)
     if today_week == SCHEDULE_DAY:
@@ -458,7 +458,7 @@ def schedule(request):
     available_hours = {}
     hours = []
     visible_schedule_panel = True
-    if  ranking_open:
+    if ranking_open:
                         
         # Get available days of the week
         for day_num in range (0, 6):
