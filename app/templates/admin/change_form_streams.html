@@ -1,0 +1,33 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+  const admin_type = "{{admin_type}}"
+
+  // Disable not editable fields
+  const selectors_disbaled = [
+   '.field-is_free', 
+   '.field-is_vip',
+   '.field-claimed_bits', 
+   '.field-is_bits_done'
+  ]
+
+  if (admin_type == "admin platino") {
+    for (selector of selectors_disbaled) {
+      const element = document.querySelector(selector)
+      element.classList.add ("hide")
+    }
+  }
+
+</script>
+
+<style>
+  /* Custom styles for disabled inputs */
+  .hide {
+    display: none;
+  }
+
+</style>
+{% endblock %}
