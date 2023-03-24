@@ -80,6 +80,18 @@ class AdminStream (admin.ModelAdmin):
         return super(AdminStream, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
+        
+    def add_view(self, request, form_url='', extra_context=None):
+        """ render change form template for deactive fields for platinum admins """
+        
+        # Get admin type
+        user_auth = request.user
+        admin_type = tools.get_admin_type(user_auth=user_auth)
+        
+        extra_context = {"admin_type": admin_type}
+        return super(AdminStream, self).add_view(
+            request, form_url, extra_context=extra_context,
+        )
 
     def get_queryset(self, request):
         
@@ -90,7 +102,6 @@ class AdminStream (admin.ModelAdmin):
         if admin_type == "admin platino":
             # Get all users of the current admin
             users = models.User.objects.filter(user_auth=user_auth)
-            exclude = ('is_vip',)
             
             # Render only streams of the current user
             return models.Stream.objects.filter(user__in=users)
