@@ -698,6 +698,7 @@ def ranking(request):
         for index, register in enumerate(points_history)]
     ranking_global_top = ranking_global[:3]
     ranking_global_other = ranking_global[3:]
+
     
     # Render page
     return render(request, 'app/ranking.html', {

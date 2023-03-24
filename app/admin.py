@@ -75,8 +75,10 @@ class AdminStream (admin.ModelAdmin):
         # Get admin type
         user_auth = request.user
         admin_type = tools.get_admin_type(user_auth=user_auth)
+        users = models.User.objects.filter(user_auth=user_auth)
+        users_ids = [user.id for user in users]
         
-        extra_context = {"admin_type": admin_type}
+        extra_context = {"admin_type": admin_type, "users_ids": users_ids}
         return super(AdminStream, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
@@ -84,11 +86,13 @@ class AdminStream (admin.ModelAdmin):
     def add_view(self, request, form_url='', extra_context=None):
         """ render change form template for deactive fields for platinum admins """
         
-        # Get admin type
+        # Get admin typeº
         user_auth = request.user
         admin_type = tools.get_admin_type(user_auth=user_auth)
+        users = models.User.objects.filter(user_auth=user_auth)
+        users_ids = [f"{user.id}" for user in users]
         
-        extra_context = {"admin_type": admin_type}
+        extra_context = {"admin_type": admin_type, "users_ids": users_ids}
         return super(AdminStream, self).add_view(
             request, form_url, extra_context=extra_context,
         )

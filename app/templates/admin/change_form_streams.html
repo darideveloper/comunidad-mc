@@ -5,21 +5,34 @@
 {{ block.super }}
 <script>
   const admin_type = "{{admin_type}}"
+  const users_ids = {{users_ids|safe}}
 
-  // Disable not editable fields
-  const selectors_disbaled = [
-   '.field-is_free', 
-   '.field-is_vip',
-   '.field-claimed_bits', 
-   '.field-is_bits_done'
-  ]
-
+  
   if (admin_type == "admin platino") {
+    // Disable not editable fields
+    const selectors_disbaled = [
+     '.field-is_free', 
+     '.field-is_vip',
+     '.field-claimed_bits', 
+     '.field-is_bits_done'
+    ]
     for (selector of selectors_disbaled) {
       const element = document.querySelector(selector)
       element.classList.add ("hide")
     }
+
+    // Disable other user fields
+    const select = document.querySelector('#id_user')
+    const options = document.querySelectorAll('#id_user > option:not(:first-child)')
+
+    options.forEach(option => {
+      option_value = option.value
+      if (!users_ids.includes(option_value)) {
+        select.removeChild(option)
+      }
+    });
   }
+
 
 </script>
 
