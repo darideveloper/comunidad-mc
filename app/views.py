@@ -391,8 +391,9 @@ def schedule(request):
         available_points = general_points_num - user_streams_num * 50 
         
         # Infinity streams for admins
+        # TODO: FREE WEEK SCHEDULE
         admin_type = tools.get_admin_type (user=user)
-        if admin_type:
+        if admin_type or True:
             max_streams = user_streams_num + 1
         
         # Validte if regular user have available streams
