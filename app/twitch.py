@@ -186,11 +186,7 @@ class TwitchApi:
         twitch_scope = [
             "openid",
             "user:read:email",
-            "moderation:read",
-            "moderator:read:chatters",
-            "moderator:read:chat_settings",
             "chat:read",
-            "bits:read",
         ]
         url_params = {
             "client_id": self.twitch_client_id,
