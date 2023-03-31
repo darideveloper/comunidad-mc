@@ -134,6 +134,11 @@ def get_general_points (user:models.User):
     
     general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
+        
+    # Filter general points of the date before current hour
+    last_hour_datetime = timezone.now() - timedelta(minutes=timezone.now().minute - 2)
+    general_points = general_points.filter(datetime__lte=last_hour_datetime)
+    general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
     if not general_points_num:
         general_points_num = 0
