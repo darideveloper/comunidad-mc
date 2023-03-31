@@ -85,7 +85,7 @@
               </button>
 
               <!-- Show bits donned button for admin_donnor users -->
-              {% if stream.claimed_bits > 0 %}
+              {% if stream.claimed_bits > 0 and is_admin_donnor %}
               <form action="." method="post">
                 {% csrf_token %}
                 <label class="donation {% if stream.is_bits_done %}checked{% endif %}">
