@@ -269,23 +269,31 @@ def add_comment(request):
     # Get user
     user = models.User.objects.filter(id=user_id).first()
 
-    if not user or not stream:
-        return HttpResponseBadRequest("stream id or user id is not valid")
+    if not user:
+        return HttpResponseBadRequest(f"user id '{user_id}' not found")
     
-    # Create comment
-    comment_obj = models.Comment(stream=stream, comment=comment, user=user)
-    comment_obj.save()
-    logger.info (f"Comment added: {comment_obj.id}")
+    if not stream:
+        return HttpResponseBadRequest(f"stream id '{stream_id}' not found")
     
-    # Add cero point (initial default point) to user
-    twitch.add_cero_point (user, stream)
-    
-    # Try to add point to user
-    twitch.add_point(user, stream)
+    try:
+        # Create comment
+        comment_obj = models.Comment(stream=stream, comment=comment, user=user)
+        comment_obj.save()
+        logger.info (f"Comment added: {comment_obj.id}")
+        
+        # Add cero point (initial default point) to user
+        twitch.add_cero_point (user, stream)
+        
+        # Try to add point to user
+        twitch.add_point(user, stream)
 
-    return JsonResponse({
-        "success": True
-    })
+        return JsonResponse({
+            "success": True
+        })
+
+    except Exception as e:
+        logger.error(f"Error adding comment: {e}")
+        return HttpResponseBadRequest(f"Error adding comment: {e}")
 
 @decorators.validate_login_active
 def points(request):
