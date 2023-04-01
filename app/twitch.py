@@ -6,6 +6,7 @@ import threading
 from . import models
 from .logs import logger
 from dotenv import load_dotenv
+from django.db.models import Sum
 from django.utils import timezone
 from . import tools
 
@@ -382,21 +383,37 @@ class TwitchApi:
                 
                 # Set tripple point if stream is vip of if triple time
                 is_triple_time = tools.is_triple_time()
+                print (f"is_triple_time: {is_triple_time}")
                 amount = 1
                 if stream.is_vip or is_triple_time:
                     amount = 3
+                print (f"amount {amount}")
         
                 # Get and update general point
                 info = models.InfoPoint.objects.get(info="ver stream")
-                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream, amount=0)
+                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream)
                 new_general_point.amount = amount
                 new_general_point.info = info
                 new_general_point.save ()
                 
                 # Validate if the user have less than the max number of daily points
-                current_daily_points = models.DailyPoint.objects.filter(general_point__user=user).count()
+                daily_points = models.DailyPoint.objects.filter(general_point__user=user)
+                current_daily_points = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
+                if not current_daily_points:
+                    current_daily_points = 0
+                
                 if current_daily_points < self.max_daily_points:
                     
+                    # Fix general points in triple time
+                    future_points = current_daily_points + amount
+                    print (f"future_points: {future_points}")
+                    if future_points > 10:
+                        new_general_point.amount = 1
+                        new_general_point.save ()
+                        
+                        extra_general_point = models.GeneralPoint (user=user, stream=stream, amount=amount - 1, info=info)
+                        extra_general_point.save ()
+                        
                     # Save daily point
                     new_daily_point = models.DailyPoint (general_point=new_general_point)
                     new_daily_point.save()
