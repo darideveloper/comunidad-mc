@@ -75,7 +75,7 @@ class Stream (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que está transmitiendo", null=False, blank=False)
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
-    is_free = models.BooleanField(name='is_free', verbose_name="free", help_text="indica si el stream es free (no restará puntos)", default=False)
+    is_free = models.BooleanField(name='is_free', verbose_name="free", help_text="indica si el stream es free (no restará puntos)", default=True)
     is_vip = models.BooleanField(name='is_vip', verbose_name="vip", help_text="indica si el stream es vip (único en su hora)", default=False)
     is_bits_done = models.BooleanField(name='is_bits_done', verbose_name="bits donados", help_text="indica si los bits han sido donados", default=False)
     
