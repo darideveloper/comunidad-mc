@@ -136,7 +136,9 @@ def get_general_points (user:models.User):
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
         
     # Filter general points of the date before current hour
-    last_hour_datetime = timezone.now() - timedelta(minutes=timezone.now().minute - 2)
+    last_hour_datetime = timezone.now() - timedelta(hours=1)
+    print (timezone.now())
+    print (last_hour_datetime)
     general_points = general_points.filter(datetime__lte=last_hour_datetime)
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
@@ -181,8 +183,8 @@ def get_user_points (user:models.User):
     general_points, general_points_num = get_general_points(user)
     
     # get points registers
-    weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user)
-    daily_points = models.DailyPoint.objects.filter(general_point__user=user)
+    weekly_points = models.WeeklyPoint.objects.filter(general_point__in=general_points)
+    daily_points = models.DailyPoint.objects.filter(general_point__in=general_points)
     
     # Calculate sums of points
     weekly_points_num = weekly_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
