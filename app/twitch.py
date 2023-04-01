@@ -414,13 +414,18 @@ class TwitchApi:
                         extra_general_point = models.GeneralPoint (user=user, stream=stream, amount=amount - 1, info=info)
                         extra_general_point.save ()
                         
+                    # Validate if already exists daily and weekly point
+                    current_daily_point = models.DailyPoint.objects.filter(general_point=new_general_point).count()
+                    current_weekly_point = models.WeeklyPoint.objects.filter(general_point=new_general_point).count()
+                        
                     # Save daily point
-                    new_daily_point = models.DailyPoint (general_point=new_general_point)
-                    new_daily_point.save()
-                    
-                    # save weekly point
-                    new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
-                    new_weekly_point.save()
+                    if current_daily_point == 0 and current_weekly_point == 0:
+                        new_daily_point = models.DailyPoint (general_point=new_general_point)
+                        new_daily_point.save()
+                        
+                        # save weekly point
+                        new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
+                        new_weekly_point.save()
                     
                     logger.info(f"Added daily and weekly point to user: {user}")
                     
