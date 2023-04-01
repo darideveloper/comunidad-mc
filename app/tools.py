@@ -1,8 +1,10 @@
 import os
+import pytz
 from . import models
 from . import tools
 import requests as req
 from .logs import logger
+from django.conf import settings 
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -133,13 +135,11 @@ def get_general_points (user:models.User):
     """
     
     general_points = models.GeneralPoint.objects.filter(user=user).order_by("datetime").reverse()
-    general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
         
     # Filter general points of the date before current hour
-    last_hour_datetime = timezone.now() - timedelta(hours=1)
-    print (timezone.now())
-    print (last_hour_datetime)
-    general_points = general_points.filter(datetime__lte=last_hour_datetime)
+    now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
+    now_hour = int (now_datetime.strftime("%H"))
+    general_points = general_points.filter(datetime__hour__lt=now_hour)
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
     if not general_points_num:
