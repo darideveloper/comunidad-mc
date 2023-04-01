@@ -601,13 +601,14 @@ def support(request):
     if not current_streams:
         current_streams = []
     for stream in current_streams:
-        stream_user = tools.get_fix_user(stream.user)        
+        stream_user = tools.get_fix_user(stream.user)
+        claimed_bits = models.Bit.objects.filter(stream=stream).aggregate(Sum('amount'))["amount__sum"]    
         streams.append({
             "id": stream.id,
             "user": stream_user.user_name, 
             "picture": stream_user.picture, 
             "is_vip": stream.is_vip,
-            "claimed_bits": stream.claimed_bits,
+            "claimed_bits": claimed_bits,
             "is_bits_done": stream.is_bits_done,
         })
     
@@ -804,17 +805,16 @@ def wallet(request):
         # Add bits to stream
         stream_id = request.POST.get("stream")
         stream = models.Stream.objects.get(id=stream_id)
-        stream.claimed_bits += bits_num
         stream.save ()
         
         # Add register for claim bits
-        models.Bit (user=user, amount=-bits_num, details="Bits reclamados").save()
+        models.Bit (user=user, amount=-bits_num, details="Bits reclamados", stream=stream).save()
         
         # Update bits of the user
         bits, bits_num = tools.get_bits (user)    
     
     # Format bits history
-    bits_history = list(map(lambda bit: {"date": bit.date.strftime("%d/%m/%Y"), "bits": bit.amount, "description": bit.details}, bits))
+    bits_history = list(map(lambda bit: {"date": bit.timestamp.strftime("%d/%m/%Y"), "bits": bit.amount, "description": bit.details}, bits))
     
     # Get streams of the current user
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
@@ -925,6 +925,7 @@ def cancel_stream (request, id):
         
         # Delete stream
         stream.delete()
+        
         request.session["message"] = "Stream elminado."  
     else:  
         request.session["error"] = error

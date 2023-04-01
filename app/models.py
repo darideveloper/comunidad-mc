@@ -77,7 +77,6 @@ class Stream (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
     is_free = models.BooleanField(name='is_free', verbose_name="free", help_text="indica si el stream es free (no restará puntos)", default=False)
     is_vip = models.BooleanField(name='is_vip', verbose_name="vip", help_text="indica si el stream es vip (único en su hora)", default=False)
-    claimed_bits = models.IntegerField(name='claimed_bits', verbose_name="bits reclamados", help_text="bits reclamados para este stream", null=False, blank=True, default=0)
     is_bits_done = models.BooleanField(name='is_bits_done', verbose_name="bits donados", help_text="indica si los bits han sido donados", default=False)
     
     def __str__(self):
@@ -183,9 +182,10 @@ class DailyPoint (models.Model):
 class Bit (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de los bits", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
-    date = models.DateField(name='date', verbose_name="fecha", help_text="fecha de los bits", null=False, blank=False, default=timezone.now)
+    stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el punto", null=True, blank=True)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de bits", null=False, blank=False)
     details = models.CharField(name='details', verbose_name="detalles", help_text="detalles de los bits", null=False, blank=True, max_length=100)
+    timestamp = models.DateTimeField(name='timestamp', verbose_name="fecha y hora", help_text="fecha y hora del punto", null=False, blank=False, default=timezone.now)
     
     def __str__(self):
         return f"{self.amount} bits ({self.user})"
