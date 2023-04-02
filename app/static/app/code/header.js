@@ -1,4 +1,5 @@
 
+// Open and close menu
 const header_btns = document.querySelectorAll ("#header .btn.menu")
 const menu_wrapper = document.querySelector('#header .menu-wrapper')
 
@@ -22,5 +23,5 @@ for (const header_btn of header_btns) {
 const menu_item_active = document.querySelector(`ul.menu li.${current_page}`)
 if (menu_item_active) {
   menu_item_active.classList.add ("active")
-  menu_item_active.querySelector("a").setAttribute ("href", "#")
+  // menu_item_active.querySelector("a").setAttribute ("href", "#")
 }

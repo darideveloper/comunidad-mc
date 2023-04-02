@@ -1,6 +1,6 @@
 // nodes
 export const loading_wrapper = document.querySelector('.loading-wrapper')
-const menu_buttons = document.querySelectorAll('.menu-wrapper ul li:not(.active) a')
+const menu_buttons = document.querySelectorAll('.menu-wrapper ul li a')
 
 // Show the loading screen shwn click menu buttons
 menu_buttons.forEach (function (button) {

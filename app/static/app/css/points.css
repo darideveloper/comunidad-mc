@@ -148,7 +148,6 @@
 }
 #header nav .menu-wrapper ul li.active a {
   color: #5db897;
-  cursor: default;
 }
 #header nav .menu-wrapper ul li.active:hover {
   border: none;
