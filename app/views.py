@@ -376,6 +376,7 @@ def schedule(request):
         
         # Get next streams of the user in the next 7 days
         user_streams, streams = tools.get_user_streams(user, user_time_zone)
+        print (user_streams)
         
         user_streams_num = 0
         if user_streams:
@@ -407,7 +408,7 @@ def schedule(request):
                 max_streams += streams_extra_num
                 
             available_stream = max_streams - user_streams_num > 0
-            if not available_stream or available_points < 50:
+            if not available_stream: # or available_points < 50:
                 error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
@@ -467,7 +468,6 @@ def schedule(request):
         for day_num in range (0, 6):
             
             extra_days = 0
-            print (today_week, SCHEDULE_DAY)
             if today_week == SCHEDULE_DAY:
                 extra_days = 7
             
@@ -538,8 +538,6 @@ def schedule(request):
         
     
     # Render page
-    print (available_days)
-    print (available_hours)
     return render(request, 'app/schedule.html', {
         # General context
         "name": user.user_name,

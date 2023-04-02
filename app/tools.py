@@ -220,18 +220,16 @@ def get_user_streams (user, user_time_zone):
     """
     
     logger.debug (f"Getting next streams of the user {user}")
-    now = timezone.now()
-    hour = now.hour
-    hour += 1
-    if hour == 24:
-        hour = 0        
-    start_datetime = datetime(
-        now.year, now.month, now.day, hour, 0, 0, tzinfo=timezone.utc)
-    end_datetime = start_datetime + timedelta(days=14)
+    start_week = timezone.datetime.today()
+    if start_week.weekday() != 6:
+        start_week = start_week - timedelta(start_week.weekday())
+    end_week = start_week + timedelta(14)
+        
+    print (f"start: {start_week}, end: {end_week}")
 
     # Get current streams
     user_streams = models.Stream.objects.filter(
-        datetime__range=[start_datetime, end_datetime], user=user).all().order_by("datetime")
+        datetime__range=[start_week, end_week], user=user).all().order_by("datetime")
     
     if not user_streams:
         user_streams = []
