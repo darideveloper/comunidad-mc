@@ -698,7 +698,7 @@ def ranking(request):
     ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
     
     # Get top 10 users from general points
-    points_history = models.PointsHistory.objects.all().order_by("general_points").reverse()[:10]
+    points_history = models.PointsHistory.objects.all().order_by("week_points").reverse()[:10]
     ranking_global = [[index + 1, register.user.user_name, register.week_points, f'app/imgs/icon_{register.user.ranking}.png', register.user.picture, register.user.ranking] \
         for index, register in enumerate(points_history)]
     ranking_global_top = ranking_global[:3]

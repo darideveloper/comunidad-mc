@@ -138,8 +138,9 @@ def get_general_points (user:models.User):
         
     # Filter general points of the date before current hour
     now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
-    now_hour = int (now_datetime.strftime("%H"))
-    general_points = general_points.filter(datetime__hour__lt=now_hour)
+    last_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
+    # now_hour = int (now_datetime.strftime("%H"))
+    general_points = general_points.filter(datetime__lt=last_hour)
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
     if not general_points_num:
@@ -156,9 +157,6 @@ def get_general_points_last_week (user:models.User):
     Returns:
         touple: general_points (registers), general_points_num (counter)
     """
-    
-    # get general points
-    general_points, _ = get_general_points(user)
     
     # Calculate general points of the current week
     general_points_week = models.GeneralPoint.objects.filter(user=user, datetime__week=timezone.now().isocalendar()[1])

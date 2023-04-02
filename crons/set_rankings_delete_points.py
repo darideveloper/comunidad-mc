@@ -56,20 +56,21 @@ if today == RESTART_POINTS_WEEK_DAY:
         # Get user week points
         general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
         
+        ranking_found = None
         admin_type = tools.get_admin_type (user)
         if admin_type:
             # Found ranking to admins
             admin_name = admin_type.replace ("admin", "").strip()
-            ranking = models.Ranking.objects.get (name=admin_name)
+            ranking_found = models.Ranking.objects.get (name=admin_name)
         else:
             # Found ranking to normal users
             for ranking in rankings:
                 if weekly_points_num >= ranking.points:
-                    models.User.ranking = ranking
+                    ranking_found = ranking
                     break
                 
-        # Update ranking
-        user.ranking = ranking        
+        # Update ranking    
+        user.ranking = ranking_found  
         user.save()
         
         general_points_week, general_points_week_num = tools.get_general_points_last_week (user)
@@ -78,10 +79,10 @@ if today == RESTART_POINTS_WEEK_DAY:
         models.PointsHistory (user=user, general_points=general_points_num, week_points=general_points_week_num).save()
         
         # Show status
-        logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {models.User.ranking}")
+        logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}")
     
     # Add bits to first, second and third users in points table
-    points_history_all = models.PointsHistory.objects.all().order_by("general_points").reverse()
+    points_history_all = models.PointsHistory.objects.all().order_by("week_points").reverse()
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user
