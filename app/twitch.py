@@ -34,9 +34,9 @@ class TwitchApi:
         logger.debug ("Getting streams from database for current hour")
         now = timezone.now()
         start_datetime = datetime.datetime(
-            now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
+            now.year, now.month, now.day, now.hour + 1, 0, 0, tzinfo=timezone.utc)
         end_datetime = datetime.datetime(
-            now.year, now.month, now.day, now.hour, 59, 59, tzinfo=timezone.utc)
+            now.year, now.month, now.day, now.hour + 1, 59, 59, tzinfo=timezone.utc)
 
         # Get current streams
         current_streams = models.Stream.objects.filter(
