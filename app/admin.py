@@ -76,7 +76,7 @@ class AdminStream (admin.ModelAdmin):
         user_auth = request.user
         admin_type = tools.get_admin_type(user_auth=user_auth)
         users = models.User.objects.filter(user_auth=user_auth)
-        users_ids = [user.id for user in users]
+        users_ids = [f"{user.id}" for user in users]
         
         extra_context = {"admin_type": admin_type, "users_ids": users_ids}
         return super(AdminStream, self).change_view(
