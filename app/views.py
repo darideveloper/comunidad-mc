@@ -459,7 +459,7 @@ def schedule(request):
             
     # Validate if today isn't sunday
     available_days = []
-    available_hours = {}
+    available_hours = {"domingo": []}
     hours = []
     visible_schedule_panel = True
     if ranking_open:
@@ -468,6 +468,7 @@ def schedule(request):
         for day_num in range (0, 6):
             
             extra_days = 0
+            print (today_week, SCHEDULE_DAY)
             if today_week == SCHEDULE_DAY:
                 extra_days = 7
             
@@ -483,10 +484,11 @@ def schedule(request):
             # Date status
             disabled = False
             active = False
-            if day_num == today_week:
-                active = True
-            elif day_num < today_week:
-                disabled = True
+            if today_week != SCHEDULE_DAY:
+                if day_num == today_week:
+                    active = True
+                elif day_num < today_week:
+                    disabled = True
             
             # Add date 
             available_days.append({
@@ -537,6 +539,8 @@ def schedule(request):
         
     
     # Render page
+    print (available_days)
+    print (available_hours)
     return render(request, 'app/schedule.html', {
         # General context
         "name": user.user_name,

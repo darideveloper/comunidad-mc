@@ -29,7 +29,8 @@ function activate_item (item, selector) {
 function show_available_hours () {
   // Show available hours for selected day
 
-  const current_day = document.querySelector (`${selector_day_item}.active`).innerText.toLowerCase()
+  const current_day_elem = document.querySelector (`${selector_day_item}.active`)
+  const current_day = current_day_elem ? current_day_elem.innerText.toLowerCase() : "domingo"
   const day_hours = available_hours[current_day]
   
   // Delete current content of select element
