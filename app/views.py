@@ -375,12 +375,8 @@ def schedule(request):
     if request.method == "POST":
         
         # Get next streams of the user in the next 7 days
-        user_streams, streams = tools.get_user_streams(user, user_time_zone)
-        print (user_streams)
-        
-        user_streams_num = 0
-        if user_streams:
-            user_streams_num = user_streams.count()
+        streams = tools.get_user_streams(user, user_time_zone)        
+        user_streams_num = len(streams)
         
         # Get stream data
         form_date = request.POST.get("date", "")
@@ -438,7 +434,7 @@ def schedule(request):
             
             
     # Get next streams of the user in the next 7 days
-    _, streams = tools.get_user_streams(user, user_time_zone)
+    streams = tools.get_user_streams(user, user_time_zone)
     
     # Format streams date times
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
@@ -827,8 +823,8 @@ def wallet(request):
     
     # Get streams of the current user
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
-    streams, _ = tools.get_user_streams (user, user_time_zone)
-    streams = list(map(lambda stream: {"id": stream.id, "datetime": stream.datetime.strftime ("%d/%m/%Y %H:%M")}, streams))
+    user_streams_data = tools.get_user_streams (user, user_time_zone)
+    streams = list(map(lambda stream: {"id": stream["id"], "datetime": stream["datetime"]}, user_streams_data))
     
     # Select bits icon
     bits_amount_range = {
