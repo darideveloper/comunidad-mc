@@ -1,11 +1,12 @@
 import os
+import pytz
 import json
 import requests
 import datetime
-import threading
 from . import models
 from .logs import logger
 from dotenv import load_dotenv
+from django.conf import settings 
 from django.db.models import Sum
 from django.utils import timezone
 from . import tools
@@ -32,15 +33,13 @@ class TwitchApi:
 
         # Get date ranges
         logger.debug ("Getting streams from database for current hour")
-        now = timezone.now()
-        start_datetime = datetime.datetime(
-            now.year, now.month, now.day, now.hour + 1, 0, 0, tzinfo=timezone.utc)
-        end_datetime = datetime.datetime(
-            now.year, now.month, now.day, now.hour + 1, 59, 59, tzinfo=timezone.utc)
-
+        now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
+        start_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
+        end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999)
+        
         # Get current streams
         current_streams = models.Stream.objects.filter(
-            datetime__range=[start_datetime, end_datetime]).all().order_by('user__user_name')
+            datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
         
         if not current_streams:
             logger.info("No streams found")
