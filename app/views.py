@@ -607,7 +607,9 @@ def support(request):
         current_streams = []
     for stream in current_streams:
         stream_user = tools.get_fix_user(stream.user)
-        claimed_bits = models.Bit.objects.filter(stream=stream).aggregate(Sum('amount'))["amount__sum"]    
+        print (models.Bit.objects.filter(stream=stream))
+        claimed_bits = abs(models.Bit.objects.filter(stream=stream).aggregate(Sum('amount'))["amount__sum"])
+        print (claimed_bits)    
         streams.append({
             "id": stream.id,
             "user": stream_user.user_name, 
