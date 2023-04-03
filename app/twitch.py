@@ -46,6 +46,29 @@ class TwitchApi:
             return []
         
         return current_streams
+    
+    def get_current_streams_node(self):
+        """ Get the current live streams from databse
+
+        Returns:
+            models.Stream.objects: Streams instances
+        """
+
+        # Get date ranges
+        logger.debug ("Getting streams from database for current hour")
+        now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
+        start_hour = now_datetime.replace(minute=50, second=0, microsecond=0) + datetime.timedelta(hours=1)
+        end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999) + datetime.timedelta(hours=1)
+        
+        # Get current streams
+        current_streams = models.Stream.objects.filter(
+            datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
+        
+        if not current_streams:
+            logger.info("No streams found")
+            return []
+        
+        return current_streams
 
     def submit_streams_node(self):
         """ Submit streams to node.js api for start reading comments
@@ -58,7 +81,7 @@ class TwitchApi:
         """
 
         node_error = False
-        current_streams = self.get_current_streams()
+        current_streams = self.get_current_streams_node()
         if not current_streams:
             return None
         
