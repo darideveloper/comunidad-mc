@@ -64,9 +64,9 @@ class AdminTimeZone (admin.ModelAdmin):
 class AdminStream (admin.ModelAdmin):
     
     change_form_template = 'admin/change_form_streams.html' 
-    list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free', 'is_bits_done')
-    ordering = ('id', 'user', 'datetime', 'is_bits_done')
-    list_filter = ('user', 'datetime', 'is_vip', 'is_free', 'is_bits_done')
+    list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free')
+    ordering = ('id', 'user', 'datetime')
+    list_filter = ('user', 'datetime', 'is_vip', 'is_free')
     search_fields = ('user__user_name', )
     
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -184,9 +184,9 @@ class AdminPointsHistory (admin.ModelAdmin):
 @admin.register (models.Bit)
 class AdminBit (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'timestamp', 'amount', 'details', )
-    ordering = ('id', 'user', 'timestamp', 'amount')
-    list_filter = ('user', 'timestamp')
+    list_display = ('id', 'user', 'timestamp', 'amount', 'is_bits_done', 'details', )
+    ordering = ('id', 'user', 'timestamp', 'is_bits_done', 'amount')
+    list_filter = ('user', 'timestamp', 'is_bits_done', 'details',)
     search_fields = ('user__user_name', 'details')
     
 @admin.register (models.TopDailyPoint)

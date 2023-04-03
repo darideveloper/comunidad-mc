@@ -591,9 +591,15 @@ def support(request):
             error = "Error al guardar la donación"
         stream_donation = streams_donation[0]
         
+        # get bit object
+        bits = models.Bit.objects.filter(stream=stream_donation)
+        if not bits:
+            error = "Error al guardar la donación"
+        bits = bits[0]
+        
         # Update status
-        stream_donation.is_bits_done = True if donation == "on" else False
-        stream_donation.save()
+        bits.is_bits_done = True if donation == "on" else False
+        bits.save()
 
     # Valide if node server is working
     error = ""
@@ -607,16 +613,24 @@ def support(request):
         current_streams = []
     for stream in current_streams:
         stream_user = tools.get_fix_user(stream.user)
-        print (models.Bit.objects.filter(stream=stream))
-        claimed_bits = abs(models.Bit.objects.filter(stream=stream).aggregate(Sum('amount'))["amount__sum"])
-        print (claimed_bits)    
+        bits_claimed = models.Bit.objects.filter(stream=stream)
+        claimed_bits = bits_claimed.aggregate(Sum('amount'))["amount__sum"]
+        if claimed_bits:
+            claimed_bits = abs(claimed_bits)
+        else:
+            claimed_bits = 0
+        
+        is_bits_done = False
+        if bits_claimed:
+            is_bits_done = bits_claimed[0].is_bits_done if bits_claimed else False
+            
         streams.append({
             "id": stream.id,
             "user": stream_user.user_name, 
             "picture": stream_user.picture, 
             "is_vip": stream.is_vip,
             "claimed_bits": claimed_bits,
-            "is_bits_done": stream.is_bits_done,
+            "is_bits_done": is_bits_done,
         })
     
     # Culate time of the user

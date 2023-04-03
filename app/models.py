@@ -77,7 +77,6 @@ class Stream (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del stream", null=False, blank=False, default=timezone.now)
     is_free = models.BooleanField(name='is_free', verbose_name="free", help_text="indica si el stream es free (no restará puntos)", default=True)
     is_vip = models.BooleanField(name='is_vip', verbose_name="vip", help_text="indica si el stream es vip (único en su hora)", default=False)
-    is_bits_done = models.BooleanField(name='is_bits_done', verbose_name="bits donados", help_text="indica si los bits han sido donados", default=False)
     
     def __str__(self):
         formated_date = str(timezone.localtime(self.datetime))[0:-12] + "h"
@@ -186,6 +185,7 @@ class Bit (models.Model):
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de bits", null=False, blank=False)
     details = models.CharField(name='details', verbose_name="detalles", help_text="detalles de los bits", null=False, blank=True, max_length=100)
     timestamp = models.DateTimeField(name='timestamp', verbose_name="fecha y hora", help_text="fecha y hora del punto", null=False, blank=False, default=timezone.now)
+    is_bits_done = models.BooleanField(name='is_bits_done', verbose_name="bits donados", help_text="indica si los bits han sido donados", default=False)
     
     def __str__(self):
         return f"{self.amount} bits ({self.user})"
