@@ -284,7 +284,7 @@ def add_comment(request):
     
     # Validate if user already have a general point in the stream
     general_point_found = models.GeneralPoint.objects.filter(
-        user=user, stream=stream).exists()
+        user=user, stream=stream, amount__gt=0).exists()
     if general_point_found:
         return HttpResponseBadRequest(f"user already have a general point")
     
