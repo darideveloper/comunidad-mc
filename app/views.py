@@ -269,6 +269,11 @@ def add_comment(request):
 
     # Get user
     user = models.User.objects.filter(id=user_id).first()
+    
+    # Ignore streamer comments
+    streamer = stream.user
+    if user == streamer:
+        return HttpResponseBadRequest(f"streamer comment")
 
     if not user:
         return HttpResponseBadRequest(f"user id '{user_id}' not found")
