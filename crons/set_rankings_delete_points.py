@@ -95,10 +95,6 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.StreamVip (user=first_user).save ()
     print ("Vip added to first user")
     
-    # Delete top daily points
-    models.DailyPoint.objects.all().delete()
-    print ("top daily points deleted")
-    
     # Delete week points
     models.WeeklyPoint.objects.all().delete()
     print ("week points deleted")
@@ -107,7 +103,10 @@ if today == RESTART_POINTS_WEEK_DAY:
     # models.GeneralPoint.objects.all().delete()
     # print ("all points deleted")
     
-else:        
-    # delete all daily points
-    models.DailyPoint.objects.all().delete()
-    print ("today points deleted")
+# delete all daily points
+models.DailyPoint.objects.all().delete()
+print ("today points deleted")
+
+# delete top daily points
+models.TopDailyPoint.objects.all().delete()
+print ("top points deleted")
