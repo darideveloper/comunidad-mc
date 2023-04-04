@@ -6,16 +6,17 @@ import datetime
 from . import models
 from .logs import logger
 from dotenv import load_dotenv
-from django.conf import settings 
+from django.conf import settings
 from django.db.models import Sum
 from django.utils import timezone
 from . import tools
+
 
 class TwitchApi:
 
     def __init__(self):
         # Load and get credentials
-        load_dotenv ()
+        load_dotenv()
         self.node_api = os.environ.get("NODE_API")
         self.twitch_client_id = os.getenv("TWITCH_CLIENT_ID")
         self.twitch_secret = os.getenv("TWITCH_SECRET")
@@ -32,21 +33,22 @@ class TwitchApi:
         """
 
         # Get date ranges
-        logger.debug ("Getting streams from database for current hour")
-        now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
+        logger.debug("Getting streams from database for current hour")
+        now_datetime = timezone.now().astimezone(pytz.timezone(settings.TIME_ZONE))
         start_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
-        end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999)
-        
+        end_hour = now_datetime.replace(
+            minute=59, second=59, microsecond=999999)
+
         # Get current streams
         current_streams = models.Stream.objects.filter(
             datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
-        
+
         if not current_streams:
             logger.info("No streams found")
             return []
-        
+
         return current_streams
-    
+
     # def get_current_streams_node(self):
     #     """ Get the current live streams from databse
 
@@ -56,18 +58,18 @@ class TwitchApi:
 
     #     # Get date ranges
     #     logger.debug ("Getting streams from database for current hour")
-    #     now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
+    #     now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE))
     #     start_hour = now_datetime.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
     #     end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999) + datetime.timedelta(hours=1)
-        
+
     #     # Get current streams
     #     current_streams = models.Stream.objects.filter(
     #         datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
-        
+
     #     if not current_streams:
     #         logger.info("No streams found")
     #         return []
-        
+
     #     return current_streams
 
     def submit_streams_node(self):
@@ -81,22 +83,24 @@ class TwitchApi:
         """
 
         node_error = False
-        current_streams = self.get_current_streams ()
-        logger.info (f"Sending streams to node.js api: {len(current_streams)}")
+        current_streams = self.get_current_streams()
+        logger.info(f"Sending streams to node.js api: {len(current_streams)}")
         # debug streams found
-        logger.info (f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}")
-        
+        logger.info(
+            f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}")
+
         # Detect unique user of the streams
-        users = list(set(map(lambda current_stream: current_stream.user, current_streams)))
+        users = list(
+            set(map(lambda current_stream: current_stream.user, current_streams)))
         users_names = list(map(lambda user: user.user_name, users))
-        
+
         # Refresh tokens
-        logger.info (f"Refreshing tokens for users: {','.join(users_names)}")
+        logger.info(f"Refreshing tokens for users: {','.join(users_names)}")
         for user in users:
-            token_updated = self.update_token (user)
+            token_updated = self.update_token(user)
             if not token_updated:
-                logger.error (f"Error updating token for user: {user}")
-        
+                logger.error(f"Error updating token for user: {user}")
+
         streams_data = {"streams": []}
         for stream in current_streams:
             # Get and stremer data
@@ -105,10 +109,10 @@ class TwitchApi:
                 "user_name": stream.user.user_name,
                 "stream_id": stream.id,
             })
-            
+
         if not streams_data:
             return None
-        
+
         # Send data to node.js api for start readding comments, and catch errors
         try:
             logger.info("Sending streams to node.js api")
@@ -119,7 +123,6 @@ class TwitchApi:
             node_error = True
 
         return node_error
-
 
     def is_node_working(self):
         """ Submit a basic request to node.js api to check if is working
@@ -139,7 +142,6 @@ class TwitchApi:
             return False
         else:
             return True
-
 
     def get_tokens(self, login_code: str, direct_url: str):
         """ Get tokens from twitch api, at the endpoint: https://id.twitch.tv/oauth2/token
@@ -170,7 +172,6 @@ class TwitchApi:
         refresh_token = json_data.get("refresh_token", "")
         logger.debug(f"{access_token}, {refresh_token}")
         return (access_token, refresh_token)
-
 
     def get_user_info(self, user_token: str):
         """ Get user information using user access token
@@ -227,23 +228,22 @@ class TwitchApi:
 
         return twitch_link
 
-
     def check_users_in_chat(self):
         """ Get list of users in chat of the current streams and save in databse """
-        
-        # Get current streams and loop  
-        current_streams = self.get_current_streams ()
+
+        # Get current streams and loop
+        current_streams = self.get_current_streams()
         if not current_streams:
             return None
-        
+
         for stream in current_streams:
-            
+
             # Loop for get data and update token
             while True:
-                
+
                 # Get current stream
                 streamer = stream.user
-                    
+
                 # Request data
                 user_id = streamer.id
                 user_token = streamer.access_token
@@ -257,62 +257,65 @@ class TwitchApi:
 
                 if not json_data:
                     continue
-                
+
                 # Validate if token is expired and retry
                 if "error" in json_data:
-                    logger.error (f"Token expired for {streamer}. Details: {json_data}")
-                    self.update_token(streamer)         
+                    logger.error(
+                        f"Token expired for {streamer}. Details: {json_data}")
+                    self.update_token(streamer)
                     continue
                 else:
-                    break       
+                    break
 
             # Get users in chat
-            users_active = list(map(lambda user: user["user_id"], json_data.get("data", [])))
-        
+            users_active = list(
+                map(lambda user: user["user_id"], json_data.get("data", [])))
+
             # Filter only user who exist in database
             valid_users = models.User.objects.filter(id__in=users_active)
             if len(valid_users) == 1:
-                logger.info (f"No users in stream: {stream}")
-                
+                logger.info(f"No users in stream: {stream}")
+
             # Update first_stream_done from user
             referred_user_from = streamer.referred_user_from
             first_stream_done = streamer.first_stream_done
             if valid_users and not first_stream_done and referred_user_from:
-                
-                logger.info (f"First stream detected from referred user {streamer}")
-                
+
+                logger.info(
+                    f"First stream detected from referred user {streamer}")
+
                 # Get ranking "diamente"
                 ranking = models.Ranking.objects.get(name="diamante")
-                
+
                 # Update streamer data
                 streamer.first_stream_done = True
-                streamer.save ()
-                
+                streamer.save()
+
                 # Update referred_user_from data
                 referred_user_from.ranking = ranking
-                referred_user_from.save ()
-                
+                referred_user_from.save()
+
                 # Add bits to streamer
-                models.Bit.objects.create(user=referred_user_from, amount=100, details=f"Referido {streamer}")
-            
+                models.Bit.objects.create(
+                    user=referred_user_from, amount=100, details=f"Referido {streamer}")
+
             # Save in each watch in database
             for user in valid_users:
-                
+
                 # Skip if user is the streamer
                 if user.id == streamer.id:
                     continue
-                
+
                 # Save check in database
                 new_check = models.WhatchCheck(stream=stream, user=user)
-                new_check.save ()
-                logger.info (f"Check saved. User: {user}, Stream: {stream}")
-                
+                new_check.save()
+                logger.info(f"Check saved. User: {user}, Stream: {stream}")
+
                 # Add cero point (initial default point) to user
-                self.add_cero_point (user, stream)
-                
+                self.add_cero_point(user, stream)
+
                 # Try to add point to user
                 self.add_point(user, stream)
-
 
     def get_new_user_token(self, refresh_token: str):
         """ Update user token
@@ -346,8 +349,8 @@ class TwitchApi:
             return ""
 
         return access_token
-    
-    def update_token (self, user: models.User):
+
+    def update_token(self, user: models.User):
         """ Update user token and save in database
 
         Args:
@@ -356,20 +359,20 @@ class TwitchApi:
         Returns: 
             bool: True if token updated, False if error
         """
-            
-        # Get new access token using refresh token  
+
+        # Get new access token using refresh token
         new_access_token = self.get_new_user_token(user.refresh_token)
         if not new_access_token:
-            logger.error (f"Error generating new token for user: {user}")
+            logger.error(f"Error generating new token for user: {user}")
             return False
 
         # Update user token
         user.access_token = new_access_token
         user.save()
-        logger.info (f"User token updated: {user}")
+        logger.info(f"User token updated: {user}")
         return True
 
-    def add_point (self, user: models.User, stream: models.Stream = None, force: bool = False):
+    def add_point(self, user: models.User, stream: models.Stream = None, force: bool = False):
         """ Add point to user after watch stream and comment in chat
 
         Args:
@@ -379,103 +382,117 @@ class TwitchApi:
 
         # Get live streams where no stream spificied
         current_streams = [stream]
-        if not stream: 
-            current_streams = self.get_current_streams ()
-        
+        if not stream:
+            current_streams = self.get_current_streams()
+
         # Loop for ech stream
         for stream in current_streams:
 
             # Get users whatch checks
-            user_checks = models.WhatchCheck.objects.filter(user=user, stream=stream, status=1)
-            
+            user_checks = models.WhatchCheck.objects.filter(
+                user=user, stream=stream, status=1)
+
             # Get users comments
-            user_comments = models.Comment.objects.filter(user=user, stream=stream, status=1)
-            
+            user_comments = models.Comment.objects.filter(
+                user=user, stream=stream, status=1)
+
             # Validate min number of checks and comments
             if (len(user_checks) >= self.min_checks and len(user_comments) >= self.min_comments) or force:
-                
-                # Get point of the current streamer
+
+                # Get streamer
                 streamer = stream.user
-                
+
                 # Subtract point to streamer (except rankings: admin and free streams)
                 admin_type = tools.get_admin_type(user=streamer)
                 if not admin_type and not stream.is_free:
-                    tools.set_negative_point (streamer, 1, "viwer asistió a stream", stream)
-                
-                # Add point in background
-                logger.info(f"Added general point to user: {user}")
-                
+                    tools.set_negative_point(
+                        streamer, 1, "viwer asistió a stream", stream)
+
                 # Set tripple point if stream is vip of if triple time
                 is_triple_time = tools.is_triple_time()
-                print (f"is_triple_time: {is_triple_time}")
+                print(f"is_triple_time: {is_triple_time}")
                 amount = 1
                 if stream.is_vip or is_triple_time:
                     amount = 3
-                print (f"amount {amount}")
-        
+                print(f"amount {amount}")
+
+                logger.info(f"Added {amount} general points to user: {user}")
+
                 # Get and update general point
                 info = models.InfoPoint.objects.get(info="ver stream")
-                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream)
+                new_general_point = models.GeneralPoint.objects.get(
+                    user=user, stream=stream)
                 new_general_point.amount = amount
                 new_general_point.info = info
-                new_general_point.save ()
-                
+                new_general_point.save()
+
                 # Validate if the user have less than the max number of daily points
-                daily_points = models.DailyPoint.objects.filter(general_point__user=user)
-                current_daily_points = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
+                daily_points = models.DailyPoint.objects.filter(
+                    general_point__user=user)
+                current_daily_points = daily_points.aggregate(Sum('general_point__amount'))[
+                    'general_point__amount__sum']
                 if not current_daily_points:
                     current_daily_points = 0
-                
+
                 if current_daily_points < self.max_daily_points:
-                    
+
                     # Fix general points in triple time
                     future_points = current_daily_points + amount
-                    print (f"future_points: {future_points}")
+                    print(f"future_points: {future_points}")
                     if future_points > 10:
                         new_general_point.amount = 1
-                        new_general_point.save ()
-                        
-                        extra_general_point = models.GeneralPoint (user=user, stream=stream, amount=amount - 1, info=info)
-                        extra_general_point.save ()
-                        
+                        new_general_point.save()
+
+                        extra_general_point = models.GeneralPoint(
+                            user=user, stream=stream, amount=amount - 1, info=info)
+                        extra_general_point.save()
+
                     # Validate if already exists daily and weekly point
-                    current_daily_point = models.DailyPoint.objects.filter(general_point=new_general_point).count()
-                    current_weekly_point = models.WeeklyPoint.objects.filter(general_point=new_general_point).count()
-                        
+                    current_daily_point = models.DailyPoint.objects.filter(
+                        general_point=new_general_point).count()
+                    current_weekly_point = models.WeeklyPoint.objects.filter(
+                        general_point=new_general_point).count()
+
                     # Save daily point
                     if current_daily_point == 0 and current_weekly_point == 0:
-                        new_daily_point = models.DailyPoint (general_point=new_general_point)
+                        new_daily_point = models.DailyPoint(
+                            general_point=new_general_point)
                         new_daily_point.save()
-                        
+
                         # save weekly point
-                        new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
+                        new_weekly_point = models.WeeklyPoint(
+                            general_point=new_general_point)
                         new_weekly_point.save()
-                    
-                    logger.info(f"Added daily and weekly point to user: {user}")
-                    
+
+                    logger.info(
+                        f"Added daily and weekly point to user: {user}")
+
                     # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
                     current_tops = models.TopDailyPoint.objects.all().count()
                     current_points = current_daily_points + 1
                     if current_tops < 10 and current_points == 10:
-                        
+
                         # Add user to Ranking of daily points if there isnt in table
-                        user_in_top = models.TopDailyPoint.objects.filter(user=user).count()
+                        user_in_top = models.TopDailyPoint.objects.filter(
+                            user=user).count()
                         if user_in_top == 0:
-                            logger.info (f"User {user} already have 10 points. Added to Ranking of daily points")      
-                            new_top_daily_point = models.TopDailyPoint (position=current_tops+1, user=user)
-                            new_top_daily_point.save ()
-                
+                            logger.info(
+                                f"User {user} already have 10 points. Added to Ranking of daily points")
+                            new_top_daily_point = models.TopDailyPoint(
+                                position=current_tops+1, user=user)
+                            new_top_daily_point.save()
+
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)
                 for check in user_checks:
                     check.status = done_status
-                    check.save ()
-                    
+                    check.save()
+
                 for comment in user_comments:
                     comment.status = done_status
-                    comment.save ()
-            
-    def is_user_live (self, user: models.User):
+                    comment.save()
+
+    def is_user_live(self, user: models.User):
         """ Return if user is live or not
 
         Args:
@@ -490,57 +507,57 @@ class TwitchApi:
             "Client-Id": self.twitch_client_id,
         }
 
-        res = requests.get(f'https://api.twitch.tv/helix/streams?user_id={user.id}', headers=headers)
-        
-        # Get json data 
+        res = requests.get(
+            f'https://api.twitch.tv/helix/streams?user_id={user.id}', headers=headers)
+
+        # Get json data
         json_data = res.json()
-        
+
         # valdiate if user is live
         is_live = False
         if json_data.get("data"):
             is_live = True
-            
+
         return is_live
-    
-    def update_twitch_data (self, user: models.User):
+
+    def update_twitch_data(self, user: models.User):
         """ Update twitch user name, profile image and id
 
         Args:
             user (models.User): user object
         """
-        
+
         # Refresh token
-        token_updated = self.update_token (user)
-        
+        token_updated = self.update_token(user)
+
         if not token_updated:
             return False
-        
+
         token = user.access_token
-        
+
         # Get user data
-        user_id, user_email, user_picture, user_name = self.get_user_info (token)
-        
+        user_id, user_email, user_picture, user_name = self.get_user_info(
+            token)
+
         # Save new data
         user.id = user_id
         user.email = user_email
         user.picture = user_picture
         user.name = user_name
-        user.save ()
-        
+        user.save()
+
         return True
 
-    def add_cero_point (self, user:models.User, stream:models.Stream):
+    def add_cero_point(self, user: models.User, stream: models.Stream):
         """ Set a point register with amount in 0 when is the first check or comment of the user in the stream """
-        
+
         # Validate if the user already have a point in the stream
-        general_points = models.GeneralPoint.objects.filter(user=user, stream=stream)
+        general_points = models.GeneralPoint.objects.filter(
+            user=user, stream=stream)
         if general_points.count() == 0:
-        
+
             # Save general point
-            info = models.InfoPoint.objects.get(info="faltó tiempo de visualización o comentarios")
-            models.GeneralPoint.objects.create(user=user, stream=stream, amount=0, info=info).save()
-        
-        
-        
-        
-        
+            info = models.InfoPoint.objects.get(
+                info="faltó tiempo de visualización o comentarios")
+            models.GeneralPoint.objects.create(
+                user=user, stream=stream, amount=0, info=info).save()

@@ -270,16 +270,23 @@ def add_comment(request):
     # Get user
     user = models.User.objects.filter(id=user_id).first()
     
-    # Ignore streamer comments
-    streamer = stream.user
-    if user == streamer:
-        return HttpResponseBadRequest(f"streamer comment")
-
+    # Raise error if user or stream not found
     if not user:
         return HttpResponseBadRequest(f"user id '{user_id}' not found")
     
     if not stream:
         return HttpResponseBadRequest(f"stream id '{stream_id}' not found")
+    
+    # Ignore streamer comments
+    streamer = stream.user
+    if user == streamer:
+        return HttpResponseBadRequest(f"streamer comment")
+    
+    # Validate if user already have a general point in the stream
+    general_point_found = models.GeneralPoint.objects.filter(
+        user=user, stream=stream).exists()
+    if general_point_found:
+        return HttpResponseBadRequest(f"user already have a general point")
     
     try:
         # Create comment
