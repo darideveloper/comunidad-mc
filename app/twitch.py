@@ -57,7 +57,7 @@ class TwitchApi:
         # Get date ranges
         logger.debug ("Getting streams from database for current hour")
         now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
-        start_hour = now_datetime.replace(minute=50, second=0, microsecond=0) + datetime.timedelta(hours=1)
+        start_hour = now_datetime.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
         end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999) + datetime.timedelta(hours=1)
         
         # Get current streams
