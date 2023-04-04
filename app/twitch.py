@@ -81,9 +81,10 @@ class TwitchApi:
         """
 
         node_error = False
-        current_streams = self.get_current_streams_node()
-        if not current_streams:
-            return None
+        current_streams = self.get_current_streams_node ()
+        logger.info (f"Sending streams to node.js api: {len(current_streams)}")
+        # debug streams found
+        logger.info (f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}")
         
         # Detect unique user of the streams
         users = list(set(map(lambda current_stream: current_stream.user, current_streams)))
@@ -259,6 +260,7 @@ class TwitchApi:
                 
                 # Validate if token is expired and retry
                 if "error" in json_data:
+                    logger.error (f"Token expired for {streamer}. Details: {json_data}")
                     self.update_token(streamer)         
                     continue
                 else:
