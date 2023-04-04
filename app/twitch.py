@@ -212,6 +212,7 @@ class TwitchApi:
             "openid",
             "user:read:email",
             "chat:read",
+            "moderator:read:chatters",
         ]
         url_params = {
             "client_id": self.twitch_client_id,
