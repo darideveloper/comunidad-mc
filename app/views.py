@@ -5,8 +5,9 @@ import datetime
 from . import tools
 from . import models
 from . import decorators
-from .twitch import TwitchApi
 from .logs import logger
+from .twitch import TwitchApi
+from django.conf import settings 
 from dotenv import load_dotenv
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -440,7 +441,7 @@ def schedule(request):
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
     
     # Get today week day
-    now = datetime.datetime.now().astimezone(user_time_zone)
+    now = timezone.now().astimezone(user_time_zone)
     today_week = now.weekday()
     today_week_name = tools.WEEK_DAYS[today_week]
     
@@ -497,7 +498,27 @@ def schedule(request):
             
             
         # Calculate and format hours
-        disabled_hours = [2, 3, 4, 5, 6]
+        disabled_hours = [2, 3, 4, 5, 6, 7, 8]
+        
+        # Convert disable hours to user time zon 
+        system_time_zone = pytz.timezone(settings.TIME_ZONE)
+        disabled_hours_timezone = list(map(lambda hour: system_time_zone.localize(
+            datetime.datetime (
+                now.year, 
+                now.month, 
+                now.day, 
+                int(hour), 
+                now.minute, 
+                now.second, 
+                0
+            )), disabled_hours
+        )) 
+        disabled_hours = list(map(lambda hour: hour.astimezone(user_time_zone).hour, disabled_hours_timezone))
+        
+        # Disable hour by days
+        disabled_hours_days = {
+            "viernes": 23,
+        }
         
         # Calculate free hours for streams
         for day in available_days:
@@ -514,7 +535,7 @@ def schedule(request):
                 day_name = day["name"]
                 day_num = day["num"]
                 current_date = day["date"]
-                
+                                
                 # get streams of the day 
                 day_streams = models.Stream.objects.filter(datetime__date=current_date).values('datetime').annotate(dcount=Count('datetime')).order_by("datetime")
                 day_streams = day_streams.filter(Q(dcount__gt=1) | Q(is_vip=True))
@@ -525,15 +546,20 @@ def schedule(request):
                 day_available_hours = list(map(lambda hour: f"0{hour}" if len(str(hour)) == 1 else str(hour), day_available_hours))
                 available_hours[day_name] = day_available_hours
                                 
-        # Remove friday at 7pm from available hours
-        if "viernes" in available_hours:
-            available_hours["viernes"] = list(filter(lambda hour: hour != "19", available_hours["viernes"]))
+        # Remove disable hour by days
+        for day_name, hour in disabled_hours_days.items():
+
+            hour_timezone = datetime.datetime (now.year, now.month, now.day, hour, now.minute, now.second, 0).astimezone(user_time_zone).strftime("%H")
+             
+            if day_name in available_hours:
+                available_hours[day_name] = list(filter(lambda hour: hour != hour_timezone, available_hours[day_name]))
+                print (available_hours[day_name] )
     
     else:
         visible_schedule_panel = False
         
     
-    # Render page
+    # Render page    
     return render(request, 'app/schedule.html', {
         # General context
         "name": user.user_name,
