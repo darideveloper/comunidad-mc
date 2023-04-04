@@ -410,77 +410,84 @@ class TwitchApi:
 
                 # Set tripple point if stream is vip of if triple time
                 is_triple_time = tools.is_triple_time()
-                print(f"is_triple_time: {is_triple_time}")
                 amount = 1
                 if stream.is_vip or is_triple_time:
                     amount = 3
-                print(f"amount {amount}")
 
                 logger.info(f"Added {amount} general points to user: {user}")
 
                 # Get and update general point
                 info = models.InfoPoint.objects.get(info="ver stream")
-                new_general_point = models.GeneralPoint.objects.get(
-                    user=user, stream=stream)
+                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream)
                 new_general_point.amount = amount
                 new_general_point.info = info
                 new_general_point.save()
+                
+                # Validate if user already have a daily point in this hour
+                start_time = timezone.now().replace(minute=0, second=0)
+                end_time = timezone.now().replace(minute=59, second=59)
+                daily_points_hour = models.DailyPoint.objects.filter(
+                    general_point__user=user, general_point__datetime__range=[start_time, end_time]).exists()
+                
+                if daily_points_hour:
+                    logger.info (f"User {user} already have a daily point in this hour")
+                    
+                else:
 
-                # Validate if the user have less than the max number of daily points
-                daily_points = models.DailyPoint.objects.filter(
-                    general_point__user=user)
-                current_daily_points = daily_points.aggregate(Sum('general_point__amount'))[
-                    'general_point__amount__sum']
-                if not current_daily_points:
-                    current_daily_points = 0
+                    # Validate if the user have less than the max number of daily points
+                    daily_points = models.DailyPoint.objects.filter(
+                        general_point__user=user)
+                    current_daily_points = daily_points.aggregate(Sum('general_point__amount'))[
+                        'general_point__amount__sum']
+                    if not current_daily_points:
+                        current_daily_points = 0
 
-                if current_daily_points < self.max_daily_points:
+                    if current_daily_points < self.max_daily_points:
 
-                    # Fix general points in triple time
-                    future_points = current_daily_points + amount
-                    print(f"future_points: {future_points}")
-                    if future_points > 10:
-                        new_general_point.amount = 1
-                        new_general_point.save()
+                        # Fix general points in triple time
+                        future_points = current_daily_points + amount
+                        if future_points > 10:
+                            new_general_point.amount = 1
+                            new_general_point.save()
 
-                        extra_general_point = models.GeneralPoint(
-                            user=user, stream=stream, amount=amount - 1, info=info)
-                        extra_general_point.save()
+                            extra_general_point = models.GeneralPoint(
+                                user=user, stream=stream, amount=amount - 1, info=info)
+                            extra_general_point.save()
 
-                    # Validate if already exists daily and weekly point
-                    current_daily_point = models.DailyPoint.objects.filter(
-                        general_point=new_general_point).count()
-                    current_weekly_point = models.WeeklyPoint.objects.filter(
-                        general_point=new_general_point).count()
+                        # Validate if already exists daily and weekly point
+                        current_daily_point = models.DailyPoint.objects.filter(
+                            general_point=new_general_point).count()
+                        current_weekly_point = models.WeeklyPoint.objects.filter(
+                            general_point=new_general_point).count()
 
-                    # Save daily point
-                    if current_daily_point == 0 and current_weekly_point == 0:
-                        new_daily_point = models.DailyPoint(
-                            general_point=new_general_point)
-                        new_daily_point.save()
+                        # Save daily point
+                        if current_daily_point == 0 and current_weekly_point == 0:
+                            new_daily_point = models.DailyPoint(
+                                general_point=new_general_point)
+                            new_daily_point.save()
 
-                        # save weekly point
-                        new_weekly_point = models.WeeklyPoint(
-                            general_point=new_general_point)
-                        new_weekly_point.save()
+                            # save weekly point
+                            new_weekly_point = models.WeeklyPoint(
+                                general_point=new_general_point)
+                            new_weekly_point.save()
 
-                    logger.info(
-                        f"Added daily and weekly point to user: {user}")
+                        logger.info(
+                            f"Added daily and weekly point to user: {user}")
 
-                    # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
-                    current_tops = models.TopDailyPoint.objects.all().count()
-                    current_points = current_daily_points + 1
-                    if current_tops < 10 and current_points == 10:
+                        # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
+                        current_tops = models.TopDailyPoint.objects.all().count()
+                        current_points = current_daily_points + 1
+                        if current_tops < 10 and current_points == 10:
 
-                        # Add user to Ranking of daily points if there isnt in table
-                        user_in_top = models.TopDailyPoint.objects.filter(
-                            user=user).count()
-                        if user_in_top == 0:
-                            logger.info(
-                                f"User {user} already have 10 points. Added to Ranking of daily points")
-                            new_top_daily_point = models.TopDailyPoint(
-                                position=current_tops+1, user=user)
-                            new_top_daily_point.save()
+                            # Add user to Ranking of daily points if there isnt in table
+                            user_in_top = models.TopDailyPoint.objects.filter(
+                                user=user).count()
+                            if user_in_top == 0:
+                                logger.info(
+                                    f"User {user} already have 10 points. Added to Ranking of daily points")
+                                new_top_daily_point = models.TopDailyPoint(
+                                    position=current_tops+1, user=user)
+                                new_top_daily_point.save()
 
                 # Set done status to comments and checks
                 done_status = models.Status.objects.get(id=2)

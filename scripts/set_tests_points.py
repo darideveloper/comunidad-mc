@@ -16,14 +16,14 @@ from app.twitch import TwitchApi
 # Users to add points
 users = [
     "darideveloper4",
-    "DariDeveloper", 
-    "minecuak", 
-    "danigempleis", 
-    "Lucifer__TV__", 
-    "yarawtm", 
-    "sauromplays", 
-    "el_lenniin", 
-    "Raven__gg", 
+    # "DariDeveloper", 
+    # "minecuak", 
+    # "danigempleis", 
+    # "Lucifer__TV__", 
+    # "yarawtm", 
+    # "sauromplays", 
+    # "el_lenniin", 
+    # "Raven__gg", 
 ]
 
 # get last stream 
@@ -42,33 +42,34 @@ for user_name in users:
     if not user:
         continue
     
-    # Loop for the last 6 days of the week
-    for back_days in range (1, 7):
+    # # Loop for the last 6 days of the week
+    # for back_days in range (1, 7):
         
-        # Randsom number of points in each day
-        points_day = random.randrange(1, 50)
+    #     # Randsom number of points in each day
+    #     points_day = random.randrange(1, 50)
         
-        # Loop for save each user point
-        info_point = models.InfoPoint.objects.get (info="ver stream")
-        for _ in range (points_day):
+    #     # Loop for save each user point
+    #     info_point = models.InfoPoint.objects.get (info="ver stream")
+    #     for _ in range (points_day):
         
-            # Calculate back date
-            back_date = timezone.now() - timezone.timedelta(days=back_days)
+    #         # Calculate back date
+    #         back_date = timezone.now() - timezone.timedelta(days=back_days)
             
-            # Save general point
-            new_general_point = models.GeneralPoint(user=user, datetime=back_date, info=info_point)
-            new_general_point.save()
+    #         # Save general point
+    #         new_general_point = models.GeneralPoint(user=user, datetime=back_date, info=info_point)
+    #         new_general_point.save()
         
-            # save weekly points
-            current_weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user).count()
-            if current_weekly_points < 60:       
-                new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
-                new_weekly_point.save()
+    #         # save weekly points
+    #         current_weekly_points = models.WeeklyPoint.objects.filter(general_point__user=user).count()
+    #         if current_weekly_points < 60:       
+    #             new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
+    #             new_weekly_point.save()
                 
-            print (f"Point {user} - {stream} - {back_date}")
+    #         print (f"Point {user} - {stream} - {back_date}")
     
-    # # add 10 points today
-    # for _ in range (10):
-    #     twitch_api.add_point(user, stream, force=True)
+    # add 10 points today
+    for _ in range (10):
+        twitch_api.add_cero_point (user, stream)
+        twitch_api.add_point(user, stream, force=True)
 
     
