@@ -260,9 +260,16 @@ class TwitchApi:
                     continue
 
                 # Validate if token is expired and retry
-                if "error" in json_data:
+                if "error" in json_data and "message" in json_data:
+                    
+                    # Debug scope errors
+                    if "Missing scope" in json_data["message"]:
+                        logger.error (f"Unauthorized to get chat users for user {streamer}: {json_data}")
+                        break
+                    
+                    # Show error and try again
                     logger.error(
-                        f"Token expired for {streamer}. Details: {json_data}")
+                        f"Token expired for {streamer}. Details: {json_data}.)")
                     self.update_token(streamer)
                     continue
                 else:
