@@ -432,14 +432,13 @@ class TwitchApi:
                 new_general_point.save()
                 
                 # Validate if user already have a daily point in this hour
-                start_time = timezone.now().replace(minute=0, second=0)
+                start_time = timezone.now().replace(minute=0, second=0) - datetime.timedelta(minutes=1)
                 end_time = timezone.now().replace(minute=59, second=59)
                 daily_points_hour = models.DailyPoint.objects.filter(
-                    general_point__user=user, general_point__datetime__range=[start_time, end_time]).exists()
+                    general_point__user=user, general_point__stream__datetime__range=[start_time, end_time])
                 
                 if daily_points_hour:
-                    logger.info (f"User {user} already have a daily point in this hour")
-                    
+                    logger.info (f"User {user} already have a daily point in this hour: {daily_points_hour}")
                 else:
 
                     # Validate if the user have less than the max number of daily points

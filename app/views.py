@@ -284,7 +284,7 @@ def add_comment(request):
     
     # Validate if user already have a general point in the stream
     general_point_found = models.GeneralPoint.objects.filter(
-        user=user, stream=stream, amount__gt=0).exists()
+        user=user, stream=stream, amount__gt=0)
     if general_point_found:
         return HttpResponseBadRequest(f"user already have a general point")
     
@@ -565,7 +565,6 @@ def schedule(request):
              
             if day_name in available_hours:
                 available_hours[day_name] = list(filter(lambda hour: hour != hour_timezone, available_hours[day_name]))
-                print (available_hours[day_name] )
     
     else:
         visible_schedule_panel = False

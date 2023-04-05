@@ -15,8 +15,8 @@ from app.twitch import TwitchApi
 
 # Users to add points
 users = [
-    "darideveloper4",
-    # "DariDeveloper", 
+    # "darideveloper4",
+    "DariDeveloper", 
     # "minecuak", 
     # "danigempleis", 
     # "Lucifer__TV__", 
@@ -27,7 +27,7 @@ users = [
 ]
 
 # get last stream 
-stream = models.Stream.objects.all().order_by('datetime').last()
+stream = models.Stream.objects.all().order_by('datetime').reverse().last()
 
 # Connect to twitch class
 twitch_api = TwitchApi ()
@@ -68,7 +68,7 @@ for user_name in users:
     #         print (f"Point {user} - {stream} - {back_date}")
     
     # add 10 points today
-    for _ in range (10):
+    for _ in range (1):
         twitch_api.add_cero_point (user, stream)
         twitch_api.add_point(user, stream, force=True)
 
