@@ -154,6 +154,7 @@ class AdminGeneralPoint (admin.ModelAdmin):
 @admin.register (models.WeeklyPoint)
 class AdminWeeklyPoint (admin.ModelAdmin):
     
+    raw_id_fields = ('general_point',)
     list_display = ('id', 'general_point')
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
@@ -162,6 +163,7 @@ class AdminWeeklyPoint (admin.ModelAdmin):
 @admin.register (models.DailyPoint)
 class AdminDailyPoint (admin.ModelAdmin):
     
+    raw_id_fields = ('general_point',)
     list_display = ('id', 'general_point')
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
