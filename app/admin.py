@@ -150,6 +150,7 @@ class AdminGeneralPoint (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
     list_filter = ('user', 'stream', 'info', 'datetime')
     search_fields = ('user__user_name', 'stream__user__user_name')
+    list_per_page = 20
     
 @admin.register (models.WeeklyPoint)
 class AdminWeeklyPoint (admin.ModelAdmin):
@@ -159,6 +160,7 @@ class AdminWeeklyPoint (admin.ModelAdmin):
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
     search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
+    list_per_page = 20
     
 @admin.register (models.DailyPoint)
 class AdminDailyPoint (admin.ModelAdmin):
@@ -168,6 +170,7 @@ class AdminDailyPoint (admin.ModelAdmin):
     ordering = ('id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
     search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
+    list_per_page = 20
     
 @admin.register (models.Ranking)
 class AdminRanking (admin.ModelAdmin):
