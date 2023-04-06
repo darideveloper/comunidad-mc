@@ -25,13 +25,13 @@ rankings = models.Ranking.objects.all().order_by("points").reverse()
 # Load environment variables
 load_dotenv ()
 RESTART_POINTS_WEEK_DAY = int(os.getenv('RESTART_POINTS_WEEK_DAY'))
-DEBUG = os.getenv('DEBUG')
+RESTART_DAY = False
 RANKING_FIRST_BITS = int(os.getenv('RANKING_FIRST_BITS'))
 RANKING_SECOND_BITS = int(os.getenv('RANKING_SECOND_BITS'))
 RANKING_THIRD_BITS = int(os.getenv('RANKING_THIRD_BITS'))
 
 # Overwrite restart date in debug mode
-if DEBUG == "True":
+if RESTART_DAY:
     RESTART_POINTS_WEEK_DAY = timezone.now().weekday()
 
 # Get current week day
@@ -104,10 +104,12 @@ if today == RESTART_POINTS_WEEK_DAY:
     # print ("all points deleted")
     
 # Convert each daily point to weekly point
+print ("Converting dailly points to weekly points")
 daily_points = models.DailyPoint.objects.all()
 for daily_point in daily_points:
     general_point = daily_point.general_point
     models.WeeklyPoint(general_point=general_point).save()
+print ("Done. Daily points converted to weekly points")
 
 # delete all daily points
 models.DailyPoint.objects.all().delete()

@@ -403,22 +403,16 @@ def schedule(request):
         # Calculate available points
         available_points = general_points_num - user_streams_num * 50 
         
-        # Infinity streams for admins
-        admin_type = tools.get_admin_type (user=user)
-        if admin_type:
-            max_streams = user_streams_num + 1
-        
         # Validte if regular user have available streams
-        else:
-            max_streams = user.ranking.max_streams
-            streams_extra = models.StreamExtra.objects.filter(user=user).all()
-            if streams_extra.count() > 0:
-                streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
-                max_streams += streams_extra_num
-                
-            available_stream = max_streams - user_streams_num > 0
-            if not available_stream: # or available_points < 50:
-                error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
+        max_streams = user.ranking.max_streams
+        streams_extra = models.StreamExtra.objects.filter(user=user).all()
+        if streams_extra.count() > 0:
+            streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
+            max_streams += streams_extra_num
+            
+        available_stream = max_streams - user_streams_num > 0
+        if not available_stream: # or available_points < 50:
+            error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
         if not error:
