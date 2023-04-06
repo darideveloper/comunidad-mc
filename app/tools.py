@@ -208,12 +208,56 @@ def get_time_zone_text (user):
     
     time_zone = str(user.time_zone.time_zone)
     return time_zone.replace("-", " ").replace("/", " / ").replace("_", " ")
+
+def get_streams_formatted (streams:models.Stream, user_time_zone:pytz.timezone) -> dict:
+    """ Format streams data to dictionary and return it
+
+    Args:
+        streams (models.Stream): streams intances
+        user_time_zone (pytz.timezone): user time zone
+
+    Returns:
+        dict: dictionary of streams with: id, date, time, datetime, is_cancellable, hour, is_vip and date_formatted
+    """
+    
+     # Format streams
+    streams_data = []
+    for stream in streams:
+        id = stream.id
+        stream_datetime = stream.datetime.astimezone(user_time_zone)
+        date = stream_datetime.strftime("%Y-%m-%d")
+        time = stream_datetime.strftime("%I:%M %p")
+        datetime = stream_datetime.strftime("%Y-%m-%d %I:%M %p")
+        hour = stream_datetime.strftime("%H")
+        is_cancellable = is_stream_cancelable(stream)
+        is_vip = stream.is_vip
+        
+        # Format date like: Lun, 01, Enero
+        date_weekday_num = stream_datetime.weekday()
+        date_month = stream_datetime.strftime("%B")
+        date_day = stream_datetime.strftime("%d")
+        date_formatted = f"{WEEK_DAYS[date_weekday_num].title()} {date_day}, {MONTHS[date_month]}"
+        
+        streams_data.append ({
+            "id": id,
+            "date": date, 
+            "time": time, 
+            "datetime": datetime,
+            "is_cancellable": "regular" if is_cancellable else "warning",
+            "hour": hour,
+            "is_vip": is_vip,
+            "date_formatted": date_formatted,
+        })
+        
+    return streams_data
+
      
-def get_user_streams (user, user_time_zone):
+def get_user_streams (user:models.User, user_time_zone:pytz.timezone):
     """ Return user streams for the next 7 days, and its proccessed data
 
     Args:
         user (models.User): user instance
+        user_time_zone (pytz.timezone): time zone of the current user
 
     Returns:
         touple: user_streams (model Objects), user_streams_data (array)
@@ -234,36 +278,35 @@ def get_user_streams (user, user_time_zone):
     if not user_streams:
         user_streams = []
         
-    # Format streams
-    user_streams_data = []
-    for stream in user_streams:
-        id = stream.id
-        stream_datetime = stream.datetime.astimezone(user_time_zone)
-        date = stream_datetime.strftime("%Y-%m-%d")
-        time = stream_datetime.strftime("%I:%M %p")
-        datetime = stream_datetime.strftime("%Y-%m-%d %I:%M %p")
-        hour = stream_datetime.strftime("%H")
-        is_cancellable = is_stream_cancelable(stream)
-        is_vip = stream.is_vip
+    # Format and return streams
+    streams_formatted = get_streams_formatted(user_streams, user_time_zone)
+    return streams_formatted
         
-        # Format date like: Lun, 01, Enero
-        date_weekday_num = stream_datetime.weekday()
-        date_month = stream_datetime.strftime("%B")
-        date_day = stream_datetime.strftime("%d")
-        date_formatted = f"{WEEK_DAYS[date_weekday_num].title()} {date_day}, {MONTHS[date_month]}"
-        
-        user_streams_data.append ({
-            "id": id,
-            "date": date, 
-            "time": time, 
-            "datetime": datetime,
-            "is_cancellable": "regular" if is_cancellable else "warning",
-            "hour": hour,
-            "is_vip": is_vip,
-            "date_formatted": date_formatted,
-        })
-        
-    return user_streams_data
+   
+def get_user_next_streams (user:models.User, user_time_zone:pytz.timezone):
+    """ Return the next streams of the user
+
+    Args:
+        user (models.User): user instance
+        user_time_zone (pytz.timezone): time zone of the current user
+
+    Returns:
+        touple: user_streams (model Objects), user_streams_data (array)
+    """
+    
+    # Get all stream of the current week
+    # streams = get_user_streams(user, user_time_zone)
+    
+    # Filter only njext streams
+    now = timezone.now().astimezone(user_time_zone)
+    user_streams = models.Stream.objects.filter(
+        datetime__gt=now, 
+        user=user
+    ).all().order_by("datetime")
+    
+    # Format and return streams
+    streams_formatted = get_streams_formatted(user_streams, user_time_zone)
+    return streams_formatted
 
 def is_stream_cancelable (stream):
     """ Return if stream is cancelable or not

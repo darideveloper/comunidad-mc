@@ -447,7 +447,7 @@ def schedule(request):
             
             
     # Get next streams of the user in the next 7 days
-    streams = tools.get_user_streams(user, user_time_zone)
+    streams = tools.get_user_next_streams(user, user_time_zone)
     
     # Format streams date times
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
@@ -876,7 +876,7 @@ def wallet(request):
     
     # Get streams of the current user
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
-    user_streams_data = tools.get_user_streams (user, user_time_zone)
+    user_streams_data = tools.get_user_next_streams (user, user_time_zone)
     streams = list(map(lambda stream: {"id": stream["id"], "datetime": stream["datetime"]}, user_streams_data))
     
     # Select bits icon
