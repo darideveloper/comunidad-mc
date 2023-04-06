@@ -103,6 +103,12 @@ if today == RESTART_POINTS_WEEK_DAY:
     # models.GeneralPoint.objects.all().delete()
     # print ("all points deleted")
     
+# Convert each daily point to weekly point
+daily_points = models.DailyPoint.objects.all()
+for daily_point in daily_points:
+    general_point = daily_point.general_point
+    models.WeeklyPoint(general_point=general_point).save()
+
 # delete all daily points
 models.DailyPoint.objects.all().delete()
 print ("today points deleted")

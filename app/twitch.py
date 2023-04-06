@@ -473,11 +473,6 @@ class TwitchApi:
                                 general_point=new_general_point)
                             new_daily_point.save()
 
-                            # save weekly point
-                            new_weekly_point = models.WeeklyPoint(
-                                general_point=new_general_point)
-                            new_weekly_point.save()
-
                         logger.info(
                             f"Added daily and weekly point to user: {user}")
 
