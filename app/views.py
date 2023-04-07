@@ -504,7 +504,7 @@ def schedule(request):
             
             
         # Calculate and format hours
-        disabled_hours = [2, 3, 4, 5, 6, 7, 8]
+        disabled_hours = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         
         # Convert disable hours to user time zon 
         system_time_zone = pytz.timezone(settings.TIME_ZONE)
