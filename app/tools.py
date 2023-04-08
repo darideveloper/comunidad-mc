@@ -77,9 +77,16 @@ def get_cookies_data (request, delete_data:bool=True):
     Returns:
         touple: user object, menssaje text, error text
     """
+
+    # Force to close sessión 1 time
+    cookies_deleted = request.session.get("cookies_deleted", False)
+    if not cookies_deleted:
+        
+        # Delete user from cookies
+        request.session["user_id"] = 0
+        request.session["cookies_deleted"] = True
     
     # Get user data from cookies
-    # request.session["user_id"] = "733167917"
     user_id = request.session.get("user_id", 0)
     users = models.User.objects.filter(id=user_id)
     
