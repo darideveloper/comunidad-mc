@@ -313,7 +313,13 @@ class TwitchApi:
                 # Skip if user is the streamer
                 if user.id == streamer.id:
                     continue
-
+                
+                # Validate if user already have a general point in the stream
+                general_point_found = models.GeneralPoint.objects.filter(stream=stream, user=user).exists()
+                if general_point_found:
+                    logger.info (f"User {user} already have a general point in stream {stream}. Check skipped.")
+                    continue
+                
                 # Save check in database
                 new_check = models.WhatchCheck(stream=stream, user=user)
                 new_check.save()
