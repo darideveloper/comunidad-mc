@@ -1,3 +1,5 @@
+# Add specific number of general points to all users
+
 # Add parent folder to path
 import os
 import sys
