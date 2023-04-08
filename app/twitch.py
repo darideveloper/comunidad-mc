@@ -398,7 +398,7 @@ class TwitchApi:
 
             # Get users whatch checks
             user_checks = models.WhatchCheck.objects.filter(
-                user=user, stream=stream, status=1)
+                user=user, stream__in=current_streams, status=1)
 
             # Get users comments
             user_comments = models.Comment.objects.filter(
