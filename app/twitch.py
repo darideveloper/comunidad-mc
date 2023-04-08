@@ -415,24 +415,25 @@ class TwitchApi:
 
                 # Get streamer
                 streamer = stream.user
+                amount = 1
 
                 # Subtract point to streamer (except rankings: admin and free streams)
                 admin_type = tools.get_admin_type(user=streamer)
                 if not admin_type and not stream.is_free:
-                    tools.set_negative_point(
-                        streamer, 1, "viwer asistió a stream", stream)
+                    tools.set_negative_point(streamer, 1, "viwer asistió a stream", stream)
 
                 # Set tripple point if stream is vip of if triple time
                 is_triple_time = tools.is_triple_time()
-                amount = 1
                 if stream.is_vip or is_triple_time:
-                    amount = 3
+                    # Add 2 points to user
+                    info = models.InfoPoint.objects.get(info="ver stream (puntos extra)")
+                    models.GeneralPoint (user=user, stream=stream, amount=2, info=info).save()
 
                 logger.info(f"Added {amount} general points to user: {user}")
 
                 # Get and update general point
                 info = models.InfoPoint.objects.get(info="ver stream")
-                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream)
+                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream, amount=0)
                 new_general_point.amount = amount
                 new_general_point.info = info
                 new_general_point.save()
@@ -457,30 +458,17 @@ class TwitchApi:
 
                     if current_daily_points < self.max_daily_points:
 
-                        # Fix general points in triple time
-                        future_points = current_daily_points + amount
-                        if future_points > 10:
-                            new_general_point.amount = 1
-                            new_general_point.save()
-
-                            extra_general_point = models.GeneralPoint(
-                                user=user, stream=stream, amount=amount - 1, info=info)
-                            extra_general_point.save()
-
                         # Validate if already exists daily and weekly point
                         current_daily_point = models.DailyPoint.objects.filter(
                             general_point=new_general_point).count()
-                        current_weekly_point = models.WeeklyPoint.objects.filter(
-                            general_point=new_general_point).count()
 
                         # Save daily point
-                        if current_daily_point == 0 and current_weekly_point == 0:
+                        if current_daily_point == 0:
                             new_daily_point = models.DailyPoint(
                                 general_point=new_general_point)
                             new_daily_point.save()
 
-                        logger.info(
-                            f"Added daily and weekly point to user: {user}")
+                        logger.info(f"Added daily to user: {user}")
 
                         # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
                         current_tops = models.TopDailyPoint.objects.all().count()
