@@ -870,8 +870,8 @@ def wallet(request):
     
     # Get streams of the current user
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
-    user_streams_data = tools.get_user_next_streams (user, user_time_zone)
-    streams = list(map(lambda stream: {"id": stream["id"], "datetime": stream["datetime"]}, user_streams_data))
+    streams = tools.get_user_next_streams (user, user_time_zone)
+    # streams = list(map(lambda stream: {"id": stream["id"], "datetime": stream["datetime"]}, user_streams_data))
     
     # Select bits icon
     bits_amount_range = {

@@ -227,6 +227,7 @@ def get_streams_formatted (streams:models.Stream, user_time_zone:pytz.timezone) 
         stream_datetime = stream.datetime.astimezone(user_time_zone)
         date = stream_datetime.strftime("%Y-%m-%d")
         time = stream_datetime.strftime("%I:%M %p")
+        time_24 = stream_datetime.strftime("%H:%M")
         datetime = stream_datetime.strftime("%Y-%m-%d %I:%M %p")
         hour = stream_datetime.strftime("%H")
         is_cancellable = is_stream_cancelable(stream)
@@ -247,6 +248,7 @@ def get_streams_formatted (streams:models.Stream, user_time_zone:pytz.timezone) 
             "hour": hour,
             "is_vip": is_vip,
             "date_formatted": date_formatted,
+            "time_24": time_24,
         })
         
     return streams_data

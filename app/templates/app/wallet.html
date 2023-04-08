@@ -26,7 +26,7 @@
         <select name="stream" id="stream">
           <option value="" selected class="default">Stream</option>
           {% for stream in streams %}
-            <option value="{{stream.id}}" name="stream">{{stream.datetime}}</option>
+            <option value="{{stream.id}}" name="stream">{{stream.date}} {{stream.time_24}} HRS</option>
           {% endfor %}
         </select>
 
