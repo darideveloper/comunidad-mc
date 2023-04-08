@@ -1,3 +1,5 @@
+# Set general points to specific users
+
 # Add parent folder to path
 import os
 import sys
@@ -27,7 +29,7 @@ users = [
 ]
 
 # get last stream 
-stream = models.Stream.objects.all().order_by('datetime').reverse().last()
+stream = models.Stream.objects.all().order_by('datetime').last()
 
 # Connect to twitch class
 twitch_api = TwitchApi ()
