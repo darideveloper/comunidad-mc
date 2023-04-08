@@ -315,7 +315,7 @@ class TwitchApi:
                     continue
                 
                 # Validate if user already have a general point in the stream
-                general_point_found = models.GeneralPoint.objects.filter(stream=stream, user=user).exists()
+                general_point_found = models.GeneralPoint.objects.filter(stream=stream, user=user, amount__gte=1).exists()
                 if general_point_found:
                     logger.info (f"User {user} already have a general point in stream {stream}. Check skipped.")
                     continue
@@ -433,7 +433,11 @@ class TwitchApi:
 
                 # Get and update general point
                 info = models.InfoPoint.objects.get(info="ver stream")
-                new_general_point = models.GeneralPoint.objects.get (user=user, stream=stream, amount=0)
+                new_general_point = models.GeneralPoint.objects.filter (user=user, stream=stream, amount=0)
+                if not new_general_point:
+                    logger.error (f"Error adding general point to user {user} in stream {stream} (0 general point, not found)")
+                    continue
+                new_general_point = new_general_point[0]
                 new_general_point.amount = amount
                 new_general_point.info = info
                 new_general_point.save()
