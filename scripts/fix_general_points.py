@@ -1,4 +1,4 @@
-# Conver today general points with amount in 0, to weekly points with amount in 1
+# Conver today general points with amount in 0, to weekly points with amount in 1, and save them as week points
 
 # Add parent folder to path
 import os
