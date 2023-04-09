@@ -202,7 +202,7 @@ class PointsHistory (models.Model):
     week_points_num = models.IntegerField(name='week_points_num', verbose_name="puntos semana", help_text="puntos semanales obtenidos a lo largo de la semana", null=False, blank=False, default=0)
     
     def __str__(self):
-        return f"{self.user} (general: {self.general_points}, semana: {self.week_points})"
+        return f"{self.user} (general_points_num: {self.general_points_num}, general_points_week_num: {self.general_points_week_num}, week_points_num: {self.week_points_num})"
     
     class Meta:
         verbose_name = "Historial de puntos generales y semanales"
