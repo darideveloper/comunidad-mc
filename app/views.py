@@ -702,7 +702,7 @@ def support(request):
         info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
         
     # TEMPORAL ERROR
-    error = "Todos los usuarios deberán cerrar y volver a iniciar sesión para poder continuar usando la plataforma, de lo contrario tu cuenta será borrada. Si tu ya lo hiciste, ignora este mensaje. "
+    error = "Todos los usuarios deberán cerrar y volver a iniciar sesión para poder continuar usando la plataforma, de lo contrario tu cuenta será reiniciada. SI YA CERRASTE SESIÓN, IGNORA ESTE MENSAJE"
     
     # Render page
     return render(request, 'app/support.html', {
