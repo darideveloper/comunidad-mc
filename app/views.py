@@ -246,6 +246,7 @@ def logout(request):
     # Delete user id from cookies
     if "user_id" in request.session:
         del request.session["user_id"]
+        request.session["required_logout"] = False
 
     # Redirect to home
     return redirect("home")
@@ -701,8 +702,10 @@ def support(request):
     if is_triple_time and not message:
         info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
         
-    # TEMPORAL ERROR
-    error = "(SI YA CERRASTE SESIÓN, IGNORA ESTE MENSAJE, SEGUIRÁ APARECIENDO) Todos los usuarios deberán cerrar y volver a iniciar sesión para poder continuar usando la plataforma, de lo contrario tu cuenta será reiniciada."
+    # TEMPORAL ERROR    
+    required_logout = request.session.get ("required_logout", True)
+    if required_logout:
+        error = "Todos los usuarios deberán cerrar y volver a iniciar sesión para poder continuar usando la plataforma, de lo contrario tu cuenta será reiniciada."
     
     # Render page
     return render(request, 'app/support.html', {
