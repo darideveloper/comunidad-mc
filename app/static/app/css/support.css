@@ -686,6 +686,17 @@ main.support > .content .streams .streams-cards .stream-card form .donation {
   align-items: center;
   justify-content: flex-end;
 }
+main.support > .content .streams .message {
+  width: 60%;
+  font-size: 0.8rem;
+  line-height: 1.2rem;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+main.support > .content .streams .message span {
+  display: block;
+}
 @media screen and (max-width: 1100px) {
   main.support > .content .streams .streams-cards {
     flex-direction: column;
