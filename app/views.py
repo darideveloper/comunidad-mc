@@ -700,13 +700,16 @@ def support(request):
     is_triple_time = tools.is_triple_time()
     if is_triple_time and not message:
         info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
+        
+    # TEMPORAL ERROR
+    error = "Todos los usuarios deberán cerrar y volver a iniciar sesión para poder continuar usando la plataforma, de lo contrario tu cuenta será borrada. Si tu ya lo hiciste, ignora este mensaje. "
     
     # Render page
     return render(request, 'app/support.html', {
         # General context
         "name": user.user_name,
         "message": message,
-        "info": info,
+        "info": "", # TEMPORAL ERROR
         "current_page": "support",
         "error": error,
         "user_active": True,
