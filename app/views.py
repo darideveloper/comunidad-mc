@@ -455,7 +455,8 @@ def schedule(request):
     # Validate the open hour of the current user
     ranking_open = True
     open_hour = user.ranking.open_hour
-    open_hour_datetime = datetime.datetime.combine(now.date(), open_hour, user_time_zone)
+    open_hour_datetime = datetime.datetime.combine(now.date(), open_hour).astimezone(user_time_zone)
+    print (open_hour_datetime, now)
     if today_week == SCHEDULE_DAY:
         ranking_open = False 
         if now >= open_hour_datetime:
