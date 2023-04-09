@@ -76,13 +76,18 @@ if today == RESTART_POINTS_WEEK_DAY:
         general_points_week, general_points_week_num = tools.get_general_points_last_week (user)
         
         # Save pouints history
-        models.PointsHistory (user=user, general_points=general_points_num, week_points=general_points_week_num).save()
+        models.PointsHistory (
+            user=user, 
+            general_points_num=general_points_num, 
+            general_points_week_num=general_points_week_num,
+            week_points_num=weekly_points_num,
+        ).save()
         
         # Show status
         logger.info (f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}")
     
     # Add bits to first, second and third users in points table
-    points_history_all = models.PointsHistory.objects.all().order_by("week_points").reverse()
+    points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()
     first_user = points_history_all[0].user
     second_user = points_history_all[1].user
     third_user = points_history_all[2].user

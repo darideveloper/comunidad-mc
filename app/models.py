@@ -197,8 +197,9 @@ class Bit (models.Model):
 class PointsHistory (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del historial", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el punto", null=False, blank=False)
-    general_points = models.IntegerField(name='general_points', verbose_name="puntos generales", help_text="puntos generales", null=False, blank=False)
-    week_points = models.IntegerField(name='week_points', verbose_name="puntos semanales", help_text="puntos semanales", null=False, blank=False)
+    general_points_num = models.IntegerField(name='general_points_num', verbose_name="puntos generales totales", help_text="puntos generales hasta el día de hoy", null=False, blank=False)
+    general_points_week_num = models.IntegerField(name='general_points_week_num', verbose_name="puntos generales semana", help_text="puntos generales obtenidos a lo largo de la semana", null=False, blank=False)
+    week_points_num = models.IntegerField(name='week_points_num', verbose_name="puntos semana", help_text="puntos semanales obtenidos a lo largo de la semana", null=False, blank=False, default=0)
     
     def __str__(self):
         return f"{self.user} (general: {self.general_points}, semana: {self.week_points})"

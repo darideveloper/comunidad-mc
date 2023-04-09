@@ -182,8 +182,8 @@ class AdminRanking (admin.ModelAdmin):
 @admin.register (models.PointsHistory)
 class AdminPointsHistory (admin.ModelAdmin):
     
-    list_display = ('id', 'user', 'general_points', 'week_points')
-    ordering = ('id', 'user', 'general_points', 'week_points')
+    list_display = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
+    ordering = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
     search_fields = ('user__user_name',)
     
 @admin.register (models.Bit)
