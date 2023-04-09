@@ -456,7 +456,6 @@ def schedule(request):
     ranking_open = True
     open_hour = user.ranking.open_hour
     open_hour_datetime = datetime.datetime.combine(now.date(), open_hour).astimezone(user_time_zone)
-    print (open_hour_datetime, now)
     if today_week == SCHEDULE_DAY:
         ranking_open = False 
         if now >= open_hour_datetime:
@@ -525,7 +524,7 @@ def schedule(request):
         
         # Disable hour by days
         disabled_hours_days = {
-            "viernes": 23,
+            "viernes": 19,
         }
         
         # Calculate free hours for streams
