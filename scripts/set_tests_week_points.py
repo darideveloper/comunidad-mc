@@ -15,7 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
-from app import tools
+from app.logs import logger
 
 # get all users
 users = models.User.objects.all()
@@ -49,6 +49,6 @@ for user_name in users:
     # Create weekly points
     models.WeeklyPoint (general_point=general_point).save()
     
-    print (f"Added {POINTS_NUM} weekly points to {user.user_name}")
+    logger.info (f"Added {POINTS_NUM} weekly points to {user.user_name}")
 
     

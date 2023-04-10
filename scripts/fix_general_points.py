@@ -15,8 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from django.utils import timezone
 from app import models
-from app.twitch import TwitchApi
-from app import tools
+from app.logs import logger
 
 # Get today general points with amount in 0
 now = timezone.now ()
@@ -28,7 +27,7 @@ counter = 0
 for general_point in general_points:
     
     counter += 1    
-    print (f"Point {counter} of {len(general_points)}")
+    logger.info (f"Point {counter} of {len(general_points)}")
     
     # Set amount to 1
     general_point.amount = 1

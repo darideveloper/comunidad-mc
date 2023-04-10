@@ -17,7 +17,6 @@ from app import models
 from app import tools
 from app.logs import logger
 from django.utils import timezone
-from django.db.models import Sum
 
 # Get ranbkings and required points
 rankings = models.Ranking.objects.all().order_by("points").reverse()
@@ -94,34 +93,30 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.Bit (user=first_user, amount=RANKING_FIRST_BITS, details="1er lugar del Ranking Semanal").save ()
     models.Bit (user=second_user, amount=RANKING_SECOND_BITS, details="2do lugar del Ranking Semanal").save ()
     models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
-    print ("Bits added to first, second and third users")
+    logger.info ("Bits added to first, second and third users")
     
     # Add a vip to first user
     models.StreamVip (user=first_user).save ()
-    print ("Vip added to first user")
+    logger.info ("Vip added to first user")
     
     # Delete week points
     models.WeeklyPoint.objects.all().delete()
-    print ("week points deleted")
-    
-    # Delete all points
-    # models.GeneralPoint.objects.all().delete()
-    # print ("all points deleted")
+    logger.info ("week points deleted")
 
 else:
 
     # Convert each daily point to weekly point
-    print ("Converting dailly points to weekly points")
+    logger.info ("Converting dailly points to weekly points")
     daily_points = models.DailyPoint.objects.all()
     for daily_point in daily_points:
         general_point = daily_point.general_point
         models.WeeklyPoint(general_point=general_point).save()
-    print ("Done. Daily points converted to weekly points")
+    logger.info ("Done. Daily points converted to weekly points")
 
 # delete all daily points
 models.DailyPoint.objects.all().delete()
-print ("today points deleted")
+logger.info ("today points deleted")
 
 # delete top daily points
 models.TopDailyPoint.objects.all().delete()
-print ("top points deleted")
+logger.info ("top points deleted")

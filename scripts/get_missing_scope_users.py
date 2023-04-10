@@ -15,6 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
+from app.logs import logger
 
 twitch = TwitchApi ()
 
@@ -42,14 +43,9 @@ for user in users:
         # Auto update user token
         if "message" in json_data:
             message = json_data["message"]
-            print (f"user {user}: {message}")
+            logger.info (f"user {user}: {message}")
             if message == "Invalid OAuth token":
                 twitch.update_token (user)
                 continue
-            elif message == "Missing scope: moderator:read:chatters":
-                error_users.append (user)
-                break
-
-print ("\nError users:s")
-for user in error_users:
-    print (user)
+            else:
+                logger.error (f"user {user}: {message}")

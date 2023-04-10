@@ -15,6 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
+from app.logs import logger
 
 twitch = TwitchApi ()
 
@@ -36,13 +37,13 @@ for user in users:
         json_data = res.json()
         
         if "data" in json_data:
-            print (f"user {user}: done")
+            logger.info (f"user {user}: done")
             break
         
         # Auto update user token
         if "message" in json_data:
             message = json_data["message"]
-            print (f"user {user}: {message}")
+            logger.error (f"user {user}: {message}")
             twitch.update_token (user)
             
         sleep (10)

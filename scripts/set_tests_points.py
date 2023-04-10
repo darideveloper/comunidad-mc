@@ -66,9 +66,7 @@ for user_name in users:
     #         if current_weekly_points < 60:       
     #             new_weekly_point = models.WeeklyPoint (general_point=new_general_point)
     #             new_weekly_point.save()
-                
-    #         print (f"Point {user} - {stream} - {back_date}")
-    
+                    
     # add 10 points today
     for _ in range (1):
         twitch_api.add_cero_point (user, stream)

@@ -278,8 +278,6 @@ def get_user_streams (user:models.User, user_time_zone:pytz.timezone):
         start_week = start_week - timedelta(start_week.weekday())
     end_week = start_week + timedelta(14)
         
-    print (f"start: {start_week}, end: {end_week}")
-
     # Get current streams
     user_streams = models.Stream.objects.filter(
         datetime__range=[start_week, end_week], user=user).all().order_by("datetime")
