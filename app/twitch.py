@@ -508,6 +508,9 @@ class TwitchApi:
         Returns:
             bool: True if user is live, False if not
         """
+        
+        print (f"Checking if user {user} is live")
+                
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {user.access_token}",
@@ -524,6 +527,8 @@ class TwitchApi:
         is_live = False
         if json_data.get("data"):
             is_live = True
+            
+        print (f"User {user} is live: {is_live}")
 
         return is_live
 
