@@ -440,6 +440,8 @@ def schedule(request):
             new_stream.save ()
             message = "Stream agendado!"
             
+        return redirect("/schedule")
+            
             
     # Get next streams of the user in the next 7 days
     streams = tools.get_user_next_streams(user, user_time_zone)
@@ -806,6 +808,8 @@ def profile(request):
         
         # Confirmation message
         message = "Datos actualziados correctamente"
+        
+        return redirect("/profile")
     
     # Get user data
     twitch_id = user.id
@@ -870,6 +874,8 @@ def wallet(request):
         
         # Update bits of the user
         bits, bits_num = tools.get_bits (user)    
+        
+        return redirect("/wallet")
     
     # Format bits history
     bits_history = list(map(lambda bit: {"date": bit.timestamp.strftime("%d/%m/%Y"), "bits": bit.amount, "description": bit.details}, bits))
