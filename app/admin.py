@@ -45,6 +45,7 @@ class AdminUser (admin.ModelAdmin):
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
     ordering = ['user_name']
+    list_per_page = 20
 
 @admin.register (models.Country)
 class AdminCountry (admin.ModelAdmin):
@@ -52,6 +53,7 @@ class AdminCountry (admin.ModelAdmin):
     list_display = ('id', 'country')
     ordering = ('id', 'country')
     search_fields = ('country', )
+    list_per_page = 20
     
 @admin.register (models.TimeZone)
 class AdminTimeZone (admin.ModelAdmin):
@@ -59,6 +61,7 @@ class AdminTimeZone (admin.ModelAdmin):
     list_display = ('id', 'time_zone')
     ordering = ('id', 'time_zone')
     search_fields = ('time_zone', )
+    list_per_page = 20
     
 @admin.register (models.Stream)
 class AdminStream (admin.ModelAdmin):
@@ -68,6 +71,7 @@ class AdminStream (admin.ModelAdmin):
     ordering = ('id', 'user', 'datetime')
     list_filter = ('user', 'datetime', 'is_vip', 'is_free')
     search_fields = ('user__user_name', )
+    list_per_page = 20
     
     def change_view(self, request, object_id, form_url='', extra_context=None):
         """ render change form template for deactive fields for platinum admins """
@@ -120,6 +124,7 @@ class AdminComment (admin.ModelAdmin):
     ordering = ('id', 'user', 'stream', 'datetime', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
     search_fields = ('user__user_name', 'stream__user__user_name', 'comment')
+    list_per_page = 20
     
 @admin.register (models.WhatchCheck)
 class AdminWhatchCheck (admin.ModelAdmin):
@@ -128,6 +133,7 @@ class AdminWhatchCheck (admin.ModelAdmin):
     ordering = ('id', 'user', 'stream', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
     search_fields = ('user__user_name', 'stream__user__user_name')
+    list_per_page = 20
     
 @admin.register (models.Status)
 class AdminStatus (admin.ModelAdmin):
@@ -135,6 +141,7 @@ class AdminStatus (admin.ModelAdmin):
     list_display = ('id', 'name')
     ordering = ('id', 'name')
     search_fields = ('name',)
+    list_per_page = 20
 
 @admin.register (models.InfoPoint)
 class AdminInfoPoint (admin.ModelAdmin):
@@ -142,6 +149,7 @@ class AdminInfoPoint (admin.ModelAdmin):
     list_display = ('id', 'info')
     ordering = ('id', 'info')
     search_fields = ('info',)
+    list_per_page = 20
     
 @admin.register (models.GeneralPoint)
 class AdminGeneralPoint (admin.ModelAdmin):
@@ -178,6 +186,7 @@ class AdminRanking (admin.ModelAdmin):
     list_display = ('id', 'name', 'points', 'max_streams', 'open_hour')
     ordering = ('id', 'name', 'points', 'max_streams', 'open_hour')
     search_fields = ('name',)
+    list_per_page = 20
     
 @admin.register (models.PointsHistory)
 class AdminPointsHistory (admin.ModelAdmin):
@@ -185,6 +194,7 @@ class AdminPointsHistory (admin.ModelAdmin):
     list_display = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
     ordering = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
     search_fields = ('user__user_name',)
+    list_per_page = 20
     
 @admin.register (models.Bit)
 class AdminBit (admin.ModelAdmin):
@@ -193,6 +203,7 @@ class AdminBit (admin.ModelAdmin):
     ordering = ('id', 'user', 'timestamp', 'is_bits_done', 'amount')
     list_filter = ('user', 'timestamp', 'is_bits_done', 'details',)
     search_fields = ('user__user_name', 'details')
+    list_per_page = 20
     
 @admin.register (models.TopDailyPoint)
 class AdminTopDailyPoint (admin.ModelAdmin):
@@ -201,6 +212,7 @@ class AdminTopDailyPoint (admin.ModelAdmin):
     ordering = ('position', 'user', 'datetime')
     list_filter = ('user', 'datetime')
     search_fields = ('user__user_name',)
+    list_per_page = 20
     
 @admin.register (models.StreamExtra)
 class AdminStreamExtra (admin.ModelAdmin):
@@ -209,6 +221,7 @@ class AdminStreamExtra (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user__user_name',)
+    list_per_page = 20
     
 @admin.register (models.StreamVip)
 class AdminVips (admin.ModelAdmin):
@@ -217,6 +230,7 @@ class AdminVips (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
+    list_per_page = 20
     
 @admin.register (models.Settings)
 class AdminSettings (admin.ModelAdmin):
@@ -224,3 +238,4 @@ class AdminSettings (admin.ModelAdmin):
     list_display = ('id', 'name', 'value')
     ordering = ('id', 'name', 'value')
     search_fields = ('name', 'value')
+    list_per_page = 20
