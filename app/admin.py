@@ -148,7 +148,7 @@ class AdminGeneralPoint (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
     ordering = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
-    list_filter = ('user', 'stream', 'info', 'datetime')
+    list_filter = ('info', 'datetime', 'user')
     search_fields = ('user__user_name', 'stream__user__user_name')
     list_per_page = 20
     
