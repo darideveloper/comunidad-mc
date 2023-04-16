@@ -171,13 +171,12 @@ def register(request):
     # timezones = pytz.all_timezones
 
     # Get user from cookies
-    user, *other = tools.get_cookies_data(request)
+    user, message, error = tools.get_cookies_data(request)
 
     # Redirect to home if user id is not valid
     if not user or (user.first_name and user.first_name.strip() != ""):
         return redirect("home")
 
-    error = ""
     if request.method == "POST":
 
         # Get user data from form
@@ -220,7 +219,7 @@ def register(request):
 
         else:
             # Show error if data is not valid
-            error = "Algo salió mal, intente de nuevo"
+            request.session["error"] = "Algo salió mal, intente de nuevo"
             
     # Default response
     return render(request, 'app/register.html', {
@@ -401,8 +400,10 @@ def schedule(request):
         selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour+":00", "%Y-%m-%d %H:%M")
         selected_datetime = user_time_zone.localize(selected_datetime)
         
+        min_points_save_stream = int(models.Settings.objects.get (name="min_points_save_stream").value)
+        
         # Calculate available points
-        available_points = general_points_num - user_streams_num * 40
+        available_points = general_points_num - user_streams_num * min_points_save_stream
         
         # Validte if regular user have available streams
         max_streams = user.ranking.max_streams
@@ -412,14 +413,15 @@ def schedule(request):
             max_streams += streams_extra_num
             
         available_stream = max_streams - user_streams_num > 0
-        if not available_stream or available_points < 40:
-            error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
+        if not available_stream or available_points < min_points_save_stream:
+            # Save error ass cookie            
+            request.session["error"] = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
         if not error:
             streams_match = models.Stream.objects.filter (datetime=selected_datetime)
             if streams_match.count() > 1:
-                error = "Lo sentimos. Esa fecha y hora ya está agendada."
+                request.session["error"] = "Lo sentimos. Esa fecha y hora ya está agendada."
                 
         # Vips validation
         if not error and form_vip:
@@ -432,13 +434,13 @@ def schedule(request):
                 has_vips = tools.get_vips_num (user) > 0            
             else:
                 # Raise error if user dont have vips
-                error = "Error al guardar el stream, no tienes vips disponibles"
+                request.session["error"] = "Error al guardar el stream, no tienes vips disponibles"
                 
         # Schedule stream
         if not error:
             new_stream = models.Stream (user=user, datetime=selected_datetime, is_vip=True if form_vip else False)
             new_stream.save ()
-            message = "Stream agendado!"
+            request.session["message"] = "Stream agendado!"
             
         return redirect("/schedule")
             
@@ -600,7 +602,7 @@ def schedule(request):
 def support(request):
     """ Page for show live streamers and copy link to stream """
     
-    user, message, _ = tools.get_cookies_data(request)
+    user, message, error = tools.get_cookies_data(request)
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
@@ -622,21 +624,22 @@ def support(request):
         # Get stream
         streams_donation = models.Stream.objects.filter(id=stream_id)
         if not streams_donation:
-            error = "Error al guardar la donación"
+            request.session["error"] = "Error al guardar la donación"
         stream_donation = streams_donation[0]
         
         # get bit object
         bits = models.Bit.objects.filter(stream=stream_donation)
         if not bits:
-            error = "Error al guardar la donación"
+            request.session["error"] = "Error al guardar la donación"
         bits = bits[0]
         
         # Update status
         bits.is_bits_done = True if donation == "on" else False
         bits.save()
+        
+        return redirect("support")
 
     # Valide if node server is working
-    error = ""
     if not is_node_working:
         error = "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
 
@@ -714,7 +717,7 @@ def support(request):
         # General context
         "name": user.user_name,
         "message": message,
-        "info": "", # TEMPORAL ERROR
+        "info": "",
         "current_page": "support",
         "error": error,
         "user_active": True,
