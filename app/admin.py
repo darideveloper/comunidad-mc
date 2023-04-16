@@ -217,3 +217,10 @@ class AdminVips (admin.ModelAdmin):
     ordering = ('id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
+    
+@admin.register (models.Settings)
+class AdminSettings (admin.ModelAdmin):
+    
+    list_display = ('id', 'name', 'value')
+    ordering = ('id', 'name', 'value')
+    search_fields = ('name', 'value')
