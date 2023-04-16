@@ -243,3 +243,8 @@ class StreamVip (models.Model):
     class Meta:
         verbose_name = "Stream Vip"
         verbose_name_plural = "Streams Vip"
+        
+class Settings (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de la configuración", null=False, blank=False, editable=False)
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre de la configuración", null=False, blank=False, max_length=100)
+    value = models.CharField(name='value', verbose_name="valor", help_text="valor de la configuración", null=False, blank=False, max_length=100)

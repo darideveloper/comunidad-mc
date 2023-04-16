@@ -402,7 +402,7 @@ def schedule(request):
         selected_datetime = user_time_zone.localize(selected_datetime)
         
         # Calculate available points
-        available_points = general_points_num - user_streams_num * 50 
+        available_points = general_points_num - user_streams_num * 40
         
         # Validte if regular user have available streams
         max_streams = user.ranking.max_streams
@@ -412,7 +412,7 @@ def schedule(request):
             max_streams += streams_extra_num
             
         available_stream = max_streams - user_streams_num > 0
-        if not available_stream or available_points < 50:
+        if not available_stream or available_points < 40:
             error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
