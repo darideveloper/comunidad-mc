@@ -412,7 +412,7 @@ def schedule(request):
             max_streams += streams_extra_num
             
         available_stream = max_streams - user_streams_num > 0
-        if not available_stream: # or available_points < 50:
+        if not available_stream or available_points < 50:
             error = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
         
         # Validate if the date and time are free
