@@ -401,27 +401,34 @@ def schedule(request):
         selected_datetime = user_time_zone.localize(selected_datetime)
         
         min_points_save_stream = int(models.Settings.objects.get (name="min_points_save_stream").value)
+        print (f"min_points_save_stream: {min_points_save_stream}")
         
         # Calculate available points
         available_points = general_points_num - user_streams_num * min_points_save_stream
+        print (f"available_points: {available_points}")
         
         # Validte if regular user have available streams
         max_streams = user.ranking.max_streams
         streams_extra = models.StreamExtra.objects.filter(user=user).all()
+        print (f"streams_extra: {streams_extra}")
         if streams_extra.count() > 0:
             streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
             max_streams += streams_extra_num
             
         available_stream = max_streams - user_streams_num > 0
+        print (f"available_stream: {available_stream}")
+        error = False
         if not available_stream or available_points < min_points_save_stream:
             # Save error ass cookie            
             request.session["error"] = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
-        
+            error = True
+            
         # Validate if the date and time are free
         if not error:
             streams_match = models.Stream.objects.filter (datetime=selected_datetime)
             if streams_match.count() > 1:
                 request.session["error"] = "Lo sentimos. Esa fecha y hora ya está agendada."
+                error = True
                 
         # Vips validation
         if not error and form_vip:
@@ -435,6 +442,7 @@ def schedule(request):
             else:
                 # Raise error if user dont have vips
                 request.session["error"] = "Error al guardar el stream, no tienes vips disponibles"
+                error = True
                 
         # Schedule stream
         if not error:
