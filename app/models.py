@@ -80,7 +80,7 @@ class Stream (models.Model):
     
     def __str__(self):
         formated_date = str(timezone.localtime(self.datetime))[0:-12] + "h"
-        return f"{self.user.user_name} {formated_date}"
+        return f"{formated_date} - {self.user.user_name}"
     
     class Meta:
         verbose_name = "Stream"
