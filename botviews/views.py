@@ -1,50 +1,51 @@
+import django
 from . import models
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from app.twitch import TwitchApi
 
+def get_json_model (model:django.db.models) -> str:
+    """ Serializes a model to json
+
+    Args:
+        model (django.db.models): model to serialize
+
+    Returns:
+        str: json data
+    """
+    
+    # Get all objects from table
+    objects = model.objects.all()
+    
+    # Format objects to json
+    objects_json = serializers.serialize('json', objects)
+    
+    return objects_json
+
 def get_settings (request):
-    
-    # Get all settings from table
-    settings = models.Setting.objects.all()
-    
-    # Format settings to json
-    settings_json = serializers.serialize('json', settings)
-        
-    return HttpResponse(settings_json, content_type='application/json')
+    """ Returns all settings in json format """        
+    return HttpResponse(get_json_model(models.Setting), content_type='application/json')
 
 def get_proxies (request):
-    
-    # Get all proxies from table
-    proxies = models.Proxy.objects.all()
-    
-    # Format proxies to json
-    proxies_json = serializers.serialize('json', proxies)
-        
-    return HttpResponse(proxies_json, content_type='application/json')
+    """ Returns all proxies in json format """    
+
+    return HttpResponse(get_json_model(models.Proxy), content_type='application/json')
 
 def get_users (request):
     
-    # Get all users from table
-    users = models.User.objects.all()
-    
-    # Format users to json
-    users_json = serializers.serialize('json', users)
+    """ Returns all users in json format """
         
-    return HttpResponse(users_json, content_type='application/json')
+    return HttpResponse(get_json_model(models.User), content_type='application/json')
 
 def get_locations (request):
     
-    # Get all locations from table
-    locations = models.Location.objects.all()
+    """ Returns all locations in json format """
     
-    # Format locations to json
-    locations_json = serializers.serialize('json', locations)
-    
-    return HttpResponse(locations_json, content_type='application/json')
+    return HttpResponse(get_json_model(models.Location), content_type='application/json')
     
 def get_streams (request):
+    """ Returns names of the current streamers in comunidad mc, as json format """
     
     # get current streams
     twitch = TwitchApi()
