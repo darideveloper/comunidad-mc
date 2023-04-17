@@ -5,7 +5,8 @@ class User (models.Model):
     name = models.CharField(max_length=50, verbose_name='Name', help_text='Nambre del usuario')
     cookies = models.JSONField(verbose_name='Cookies', help_text='Cookies de sesión del usuario')
     is_active = models.BooleanField(default=True, verbose_name='Activo', help_text='Indica si el usuario está activo')
-
+    last_update = models.DateTimeField(auto_now=True, verbose_name='Última actualización', help_text='Fecha y hora de la última actualización')
+    
     def __str__(self):
         return self.name
     
