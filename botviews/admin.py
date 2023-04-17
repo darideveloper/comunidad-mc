@@ -14,7 +14,7 @@ class AdminUser (admin.ModelAdmin):
 class AdminProxy (admin.ModelAdmin):
     
     list_display = ('id', 'host', 'port', 'user', 'password', 'location')
-    list_filter = ('location__name', )
+    list_filter = ('location__name', 'host')
     ordering = ('id', 'host', 'port', 'user', 'password', 'location')
     search_fields = ('host', 'port', 'user', 'password', 'location__name')
     list_per_page = 20
