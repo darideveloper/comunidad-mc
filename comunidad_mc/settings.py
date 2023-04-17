@@ -28,6 +28,7 @@ DEBUG = os.environ.get("DEBUG") == "True"
 
 INSTALLED_APPS = [
     'app',
+    'botviews',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
