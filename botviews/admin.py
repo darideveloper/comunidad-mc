@@ -27,7 +27,7 @@ class AdminLocations (admin.ModelAdmin):
     search_fields = ('name',)
     list_per_page = 20
     
-@admin.register (models.Settings)
+@admin.register (models.Setting)
 class AdminSettings (admin.ModelAdmin):
     
     list_display = ('name', 'value')
