@@ -42,3 +42,10 @@ class Location (models.Model):
 class Settings (models.Model):
     name = models.CharField(max_length=50, verbose_name='Nombre', help_text='Nombre de la configuración', unique=True)
     value = models.CharField(max_length=50, verbose_name='Valor', help_text='Valor de la configuración')
+    
+    def __str__ (self):
+        return f"{self.name} ({self.value})"
+    
+    class Meta:
+        verbose_name = "Ajuste"
+        verbose_name_plural = "Ajustes"
