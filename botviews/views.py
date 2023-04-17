@@ -1,7 +1,8 @@
 from . import models
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from app.twitch import TwitchApi
 
 def get_settings (request):
     
@@ -43,3 +44,14 @@ def get_locations (request):
     
     return HttpResponse(locations_json, content_type='application/json')
     
+def get_streams (request):
+    
+    # get current streams
+    twitch = TwitchApi()
+    streams = twitch.get_current_streams ()
+    
+    # Get streamers
+    streamers = list(map(lambda stream: stream.user.user_name, streams))
+    data_json = {"streams": streamers}
+        
+    return JsonResponse (data_json)
