@@ -26,3 +26,11 @@ class AdminLocations (admin.ModelAdmin):
     ordering = ('id', 'name')
     search_fields = ('name',)
     list_per_page = 20
+    
+@admin.register (models.Settings)
+class AdminSettings (admin.ModelAdmin):
+    
+    list_display = ('name', 'value')
+    ordering = ('name', 'value')
+    search_fields = ('name', 'value')
+    list_per_page = 20
