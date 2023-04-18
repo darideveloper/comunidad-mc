@@ -53,6 +53,6 @@ def get_streams (request):
     
     # Get streamers
     streamers = list(map(lambda stream: stream.user.user_name, streams))
-    data_json = {"streams": streamers}
+    # data_json = {"streams": streamers}
         
-    return JsonResponse (data_json)
+    return JsonResponse (streamers, safe=False)
