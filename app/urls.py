@@ -27,5 +27,5 @@ urlpatterns = [
     path('users-points/', views.user_points, name='users-points'),
     path('cancel-stream/<int:id>', views.cancel_stream, name='cancel-stream'),
     path('update-twitch-data/', views.update_twitch_data, name='update-twitch-data'),
-    path('register/<str:user_from_id>', views.register_referred_user_from, name='register_referred_user_from'),
+    path('register/<str:user_from_id>/', views.register_referred_user_from, name='register_referred_user_from'),
 ]
