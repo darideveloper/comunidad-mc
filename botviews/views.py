@@ -52,7 +52,8 @@ def get_streams (request):
     streams = twitch.get_current_streams ()
     
     # Get streamers
-    streamers = list(map(lambda stream: stream.user.user_name, streams))
-    # data_json = {"streams": streamers}
+    streamers = []
+    if streams:
+        streamers = list(map(lambda stream: stream.user.user_name, streams))
         
     return JsonResponse (streamers, safe=False)
