@@ -34,3 +34,12 @@ class AdminSettings (admin.ModelAdmin):
     ordering = ('name', 'value')
     search_fields = ('name', 'value')
     list_per_page = 20
+    
+@admin.register (models.Token)
+class AdminToken (admin.ModelAdmin):
+    
+    list_display = ('name', 'value', 'is_active')
+    list_filter = ('is_active',)
+    ordering = ('name', 'value', 'is_active')
+    search_fields = ('name', 'value',)
+    list_per_page = 20

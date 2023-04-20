@@ -50,3 +50,15 @@ class Setting (models.Model):
     class Meta:
         verbose_name = "Ajuste"
         verbose_name_plural = "Ajustes"
+        
+class Token (models.Model):
+    name = models.CharField(max_length=50, verbose_name='Nombre', help_text='Apodo del token', unique=True)
+    value = models.CharField(max_length=50, verbose_name='Valor', help_text='Token de validación', unique=True)
+    is_active = models.BooleanField(default=True, verbose_name='Activo', help_text='Indica si el token está activo')
+    
+    def __str__ (self):
+        return f"{self.value} ({self.is_active})"
+    
+    class Meta:
+        verbose_name = "Token"
+        verbose_name_plural = "Tokens"
