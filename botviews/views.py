@@ -1,9 +1,16 @@
+import os
 import django
+from dotenv import load_dotenv
 from . import models
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from app.twitch import TwitchApi
+
+load_dotenv ()
+
+# Load enviroment variables
+DEBUG = os.getenv ("DEBUG")
 
 def get_json_model (model:django.db.models) -> str:
     """ Serializes a model to json
@@ -55,5 +62,9 @@ def get_streams (request):
     streamers = []
     if streams:
         streamers = list(map(lambda stream: stream.user.user_name, streams))
+    
+    # Return always one stream in debug mode
+    if not streamers and DEBUG:
+        streamers = ["darideveloper"]
         
     return JsonResponse (streamers, safe=False)
