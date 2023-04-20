@@ -99,9 +99,9 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.StreamVip (user=first_user).save ()
     logger.info ("Vip added to first user")
     
-    # Delete week points
-    models.WeeklyPoint.objects.all().delete()
-    logger.info ("week points deleted")
+    # # Delete week points
+    # models.WeeklyPoint.objects.all().delete()
+    # logger.info ("week points deleted")
 
 else:
 
