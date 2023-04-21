@@ -11,7 +11,7 @@ from app.twitch import TwitchApi
 load_dotenv ()
 
 # Load enviroment variables
-DEBUG = os.getenv ("DEBUG")
+DEBUG = os.getenv ("DEBUG") == "True"
 
 def get_json_model (model:django.db.models) -> str:
     """ Serializes a model to json
