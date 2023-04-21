@@ -9,11 +9,12 @@ from .logs import logger
 from .twitch import TwitchApi
 from django.conf import settings 
 from dotenv import load_dotenv
-from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count, Sum, Q
+from django.template.loader import render_to_string
 
 
 # Get credentials
@@ -236,8 +237,14 @@ def register(request):
     })
 
 def error404(request, exception):
-    return render(request, 'app/404.html')
-
+    # Render template 404.html
+    rendered = render_to_string('app/404.html', {
+        # General context
+        "name": "",
+        "current_page": "404",
+        "user_active": False,
+    })
+    return HttpResponse(rendered)
 
 def logout(request):
     """ Logout user """
@@ -249,7 +256,6 @@ def logout(request):
 
     # Redirect to home
     return redirect("home")
-
 
 @csrf_exempt
 def add_comment(request):

@@ -20,8 +20,10 @@ for (const header_btn of header_btns) {
 // })
 
 // Activate menu element of the current page
-const menu_item_active = document.querySelector(`ul.menu li.${current_page}`)
-if (menu_item_active) {
-  menu_item_active.classList.add ("active")
-  // menu_item_active.querySelector("a").setAttribute ("href", "#")
+if (current_page != "404") {
+  const menu_item_active = document.querySelector(`ul.menu li.${current_page}`)
+  if (menu_item_active) {
+    menu_item_active.classList.add ("active")
+    // menu_item_active.querySelector("a").setAttribute ("href", "#")
+  }
 }
