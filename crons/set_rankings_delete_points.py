@@ -36,6 +36,14 @@ if RESTART_DAY:
 # Get current week day
 today = timezone.now().weekday()
 
+# Convert each daily point to weekly point
+logger.info ("Converting dailly points to weekly points")
+daily_points = models.DailyPoint.objects.all()
+for daily_point in daily_points:
+    general_point = daily_point.general_point
+    models.WeeklyPoint(general_point=general_point).save()
+logger.info ("Done. Daily points converted to weekly points")
+
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
     
@@ -102,16 +110,6 @@ if today == RESTART_POINTS_WEEK_DAY:
     # # Delete week points
     # models.WeeklyPoint.objects.all().delete()
     # logger.info ("week points deleted")
-
-else:
-
-    # Convert each daily point to weekly point
-    logger.info ("Converting dailly points to weekly points")
-    daily_points = models.DailyPoint.objects.all()
-    for daily_point in daily_points:
-        general_point = daily_point.general_point
-        models.WeeklyPoint(general_point=general_point).save()
-    logger.info ("Done. Daily points converted to weekly points")
 
 # delete all daily points
 models.DailyPoint.objects.all().delete()
