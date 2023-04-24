@@ -88,6 +88,7 @@ def get_cookies_data (request, delete_data:bool=True):
     
     # Get user data from cookies
     user_id = request.session.get("user_id", 0)
+    # user_id = 226645357
     users = models.User.objects.filter(id=user_id)
     
     # Delete cookies if user not exist and return None
@@ -400,10 +401,11 @@ def is_triple_time ():
     return triple_time_start <= now_time <= triple_end_time
 
 def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
-    """ Return admin type of the user, related with an user_auth
+    """ Return admin type of the user, or user_auth
 
     Args:
-        user (models.User): _description_
+        user (models.User): user model
+        user_auth (models.UserAuth): user auth model
 
     Returns:
         str: name of the admin type if its admin, None if not
@@ -415,15 +417,15 @@ def get_admin_type (user:models.User = None, user_auth:models.UserAuth = None):
     
     # Get user auth
     if not user_auth:
-        user_auth = user.user_auth
+        user_auth = user.user_auth 
         
     # Get user groups
     if user_auth:
-        user_groups = user_auth.groups
+        user_group = user_auth.groups.first ()
         
         # Validate if user has groups
-        if user_groups:
-            user_group_name = user_groups.first().name
+        if user_group:
+            user_group_name = user_group.name
             
             # Validate if user is admin
             if "admin" in user_group_name:
