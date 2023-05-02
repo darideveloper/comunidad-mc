@@ -1,4 +1,4 @@
-# Set specific points to all users, in current stream
+# Set specific points to all users, in specific streams
 
 # Add parent folder to path
 import os
@@ -20,20 +20,31 @@ users = models.User.objects.all()
 # Connect to twitch class
 twitch_api = TwitchApi ()
 
-stream = twitch_api.get_current_streams ()[0]
+# Get streamers
+streamers_names = [
+    "davi_gamerplay",
+    "pipevillanu3va"
+]
+streamers = models.User.objects.filter(user_name__in=streamers_names)
 
-# Loop users for add points
-for user_name in users: 
-    
-    # Get user
-    user = models.User.objects.filter(user_name=user_name).first()
-    
-    # Skip if user not found
-    if not user:
-        continue
-    
-    # add 10 points today
-    for _ in range (1):
-        twitch_api.add_cero_point (user, stream)
-        twitch_api.add_point(user, stream, force=True)
-    
+for streamer in streamers:
+
+    # Get last streams of streamer
+    stream = models.Stream.objects.filter(user=streamer).order_by('-id')[0]
+    print (f"\nStream: {stream}\n")
+
+    # Loop users for add points
+    for user_name in users: 
+        
+        # Get user
+        user = models.User.objects.filter(user_name=user_name).first()
+        
+        # Skip if user not found
+        if not user:
+            continue
+        
+        # add 10 points today
+        for _ in range (1):
+            twitch_api.add_cero_point (user, stream)
+            twitch_api.add_point(user, stream, force=True)
+        
