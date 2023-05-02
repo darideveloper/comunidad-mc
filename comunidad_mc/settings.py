@@ -146,5 +146,6 @@ django_heroku.settings(locals())
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
 
-# End session when browser is closed
+# End session when browser is closed or after 12 hours
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 12 * 60 * 60
