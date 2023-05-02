@@ -228,6 +228,52 @@ class TwitchApi:
         twitch_link = f"https://id.twitch.tv/oauth2/authorize?{encoded_params}"
 
         return twitch_link
+    
+    def __get_watch_users__ (self, streamer: models.User):
+        """ get users who are currently watching a stream
+
+        Args:
+            stream (models.Stream): stream to get users
+        """
+        
+         # Loop for get data and update token
+        while True:
+
+            # Request data
+            user_id = streamer.id
+            user_token = streamer.access_token
+            url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
+            headers = {
+                "Authorization": f"Bearer {user_token}",
+                "Client-Id": self.twitch_client_id
+            }
+            res = requests.get(url, headers=headers)
+            json_data = res.json()
+
+            if not json_data:
+                continue
+
+            # Validate if token is expired and retry
+            if "error" in json_data and "message" in json_data:
+                
+                # Debug scope errors
+                if "Missing scope" in json_data["message"]:
+                    logger.error (f"Unauthorized to get chat users for user {streamer}: {json_data}")
+                    break
+                
+                # Show error and try again
+                logger.error(
+                    f"Token expired for {streamer}. Details: {json_data}.)")
+                self.update_token(streamer)
+                continue
+            else:
+                break
+
+        # Get users in chat
+        users_active = list(
+            map(lambda user: user["user_id"], json_data.get("data", [])))
+        
+        return users_active
 
     def check_users_in_chat(self):
         """ Get list of users in chat of the current streams and save in databse """
@@ -238,49 +284,15 @@ class TwitchApi:
             return None
 
         for stream in current_streams:
-
-            # Loop for get data and update token
-            while True:
-
-                # Get current stream
-                streamer = stream.user
-
-                # Request data
-                user_id = streamer.id
-                user_token = streamer.access_token
-                url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
-                headers = {
-                    "Authorization": f"Bearer {user_token}",
-                    "Client-Id": self.twitch_client_id
-                }
-                res = requests.get(url, headers=headers)
-                json_data = res.json()
-
-                if not json_data:
-                    continue
-
-                # Validate if token is expired and retry
-                if "error" in json_data and "message" in json_data:
-                    
-                    # Debug scope errors
-                    if "Missing scope" in json_data["message"]:
-                        logger.error (f"Unauthorized to get chat users for user {streamer}: {json_data}")
-                        break
-                    
-                    # Show error and try again
-                    logger.error(
-                        f"Token expired for {streamer}. Details: {json_data}.)")
-                    self.update_token(streamer)
-                    continue
-                else:
-                    break
-
-            # Get users in chat
-            users_active = list(
-                map(lambda user: user["user_id"], json_data.get("data", [])))
+            
+            # Get current stream
+            streamer = stream.user
+            
+            # Get watch users of the current streams
+            watch_users = self.__get_watch_users__(streamer)
 
             # Filter only user who exist in database
-            valid_users = models.User.objects.filter(id__in=users_active)
+            valid_users = models.User.objects.filter(id__in=watch_users)
             if len(valid_users) == 1:
                 logger.info(f"No users in stream: {stream}")
 
@@ -509,26 +521,35 @@ class TwitchApi:
             bool: True if user is live, False if not
         """
         
-        print (f"Checking if user {user} is live")
-                
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {user.access_token}",
-            "Client-Id": self.twitch_client_id,
-        }
-
-        res = requests.get(
-            f'https://api.twitch.tv/helix/streams?user_id={user.id}', headers=headers)
-
-        # Get json data
-        json_data = res.json()
-
-        # valdiate if user is live
         is_live = False
-        if json_data.get("data"):
-            is_live = True
+        while True:
             
-        print (f"User {user} is live: {is_live}")
+            print (f"Checking if user {user} is live")
+                    
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {user.access_token}",
+                "Client-Id": self.twitch_client_id,
+            }
+
+            res = requests.get(
+                f'https://api.twitch.tv/helix/streams?user_id={user.id}', headers=headers)
+
+            # Get json data
+            json_data = res.json()
+            
+            if res.status_code != 200:
+                print (f"\tUpdate token for user {user}")
+                self.update_token(user)
+                continue
+                
+            # valdiate if user is live
+            if json_data.get("data"):
+                is_live = True
+           
+            break
+            
+        print (f"\tUser {user} is live: {is_live}")
 
         return is_live
 
