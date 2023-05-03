@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 HOST = os.environ.get("HOST")
 TRIPLE_POINTS_END = os.environ.get("TRIPLE_POINTS_END")
 TRIPLE_POINTS_START = os.environ.get("TRIPLE_POINTS_START")
+DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG_USER_ID = os.environ.get("DEBUG_USER_ID")
 
 # Shared const
 WEEK_DAYS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
@@ -88,7 +90,8 @@ def get_cookies_data (request, delete_data:bool=True):
     
     # Get user data from cookies
     user_id = request.session.get("user_id", 0)
-    # user_id = 226645357
+    if DEBUG and DEBUG_USER_ID:
+        user_id = DEBUG_USER_ID
     users = models.User.objects.filter(id=user_id)
     
     # Delete cookies if user not exist and return None
