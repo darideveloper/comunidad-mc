@@ -148,4 +148,4 @@ if not DEBUG:
 
 # End session when browser is closed or after 12 hours
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 12 * 60 * 60
+SESSION_COOKIE_AGE = 10 * 60 * 60
