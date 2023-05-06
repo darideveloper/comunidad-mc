@@ -41,10 +41,9 @@ class AdminUser (admin.ModelAdmin):
     change_form_template = 'admin/change_form_users.html'    
     list_display = ('id', 'user_name', 'is_active', 'ranking', 'first_name', 'last_name', 'email', 'phone', 'user_auth')
     list_filter = ('country', 'time_zone', 'is_active', 'ranking', 'user_auth')
-    ordering = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'user_auth')
+    ordering = ('user_name', 'id', 'first_name', 'last_name', 'email', 'phone', 'ranking', 'user_auth')
     search_fields = ('id', 'user_name', 'first_name', 'last_name', 'email', 'phone')
     search_help_text = "Buscar usuarios por nombre, apellido, email, país o zona horaria"
-    ordering = ['user_name']
     list_per_page = 20
 
 @admin.register (models.Country)
@@ -59,7 +58,7 @@ class AdminCountry (admin.ModelAdmin):
 class AdminTimeZone (admin.ModelAdmin):
     
     list_display = ('id', 'time_zone')
-    ordering = ('id', 'time_zone')
+    ordering = ('-id', 'time_zone')
     search_fields = ('time_zone', )
     list_per_page = 20
     
@@ -68,7 +67,7 @@ class AdminStream (admin.ModelAdmin):
     
     change_form_template = 'admin/change_form_streams.html' 
     list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free')
-    ordering = ('id', 'user', 'datetime')
+    ordering = ('-id', 'user', 'datetime')
     list_filter = ('user', 'datetime', 'is_vip', 'is_free')
     search_fields = ('user__user_name', )
     list_per_page = 20
@@ -121,7 +120,7 @@ class AdminStream (admin.ModelAdmin):
 class AdminComment (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'comment', 'datetime', 'status')
-    ordering = ('id', 'user', 'stream', 'datetime', 'datetime', 'status')
+    ordering = ('-id', 'user', 'stream', 'datetime', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
     search_fields = ('user__user_name', 'stream__user__user_name', 'comment')
     list_per_page = 20
@@ -130,7 +129,7 @@ class AdminComment (admin.ModelAdmin):
 class AdminWhatchCheck (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'datetime', 'status')
-    ordering = ('id', 'user', 'stream', 'datetime', 'status')
+    ordering = ('-id', 'user', 'stream', 'datetime', 'status')
     list_filter = ('user', 'datetime', 'status')
     search_fields = ('user__user_name', 'stream__user__user_name')
     list_per_page = 20
@@ -155,7 +154,7 @@ class AdminInfoPoint (admin.ModelAdmin):
 class AdminGeneralPoint (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
-    ordering = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
+    ordering = ('-id', 'user', 'amount', 'stream', 'info', 'datetime')
     list_filter = ('info', 'datetime', 'user')
     search_fields = ('user__user_name', 'stream__user__user_name')
     list_per_page = 20
@@ -165,7 +164,7 @@ class AdminWeeklyPoint (admin.ModelAdmin):
     
     raw_id_fields = ('general_point',)
     list_display = ('id', 'general_point')
-    ordering = ('id', 'general_point')
+    ordering = ('-id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
     search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
     list_per_page = 20
@@ -175,7 +174,7 @@ class AdminDailyPoint (admin.ModelAdmin):
     
     raw_id_fields = ('general_point',)
     list_display = ('id', 'general_point')
-    ordering = ('id', 'general_point')
+    ordering = ('-id', 'general_point')
     list_filter = (FilterWeeklyDailyPoints,)
     search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
     list_per_page = 20
@@ -192,7 +191,7 @@ class AdminRanking (admin.ModelAdmin):
 class AdminPointsHistory (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
-    ordering = ('id', 'user', 'general_points_num', 'general_points_week_num', 'week_points_num')
+    ordering = ('user', 'general_points_num', 'general_points_week_num', 'week_points_num')
     search_fields = ('user__user_name',)
     list_per_page = 20
     
@@ -200,7 +199,7 @@ class AdminPointsHistory (admin.ModelAdmin):
 class AdminBit (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'timestamp', 'amount', 'is_bits_done', 'details', )
-    ordering = ('id', 'user', 'timestamp', 'is_bits_done', 'amount')
+    ordering = ('-id', 'user', 'timestamp', 'is_bits_done', 'amount')
     list_filter = ('user', 'timestamp', 'is_bits_done', 'details',)
     search_fields = ('user__user_name', 'details')
     list_per_page = 20
@@ -218,7 +217,7 @@ class AdminTopDailyPoint (admin.ModelAdmin):
 class AdminStreamExtra (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'amount',)
-    ordering = ('id', 'user', 'amount')
+    ordering = ('-id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user__user_name',)
     list_per_page = 20
@@ -227,7 +226,7 @@ class AdminStreamExtra (admin.ModelAdmin):
 class AdminVips (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'amount')
-    ordering = ('id', 'user', 'amount')
+    ordering = ('-id', 'user', 'amount')
     list_filter = ('user',)
     search_fields = ('user',)
     list_per_page = 20
