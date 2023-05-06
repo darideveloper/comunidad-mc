@@ -90,7 +90,7 @@ class Comment (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del comentario", null=False, blank=False, editable=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho el comentario", null=False, blank=False)
     stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el comentario", null=False, blank=False)
-    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del comentario", null=False, blank=False, default=timezone.now)
+    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del comentario", default=timezone.now)
     comment = models.TextField(name='comment', verbose_name="comentario", help_text="comentario", null=False, blank=False)
     status = models.ForeignKey('Status', on_delete=models.CASCADE, name='status', verbose_name="estado", help_text="estado del check", null=False, blank=False, default=1)
         
