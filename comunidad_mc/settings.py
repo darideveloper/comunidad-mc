@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'comunidad_mc.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'comunidad_mc',
-        'USER': 'daridev',
-        'PASSWORD': '2nMIe8McUCcbDhPPGUCNpJC2iNgKDtP5',
-        'HOST': 'dpg-cef3eqsgqg4b3haa6eq0-a.ohio-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': os.environ.get("DB_ENGINE"),
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     },
 }
 
