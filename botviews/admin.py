@@ -43,3 +43,13 @@ class AdminToken (admin.ModelAdmin):
     ordering = ('name', 'value', 'is_active')
     search_fields = ('name', 'value',)
     list_per_page = 20
+    
+@admin.register (models.Donation)
+class AdminDonation (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'stream', 'minute', 'amount', 'message', 'status')
+    list_filter = ('status', 'user')
+    ordering = ('-id', 'user', 'stream', 'minute', 'amount', 'message', 'status')
+    search_fields = ('user', 'stream', 'message')
+    list_per_page = 20
+    raw_id_fields = ('stream',)
