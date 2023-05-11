@@ -9,5 +9,5 @@ urlpatterns = [
     path('locations/', views.get_locations, name='locations'),
     path('streams/', views.get_streams, name='streams'),
     path('donations/', views.get_donations, name='donations'),
-    
+    path('disable-user/<name>/', views.disable_user, name='disable_user'),
 ]
