@@ -1,6 +1,9 @@
+import os
 from . import models
 from functools import wraps
 from django.http import HttpResponseBadRequest
+
+DEBUG = os.getenv("DEBUG") == "True"
 
 
 def validate_token (function):
@@ -8,6 +11,10 @@ def validate_token (function):
     
     @wraps(function)
     def wrap (request, *args, **kwargs):
+        
+        # NO validate token in debug mode
+        if DEBUG:
+            return function(request, *args, **kwargs)
         
         # Validate token
         token = request.GET.get ("token")
