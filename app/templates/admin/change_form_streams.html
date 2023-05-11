@@ -13,14 +13,15 @@
     const selectors_disbaled = [
      '.field-is_free', 
      '.field-is_vip',
-     '.field-is_bits_done'
     ]
     for (selector of selectors_disbaled) {
       const element = document.querySelector(selector)
-      element.classList.add ("hide")
+      if (element) {
+        element.classList.add ("hide")
+      } else {
+        console.log ("Element not found: " + selector)
+      }
     }
-
-    console.log ("here")
 
     // Disable other user fields
     const select = document.querySelector('#id_user')
