@@ -69,7 +69,7 @@ class Donation (models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='Usuario', help_text='Usuario que ha realizado la donación')
     stream = models.ForeignKey(app_models.Stream, on_delete=models.CASCADE, verbose_name='Stream', help_text='Stream de la donación')
     minute = models.IntegerField(verbose_name='Minuto', help_text='Minuto de la donación')
-    amount = models.FloatField(verbose_name='Cantidad', help_text='Cantidad de la donación')
+    amount = models.IntegerField (verbose_name='Cantidad', help_text='Cantidad de la donación')
     message = models.CharField(max_length=100, verbose_name='Mensaje', help_text='Mensaje de la donación')
     status = models.BooleanField(default=False, verbose_name='Estado', help_text='Indica si la donación ha sido procesada')
     
