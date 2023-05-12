@@ -121,7 +121,7 @@ class AdminComment (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'comment', 'datetime', 'status')
     ordering = ('-id', 'user', 'stream', 'datetime', 'datetime', 'status')
-    list_filter = ('user', 'datetime', 'status')
+    list_filter = ('datetime', 'status', 'user')
     search_fields = ('user__user_name', 'stream__user__user_name', 'comment')
     list_per_page = 20
     
@@ -130,7 +130,7 @@ class AdminWhatchCheck (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'stream', 'datetime', 'status')
     ordering = ('-id', 'user', 'stream', 'datetime', 'status')
-    list_filter = ('user', 'datetime', 'status')
+    list_filter = ('datetime', 'status', 'user')
     search_fields = ('user__user_name', 'stream__user__user_name')
     list_per_page = 20
     
@@ -200,7 +200,7 @@ class AdminBit (admin.ModelAdmin):
     
     list_display = ('id', 'user', 'timestamp', 'amount', 'is_bits_done', 'details', )
     ordering = ('-id', 'user', 'timestamp', 'is_bits_done', 'amount')
-    list_filter = ('user', 'timestamp', 'is_bits_done', 'details',)
+    list_filter = ('timestamp', 'is_bits_done', 'details', 'user')
     search_fields = ('user__user_name', 'details')
     list_per_page = 20
     
@@ -209,7 +209,7 @@ class AdminTopDailyPoint (admin.ModelAdmin):
     
     list_display = ('position', 'user', 'datetime')
     ordering = ('position', 'user', 'datetime')
-    list_filter = ('user', 'datetime')
+    list_filter = ('datetime', 'user')
     search_fields = ('user__user_name',)
     list_per_page = 20
     
