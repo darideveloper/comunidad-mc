@@ -68,7 +68,7 @@ class AdminStream (admin.ModelAdmin):
     change_form_template = 'admin/change_form_streams.html' 
     list_display = ('id', 'user', 'datetime', 'is_vip', 'is_free')
     ordering = ('-id', 'user', 'datetime')
-    list_filter = ('user', 'datetime', 'is_vip', 'is_free')
+    list_filter = ('datetime', 'is_vip', 'is_free', 'user')
     search_fields = ('user__user_name', )
     list_per_page = 20
     
