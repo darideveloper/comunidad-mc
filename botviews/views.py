@@ -83,31 +83,6 @@ def get_streams(request):
     return JsonResponse(streamers, safe=False)
 
 @decorators.validate_token
-def get_donations(request):
-    """ Returns donations to the current streams in json format """
-
-    # get current streams
-    twitch = TwitchApi()
-    streams = twitch.get_current_streams()
-    
-    # Get donations from current streams
-    donations = models.Donation.objects.filter(stream__in=streams)
-    
-    # Format data
-    donations_formatted = []
-    for donation in donations:
-        donations_formatted.append ({
-            "user": donation.user.name,
-            "streamer": donation.stream.user.user_name,
-            "minute": donation.minute,
-            "amount": donation.amount,
-            "message": donation.message,
-            "status": donation.status,
-        })
-
-    return JsonResponse(donations_formatted, safe=False)
-
-@decorators.validate_token
 def disable_user (request, name:str):
     """ Set user is_active status to False, to specific user
 
