@@ -1,27 +1,30 @@
 from django.contrib import admin
+from . import models
+from app import tools
 
-# @admin.register (models.Donation)
-# class AdminDonation (admin.ModelAdmin):
-    
-#     list_display = ('id', 'user', 'stream', 'minute', 'amount', 'message', 'status')
-#     list_filter = ('status', 'user')
-#     ordering = ('-id', 'user', 'stream', 'minute', 'amount', 'message', 'status')
-#     search_fields = ('user', 'stream', 'message')
-#     list_per_page = 20
-#     raw_id_fields = ('stream',)
-    
-#     def get_queryset(self, request):
+@admin.register (models.User)
+class AdminUser (admin.ModelAdmin):
         
-#         # Get admin type
-#         user_auth = request.user
-#         admin_type = tools.get_admin_type(user_auth=user_auth)
+    list_display = ('id', 'name', 'last_update', 'is_active', 'user_auth')
+    list_filter = ('is_active', 'last_update', 'user_auth__username')
+    ordering = ('id', 'name', 'cookies', 'last_update', 'is_active', 'user_auth')
+    search_fields = ('name', 'cookies', 'is_active', 'user_auth')
+    list_per_page = 20
 
-#         if admin_type == "admin platino":
-#             # Get all users of the current admin
-#             users = app_models.User.objects.filter(user_auth=user_auth)
-            
-#             # Render only streams of the current user
-#             return models.Donation.objects.filter(stream__user__in=users)
-            
-#         # Render all streams
-#         return models.Donation.objects.all()   
+@admin.register (models.Donation)
+class AdminDonation (admin.ModelAdmin):
+    
+    list_display = ('id', 'user',  'stream_chat_link', 'minute', 'amount', 'message', 'status')
+    list_filter = ('status', 'user', 'user__user_auth')
+    ordering = ('-id', 'user', 'stream_chat_link', 'minute', 'amount', 'message', 'status')
+    search_fields = ('user', 'stream_chat_link', 'message')
+    list_per_page = 20
+    
+@admin.register (models.Token)
+class AdminToken (admin.ModelAdmin):
+    
+    list_display = ('name', 'value', 'is_active')
+    list_filter = ('is_active',)
+    ordering = ('name', 'value', 'is_active')
+    search_fields = ('name', 'value',)
+    list_per_page = 20
