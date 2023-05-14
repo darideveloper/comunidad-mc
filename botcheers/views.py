@@ -3,7 +3,7 @@ from . import decorators
 from . import models
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
-from app.twitch import TwitchApi
+from django.utils import timezone
 
 
 def get_json_model(model: django.db.models, get_objects=True) -> str:
@@ -31,20 +31,21 @@ def get_json_model(model: django.db.models, get_objects=True) -> str:
 @decorators.validate_token
 def get_donations(request):
     """ Returns donations to the current streams in json format """
-
-    # get current streams
-    twitch = TwitchApi()
-    streams = twitch.get_current_streams()
     
-    # Get donations from current streams
-    donations = models.Donation.objects.filter(stream__in=streams)
+    # Get current hour with timezone
+    hour = timezone.localtime(timezone.now()).hour
+    print (hour)
+    
+    # Get donations of the current hour
+    donations = models.Donation.objects.filter(hour=hour)
+    print (donations)
     
     # Format data
     donations_formatted = []
     for donation in donations:
         donations_formatted.append ({
             "user": donation.user.name,
-            "admin": donation.user_auth.username,
+            "admin": donation.user.user_auth.username,
             "stream_chat_link": donation.stream_chat_link,
             "hour": donation.hour,
             "minute": donation.minute,
