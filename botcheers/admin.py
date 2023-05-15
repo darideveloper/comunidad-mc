@@ -1,6 +1,8 @@
-from django.contrib import admin
 from . import models
 from app import tools
+from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
+
 
 @admin.register (models.User)
 class AdminUser (admin.ModelAdmin):
@@ -14,12 +16,12 @@ class AdminUser (admin.ModelAdmin):
 @admin.register (models.Donation)
 class AdminDonation (admin.ModelAdmin):
     
-    list_display = ('id', 'user',  'stream_chat_link', 'minute', 'amount', 'message', 'status')
+    list_display = ('id', 'user',  'stream_chat_link', 'hour', 'minute', 'amount', 'message', 'status')
     list_filter = ('status', 'user', 'user__user_auth')
-    ordering = ('-id', 'user', 'stream_chat_link', 'minute', 'amount', 'message', 'status')
+    ordering = ('-id', 'user', 'stream_chat_link', 'hour', 'minute', 'amount', 'message', 'status')
     search_fields = ('user', 'stream_chat_link', 'message')
     list_per_page = 20
-    
+
 @admin.register (models.Token)
 class AdminToken (admin.ModelAdmin):
     

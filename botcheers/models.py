@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User as UserAuth
 
 class User (models.Model):
@@ -20,14 +22,27 @@ class Donation (models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     user = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='Usuario', help_text='Usuario que ha realizado la donación', null=True, blank=True)
     stream_chat_link = models.URLField (verbose_name='Enlace al chat del stream', help_text='Enlace al chat del stream')
-    hour = models.IntegerField(verbose_name='Hora', help_text='Hora de la donación')
-    minute = models.IntegerField(verbose_name='Minuto', help_text='Minuto de la donación')
+    hour = models.IntegerField(verbose_name='Hora', help_text='Hora de la donación (de 0 a 23)', validators=[MinValueValidator(0), MaxValueValidator(23)])
+    minute = models.IntegerField(verbose_name='Minuto', help_text='Minuto de la donación (de 0 a 59)', validators=[MinValueValidator(0), MaxValueValidator(59)])
     amount = models.IntegerField (verbose_name='Cantidad', help_text='Cantidad de la donación')
     message = models.CharField(max_length=100, verbose_name='Mensaje', help_text='Mensaje de la donación')
     status = models.BooleanField(default=False, verbose_name='Estado', help_text='Indica si la donación ha sido procesada')
     
+    # def validate_time(self, *args, **kwargs):
+    #     # Custom validation
+        
+    #     # Validate hour and minute
+    #     if self.hour < 0 or self.hour > 23:
+    #         raise ValidationError('La hora debe estar entre 0 y 23')
+        
+    #     # Validate minute
+    #     if self.minute < 0 or self.minute > 59:
+    #         raise ValidationError('El minuto debe estar entre 0 y 59')        
+        
+    #     return
+    
     def __str__ (self):
-        return f"{self.user} - {self.amount} bits ({self.user_auth.username})"
+        return f"{self.user} - {self.amount} bits ({self.user.user_auth.username})"
     
     class Meta:
         verbose_name = "Donación"
