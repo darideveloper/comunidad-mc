@@ -1,8 +1,5 @@
 from . import models
-from app import tools
-from django.contrib import admin, messages
-from django.core.exceptions import ValidationError
-
+from django.contrib import admin
 
 @admin.register (models.User)
 class AdminUser (admin.ModelAdmin):

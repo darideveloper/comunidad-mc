@@ -12,8 +12,8 @@ class User (models.Model):
         return self.name
     
     class Meta:
-        verbose_name = "Usuario"
-        verbose_name_plural = "Usuarios"
+        verbose_name = "Bot"
+        verbose_name_plural = "Bots"
 
 class Proxy (models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
