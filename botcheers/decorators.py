@@ -12,10 +12,6 @@ def validate_token (function):
     @wraps(function)
     def wrap (request, *args, **kwargs):
         
-        # NO validate token in debug mode
-        if DEBUG:
-            return function(request, *args, **kwargs)
-        
         # Validate token
         token = request.GET.get ("token")
         token_found = models.Token.objects.filter (value=token)
