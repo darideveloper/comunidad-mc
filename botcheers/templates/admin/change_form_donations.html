@@ -1,0 +1,30 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+  const admin_groups = {{admin_groups|safe}}
+  const users_ids = {{users_ids|safe}}
+
+  // Select bot field
+  if (admin_groups.includes("bot cheers manager")) {
+    const select = document.querySelector("#id_user")
+    const options = document.querySelectorAll("#id_user > option:not(:first-child)")
+    Array.from(options).forEach(option => {
+      if (!users_ids.includes(parseInt(option.value))) {
+        option.classList.add("hide")
+      }
+    })
+  }
+
+</script>
+
+<style>
+  /* Custom styles for disabled inputs */
+  .hide {
+    display: none !important;
+  }
+
+</style>
+{% endblock %}
