@@ -36,7 +36,7 @@ def get_donations(request):
     hour = timezone.localtime(timezone.now()).hour
     
     # Get to do donations of the current hour
-    donations = models.Donation.objects.filter(hour=hour, done=False)
+    donations = models.Donation.objects.filter(hour=hour, done=False, user__is_active=True)
     
     # Format data
     donations_formatted = []
