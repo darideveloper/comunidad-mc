@@ -1,0 +1,34 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+
+<script>
+  
+  // Disable user field
+  const admin_groups = {{admin_groups|safe}}
+  const user_auth_id = {{user_auth_id}}
+  
+  if (admin_groups.includes("bot cheers manager")) {
+
+    // Select user field
+    const select = document.querySelector("#id_user_auth")
+    const options = document.querySelectorAll("#id_user_auth > option:not(:first-child)")
+    const user = Array.from(options).find(option => parseInt(option.value) == user_auth_id)
+    user.selected = true
+
+    // Hide user field
+    const user_field_wrapper = document.querySelector(".field-user_auth")
+    user_field_wrapper.classList.add("hide")
+  }
+
+</script>
+
+<style>
+  .hide {
+    display: none;
+  }
+</style>
+
+{% endblock %}

@@ -27,6 +27,53 @@ class AdminUser (admin.ModelAdmin):
     ordering = ('id', 'name', 'cookies', 'last_update', 'is_active', 'user_auth')
     search_fields = ('name', 'cookies', 'is_active', 'user_auth')
     list_per_page = 20
+    
+    # Template for customize change form
+    change_form_template = 'admin/change_form_cheers_bots.html' 
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        """ auto set current user as user_auth """
+        
+        # get bots ids
+        user_auth = request.user
+        admin_groups = get_admin_group (request.user)
+        
+        # Format data
+        extra_context = {"admin_groups": admin_groups, "user_auth_id": user_auth.id}
+        
+        # Render change view and submit data
+        return super(AdminUser, self).change_view(
+            request, object_id, form_url, extra_context=extra_context,
+        )
+        
+    def add_view(self, request, form_url='', extra_context=None):
+        """ auto set current user as user_auth """
+        
+        # get bots ids
+        user_auth = request.user
+        admin_groups = get_admin_group (request.user)
+        
+        # Format data
+        extra_context = {"admin_groups": admin_groups, "user_auth_id": user_auth.id}
+        
+        # Render change view and submit data
+        return super(AdminUser, self).add_view(
+            request, form_url, extra_context=extra_context,
+        )
+
+    def get_queryset(self, request):
+        
+        # Get admin type
+        user_auth = request.user
+        admin_groups = get_admin_group (request.user)
+
+        if "bot cheers manager" in admin_groups:
+            
+            # Render only donations of the current user
+            return models.User.objects.filter(user_auth=user_auth)
+            
+        # Render all streams
+        return models.User.objects.all()     
 
 @admin.register (models.Donation)
 class AdminDonation (admin.ModelAdmin):
