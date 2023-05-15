@@ -89,10 +89,10 @@ class Donation(models.Model):
         verbose_name='Mensaje',
         help_text='Mensaje de la donación'
     )
-    status = models.BooleanField(
+    done = models.BooleanField(
         default=False,
-        verbose_name='Estado',
-        help_text='Indica si la donación ha sido procesada'
+        verbose_name='Donación realizada',
+        help_text='Indica si la donación ha sido enviada al stream'
     )
 
     def __str__(self):
