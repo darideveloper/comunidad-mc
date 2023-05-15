@@ -34,11 +34,9 @@ def get_donations(request):
     
     # Get current hour with timezone
     hour = timezone.localtime(timezone.now()).hour
-    print (hour)
     
     # Get donations of the current hour
     donations = models.Donation.objects.filter(hour=hour)
-    print (donations)
     
     # Format data
     donations_formatted = []
@@ -52,6 +50,7 @@ def get_donations(request):
             "amount": donation.amount,
             "message": donation.message,
             "status": donation.status,
+            "cookies": donation.user.cookies,
         })
 
     return JsonResponse(donations_formatted, safe=False)
