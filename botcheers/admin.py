@@ -1,6 +1,6 @@
 import django
 from . import models
-from app import tools
+from django import forms
 from django.contrib import admin
 
 def get_admin_group (user_auth:django.contrib.auth.models.User) -> list:
@@ -28,38 +28,20 @@ class AdminUser (admin.ModelAdmin):
     search_fields = ('name', 'cookies', 'is_active', 'user_auth')
     list_per_page = 20
     
-    # Template for customize change form
-    change_form_template = 'admin/change_form_cheers_bots.html' 
-    
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        """ auto set current user as user_auth """
+    def get_form (self, request, object, **kwargs):
+        """ Filter query set of 'user' field """
         
-        # get bots ids
-        user_auth = request.user
+        # Get form
+        form = super(AdminUser, self).get_form(request, object, **kwargs)
+        
+        # Limit users to the regular bot cheers managers
         admin_groups = get_admin_group (request.user)
-        
-        # Format data
-        extra_context = {"admin_groups": admin_groups, "user_auth_id": user_auth.id}
-        
-        # Render change view and submit data
-        return super(AdminUser, self).change_view(
-            request, object_id, form_url, extra_context=extra_context,
-        )
-        
-    def add_view(self, request, form_url='', extra_context=None):
-        """ auto set current user as user_auth """
-        
-        # get bots ids
-        user_auth = request.user
-        admin_groups = get_admin_group (request.user)
-        
-        # Format data
-        extra_context = {"admin_groups": admin_groups, "user_auth_id": user_auth.id}
-        
-        # Render change view and submit data
-        return super(AdminUser, self).add_view(
-            request, form_url, extra_context=extra_context,
-        )
+        if "bot cheers manager regular" in admin_groups:
+            form.base_fields["user_auth"].initial  = request.user.id
+            form.base_fields["user_auth"].disabled = True
+            form.base_fields["user_auth"].widget = forms.HiddenInput()
+            
+        return form
 
     def get_queryset(self, request):
         
@@ -84,42 +66,18 @@ class AdminDonation (admin.ModelAdmin):
     search_fields = ('user', 'stream_chat_link', 'message')
     list_per_page = 20
     
-    # Template for customize change form
-    change_form_template = 'admin/change_form_donations.html' 
-    
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        """ show only user bots in change view """
+    def get_form (self, request, object, **kwargs):
+        """ Filter query set of 'user' field """
         
-        # get bots ids
-        user_auth = request.user
+        # Get form
+        form = super(AdminDonation, self).get_form(request, object, **kwargs)
+        
+        # Limit users to the regular bot cheers managers
         admin_groups = get_admin_group (request.user)
-        users = models.User.objects.filter(user_auth=user_auth)
-        users_ids = [user.id for user in users]
-        
-        # Format data
-        extra_context = {"admin_groups": admin_groups, "users_ids": users_ids}
-        
-        # Render change view and submit data
-        return super(AdminDonation, self).change_view(
-            request, object_id, form_url, extra_context=extra_context,
-        )
-        
-    def add_view(self, request, form_url='', extra_context=None):
-        """ render change form template for deactive fields for platinum admins """
-        
-        # get bots ids
-        user_auth = request.user
-        admin_groups = get_admin_group (request.user)
-        users = models.User.objects.filter(user_auth=user_auth)
-        users_ids = [user.id for user in users]
-        
-        # Format data
-        extra_context = {"admin_groups": admin_groups, "users_ids": users_ids}
-        
-        # Render change view and submit data
-        return super(AdminDonation, self).add_view(
-            request, form_url, extra_context=extra_context,
-        )
+        if "bot cheers manager regular" in admin_groups:
+            form.base_fields["user"].queryset = models.User.objects.filter(user_auth=request.user)
+            
+        return form
 
     def get_queryset(self, request):
         
