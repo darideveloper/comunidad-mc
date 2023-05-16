@@ -205,7 +205,7 @@ class TestAdmin (TestCase):
         self.user_auth_username_pro = "sample auth pro"
         self.user_auth_password = "sample pass"
         
-        self.user_auth = UserAuth.objects.create_user (
+        self.user_auth_regular = UserAuth.objects.create_user (
             email=self.user_auth_email,
             username=self.user_auth_username,
             password=self.user_auth_password,
@@ -241,17 +241,17 @@ class TestAdmin (TestCase):
             self.group_bot_cheers_manager_pro.permissions.add (permision)
         
         # Add groups to users
-        self.user_auth.groups.add (self.group_bot_cheers_manager)
+        self.user_auth_regular.groups.add (self.group_bot_cheers_manager)
         self.user_auth_pro.groups.add (self.group_bot_cheers_manager_pro)       
         
         # Create cheerbot instances
         
         # Create cheerbot users       
-        self.user = models.User.objects.create (
+        self.user_regular = models.User.objects.create (
             name = "test user",
             cookies = [{"test": "test"}],
             is_active = True,
-            user_auth = self.user_auth,
+            user_auth = self.user_auth_regular,
         )
         
         self.user_pro = models.User.objects.create (
@@ -268,7 +268,7 @@ class TestAdmin (TestCase):
         self.donation_amount = 10
         
         self.donation_regular = models.Donation.objects.create (
-            user = self.user,
+            user = self.user_regular,
             stream_chat_link = self.donation_stream_chat_link,
             hour = self.donation_hour,
             minute = self.donation_minute,
