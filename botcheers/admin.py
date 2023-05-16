@@ -49,7 +49,7 @@ class AdminUser (admin.ModelAdmin):
         user_auth = request.user
         admin_groups = get_admin_group (request.user)
 
-        if "bot cheers manager" in admin_groups:
+        if "bot cheers manager regular" in admin_groups:
             
             # Render only donations of the current user
             return models.User.objects.filter(user_auth=user_auth)
@@ -85,7 +85,7 @@ class AdminDonation (admin.ModelAdmin):
         user_auth = request.user
         admin_groups = get_admin_group (request.user)
 
-        if "bot cheers manager" in admin_groups:
+        if "bot cheers manager regular" in admin_groups:
             
             # Get all users of the current admin
             users = models.User.objects.filter(user_auth=user_auth)
