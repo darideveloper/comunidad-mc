@@ -193,9 +193,9 @@ class TestAdmin (TestCase):
         # Test endpoints
         self.endpoint_admin = "/admin"
         self.endpoint_admin_login = f"{self.endpoint_admin}/login/"
-        self.endpoint_app = f"{self.endpoint_admin}/botcheers/"
-        self.endpoint_admin_donation_list = f"{self.endpoint_app}donation/"
-        self.endpoint_admin_donation_add = f"{self.endpoint_app}donation/add/"
+        self.endpoint_app = f"{self.endpoint_admin}/botcheers"
+        self.endpoint_admin_donation_list = f"{self.endpoint_app}/donation/"
+        self.endpoint_admin_donation_add = f"{self.endpoint_app}/donation/add/"
     
         # Create admin instances
                 
@@ -221,7 +221,7 @@ class TestAdmin (TestCase):
     
         # Create admin groups
         self.group_bot_cheers_manager = Group.objects.create (
-            name = "bot cheers manager"
+            name = "bot cheers manager regular"
         )
         
         self.group_bot_cheers_manager_pro = Group.objects.create (
@@ -351,10 +351,10 @@ class TestAdmin (TestCase):
         # Validate response
         response = self.client.get (self.endpoint_admin_donation_list)
         self.assertEqual(response.status_code, 200)
-                
-        # Validate rows of response: it should show only regular user donations
-        self.assertContains(response, self.donation_regular.message)
-        self.assertNotContains(response, self.donation_pro.message)
+
+        # Validate number of rows of response: it should show only current amdin donations
+        queryset = response.context["cl"].queryset
+        self.assertEqual(queryset.count(), 1)
         
     def test_donation_list_pro (self):
         """ Tets donation list page to pro user
@@ -367,9 +367,9 @@ class TestAdmin (TestCase):
         response = self.client.get (self.endpoint_admin_donation_list)
         self.assertEqual(response.status_code, 200)
         
-        # Validate rows of response: it should show all user donations
-        self.assertContains(response, self.donation_regular.message)
-        self.assertContains(response, self.donation_pro.message)
+        # Validate number of rows of response: it should show all user donations
+        queryset = response.context["cl"].queryset
+        self.assertEqual(queryset.count(), 2)
     
     def test_donation_add_regular (self):
         """ Tets add donation page to regular user
@@ -382,9 +382,10 @@ class TestAdmin (TestCase):
         response = self.client.get (self.endpoint_admin_donation_add)
         self.assertEqual(response.status_code, 200)
         
-        # Validate rows of response: user options should be only regular user
-        self.assertContains(response, self.user.name)
-        self.assertNotContains(response, self.user_pro.name)
+        # Validate rows of response: user options should be all users
+        form = response.context['adminform'].form
+        queryset = form.fields["user"].queryset
+        self.assertEqual(queryset.count(), 1)
         
     def test_donation_add_pro (self):
         """ Tets adc donation page to pro user
@@ -398,5 +399,6 @@ class TestAdmin (TestCase):
         self.assertEqual(response.status_code, 200)
         
         # Validate rows of response: user options should be all users
-        self.assertContains(response, self.user.name)
-        self.assertContains(response, self.user_pro.name)
+        form = response.context['adminform'].form
+        queryset = form.fields["user"].queryset
+        self.assertEqual(queryset.count(), 2)
