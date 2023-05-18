@@ -53,3 +53,22 @@ def get_donations(request):
         })
 
     return JsonResponse(donations_formatted, safe=False)
+
+@decorators.validate_token
+def disable_user (request, name:str):
+    """ Set is_active status to False, to specific user
+
+    Args:
+        name (str): name of the user to disable
+    """
+    
+    user = models.User.objects.filter (name=name)
+    if user:
+        user = user[0]
+        user.is_active = False
+        user.save()
+        
+        return HttpResponse("User disabled")
+    
+    else:
+        return HttpResponse("User not found")
