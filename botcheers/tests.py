@@ -105,7 +105,8 @@ class TestViews (TestCase):
         self.token_value = "test_token_value"
 
         self.endpoint_get_dinations = f"/botcheers/donations/"
-        self.endpoint_disable_user = f"/botcheers/disable-user" # add name
+        self.endpoint_disable_user = f"/botcheers/disable-user" # add username
+        self.endpoint_update_donation = f"/botcheers/update-donation" # add donation id
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
         self.donation_hour = timezone.localtime(timezone.now()).hour
@@ -226,6 +227,39 @@ class TestViews (TestCase):
         # Validate models
         user = models.User.objects.filter(name=username)
         self.assertEqual(user.count(), 0)
+    
+    def test_update_donation (self):
+        """ Test to set to done specific donation (by id), with endpoint
+        """
+        
+        donation_id = 1
+
+        # Validate response
+        response = self.client.get(
+            f"{self.endpoint_update_donation}/{donation_id}/?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"Donation updated")
+
+        # Validate models
+        donation = models.Donation.objects.get(id=donation_id)
+        self.assertEqual(donation.done, True)
+
+    def test_update_donation_error (self):
+        """ Test to catch error while set to done specific donation (by id), with endpoint
+        """
+        
+        donation_id = 999
+        
+        # Validate response
+        response = self.client.get(
+            f"{self.endpoint_update_donation}/{donation_id}/?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"Donation not found")
+
+        # Validate models
+        donation = models.Donation.objects.filter(id=donation_id)
+        self.assertEqual(donation.count(), 0)
+    
 
 
 class TestAdmin (TestCase):

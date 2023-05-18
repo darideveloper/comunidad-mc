@@ -72,3 +72,23 @@ def disable_user (request, name:str):
     
     else:
         return HttpResponse("User not found")
+    
+
+@decorators.validate_token
+def upodate_donation (request, id:int):
+    """ Set done status to True, to specific donation
+
+    Args:
+        id (int): donation id
+    """
+    
+    donation = models.Donation.objects.filter (id=id)
+    if donation:
+        donation = donation[0]
+        donation.done = True
+        donation.save()
+        
+        return HttpResponse("Donation updated")
+    
+    else:
+        return HttpResponse("Donation not found")
