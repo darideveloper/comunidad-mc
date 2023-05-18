@@ -232,16 +232,24 @@ class TestViews (TestCase):
         """ Test to set to done specific donation (by id), with endpoint
         """
         
-        donation_id = 1
+        # Create donation
+        donation = models.Donation.objects.create(
+            user=self.user,
+            stream_chat_link=self.donation_stream_chat_link,
+            hour=self.donation_hour,
+            minute=self.donation_minute,
+            amount=self.donation_amount,
+            message=self.donation_message,
+        )
 
         # Validate response
         response = self.client.get(
-            f"{self.endpoint_update_donation}/{donation_id}/?token={self.token_value}")
+            f"{self.endpoint_update_donation}/{donation.id}/?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b"Donation updated")
 
         # Validate models
-        donation = models.Donation.objects.get(id=donation_id)
+        donation = models.Donation.objects.filter(id=donation.id)[0]
         self.assertEqual(donation.done, True)
 
     def test_update_donation_error (self):
@@ -250,7 +258,7 @@ class TestViews (TestCase):
         
         donation_id = 999
         
-        # Validate response
+        # Validate response without donation in models
         response = self.client.get(
             f"{self.endpoint_update_donation}/{donation_id}/?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
