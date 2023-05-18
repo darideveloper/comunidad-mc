@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth.models import User as UserAuth, Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django import forms
 
 class TestModels (TestCase):
     
@@ -196,6 +197,8 @@ class TestAdmin (TestCase):
         self.endpoint_app = f"{self.endpoint_admin}/botcheers"
         self.endpoint_admin_donation_list = f"{self.endpoint_app}/donation/"
         self.endpoint_admin_donation_add = f"{self.endpoint_app}/donation/add/"
+        self.endpoint_admin_user_list = f"{self.endpoint_app}/user/"
+        self.endpoint_admin_user_add = f"{self.endpoint_app}/user/add/"
     
         # Create admin instances
                 
@@ -388,7 +391,7 @@ class TestAdmin (TestCase):
         self.assertEqual(queryset.count(), 1)
         
     def test_donation_add_pro (self):
-        """ Tets adc donation page to pro user
+        """ Tets add donation page to pro user
         """
         
         # Login
@@ -402,3 +405,71 @@ class TestAdmin (TestCase):
         form = response.context['adminform'].form
         queryset = form.fields["user"].queryset
         self.assertEqual(queryset.count(), 2)
+        
+    def test_user_list_regular (self):
+        """ Tets user list page to regular user
+        """
+        
+        # Login
+        self.login (self.user_auth_username, self.user_auth_password)
+        
+        # Validate response
+        response = self.client.get (self.endpoint_admin_user_list)
+        self.assertEqual(response.status_code, 200)
+
+        # Validate number of rows of response: it should show only current amdin donations
+        queryset = response.context["cl"].queryset
+        self.assertEqual(queryset.count(), 1)
+        
+    def test_user_list_pro (self):
+        """ Tets user list page to pro user
+        """
+        
+        # Login
+        self.login (self.user_auth_username_pro, self.user_auth_password)
+        
+        # Validate response
+        response = self.client.get (self.endpoint_admin_user_list)
+        self.assertEqual(response.status_code, 200)
+        
+        # Validate number of rows of response: it should show all user donations
+        queryset = response.context["cl"].queryset
+        self.assertEqual(queryset.count(), 2)
+        
+    def test_user_add_regular (self):
+        """ Tets add user page to regular user
+        """
+        
+        # Login
+        self.login (self.user_auth_username, self.user_auth_password)
+        
+        # Validate response
+        response = self.client.get (self.endpoint_admin_user_add)
+        self.assertEqual(response.status_code, 200)
+        
+        # Validate rows of response: user options should be all users
+        form = response.context['adminform'].form
+        user_auth = form.fields["user_auth"]
+        user_auth_widget = user_auth.widget
+        self.assertIsInstance(user_auth_widget, forms.HiddenInput)
+        self.assertEqual(user_auth.initial, self.user_auth_regular.id)
+        self.assertEqual(user_auth.queryset.count(), 2)
+        
+    def test_user_add_pro (self):
+        """ Tets add user page to pro user
+        """
+        
+        # Login
+        self.login (self.user_auth_username_pro, self.user_auth_password)
+        
+        # Validate response
+        response = self.client.get (self.endpoint_admin_user_add)
+        self.assertEqual(response.status_code, 200)
+        
+        # Validate rows of response: user options should be all users
+        form = response.context['adminform'].form
+        user_auth = form.fields["user_auth"]
+        user_auth_widget = user_auth.widget
+        self.assertNotIsInstance(user_auth_widget, forms.HiddenInput)
+        self.assertNotEqual(user_auth.initial, self.user_auth_regular.id)
+        self.assertEqual(user_auth.queryset.count(), 2)
