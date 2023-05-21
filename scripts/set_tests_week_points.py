@@ -42,7 +42,7 @@ for user_name in users:
         stream=stream, 
         datetime=timezone.now() - timedelta(hours=2), 
         info=info_point, 
-        amount=20
+        amount=POINTS_NUM
     )
     general_point.save()
     

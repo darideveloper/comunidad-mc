@@ -22,8 +22,7 @@ twitch_api = TwitchApi ()
 
 # Get streamers
 streamers_names = [
-    "davi_gamerplay",
-    "pipevillanu3va"
+    "darideveloper2",
 ]
 streamers = models.User.objects.filter(user_name__in=streamers_names)
 
@@ -44,7 +43,7 @@ for streamer in streamers:
             continue
         
         # add 10 points today
-        for _ in range (1):
+        for _ in range (4):
             twitch_api.add_cero_point (user, stream)
             twitch_api.add_point(user, stream, force=True)
         
