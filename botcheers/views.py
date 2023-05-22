@@ -42,6 +42,7 @@ def get_donations(request):
     donations_formatted = []
     for donation in donations: 
         donations_formatted.append ({
+            "id": donation.id,
             "user": donation.user.name,
             "admin": donation.user.user_auth.username,
             "stream_chat_link": donation.stream_chat_link,

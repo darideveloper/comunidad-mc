@@ -146,7 +146,7 @@ class TestViews (TestCase):
         """
 
         # Create donation in the current time
-        models.Donation.objects.create(
+        donation = models.Donation.objects.create(
             user=self.user,
             stream_chat_link=self.donation_stream_chat_link,
             time=self.donation_time,
@@ -160,6 +160,7 @@ class TestViews (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
+                "id": donation.id,
                 "user": self.user.name,
                 "admin": self.user_auth.username,
                 "stream_chat_link": self.donation_stream_chat_link,
