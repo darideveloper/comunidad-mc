@@ -16,8 +16,7 @@ class TestModels (TestCase):
         self.user_is_active = True
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
-        self.donation_hour = 1
-        self.donation_minute = 1
+        self.donation_time = timezone.localtime(timezone.now())
         self.donation_amount = 10
         self.donation_message = "hello"
 
@@ -64,8 +63,7 @@ class TestModels (TestCase):
         donation = models.Donation.objects.create(
             user=user,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour,
-            minute=self.donation_minute,
+            time=self.donation_time,
             amount=self.donation_amount,
             message=self.donation_message,
         )
@@ -73,8 +71,7 @@ class TestModels (TestCase):
         self.assertEqual(donation.user, user)
         self.assertEqual(donation.stream_chat_link,
                          self.donation_stream_chat_link)
-        self.assertEqual(donation.hour, self.donation_hour)
-        self.assertEqual(donation.minute, self.donation_minute)
+        self.assertEqual(donation.time, self.donation_time)
         self.assertEqual(donation.amount, self.donation_amount)
         self.assertEqual(donation.message, self.donation_message)
         self.assertEqual(donation.__str__(),
@@ -109,8 +106,7 @@ class TestViews (TestCase):
         self.endpoint_update_donation = f"/botcheers/update-donation" # add donation id
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
-        self.donation_hour = timezone.localtime(timezone.now()).hour
-        self.donation_minute = 1
+        self.donation_time = timezone.localtime(timezone.now())
         self.donation_amount = 10
         self.donation_message = "hello"
 
@@ -149,12 +145,11 @@ class TestViews (TestCase):
         """ Test donations who return data
         """
 
-        # Create donation in the current hour
+        # Create donation in the current time
         models.Donation.objects.create(
             user=self.user,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour,
-            minute=self.donation_minute,
+            time=self.donation_time,
             amount=self.donation_amount,
             message=self.donation_message,
         )
@@ -168,8 +163,7 @@ class TestViews (TestCase):
                 "user": self.user.name,
                 "admin": self.user_auth.username,
                 "stream_chat_link": self.donation_stream_chat_link,
-                "hour": self.donation_hour,
-                "minute": self.donation_minute,
+                "time": self.donation_time.strftime("%H:%M:%S.%f")[:12],
                 "amount": self.donation_amount,
                 "message": self.donation_message,
                 "cookies": [{"test": "test"}]
@@ -184,8 +178,7 @@ class TestViews (TestCase):
         models.Donation.objects.create(
             user=self.user,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour + 1,
-            minute=self.donation_minute,
+            time=self.donation_time + timezone.timedelta(hours=1),
             amount=self.donation_amount,
             message=self.donation_message,
         )
@@ -236,8 +229,7 @@ class TestViews (TestCase):
         donation = models.Donation.objects.create(
             user=self.user,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour,
-            minute=self.donation_minute,
+            time=self.donation_time,
             amount=self.donation_amount,
             message=self.donation_message,
         )
@@ -352,15 +344,13 @@ class TestAdmin (TestCase):
 
         # Create cheerbot donations
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
-        self.donation_hour = timezone.localtime(timezone.now()).hour
-        self.donation_minute = 1
+        self.donation_time = timezone.localtime(timezone.now())
         self.donation_amount = 10
 
         self.donation_regular = models.Donation.objects.create(
             user=self.user_regular,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour,
-            minute=self.donation_minute,
+            time=self.donation_time,
             amount=self.donation_amount,
             message="donation regular user",
         )
@@ -368,8 +358,7 @@ class TestAdmin (TestCase):
         self.donation_pro = models.Donation.objects.create(
             user=self.user_pro,
             stream_chat_link=self.donation_stream_chat_link,
-            hour=self.donation_hour + 1,
-            minute=self.donation_minute,
+            time=self.donation_time + timezone.timedelta(hours=1),
             amount=self.donation_amount,
             message="donation pro user",
         )

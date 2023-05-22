@@ -1,7 +1,7 @@
 from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User as UserAuth
+from django.utils import timezone
 
 
 class User (models.Model):
@@ -65,20 +65,15 @@ class Donation(models.Model):
         validators=[
             RegexValidator(
                 regex=r'https://www.twitch.tv/popout/.*/chat\?popout=',
-                message='El enlace debe ser un un chat de twitch. Ejemplo: https://www.twitch.tv/minecuak/chat?popout=',
+                message='El enlace debe ser un un chat de twitch. Ejemplo: https://www.twitch.tv/popout/usuario/chat?popout=',
                 code='invalid_characters'
             )
         ]
     )
-    hour = models.IntegerField(
+    time = models.TimeField (
         verbose_name='Hora',
-        help_text='Hora de la donación (de 0 a 23)',
-        validators=[MinValueValidator(0), MaxValueValidator(23)]
-    )
-    minute = models.IntegerField(
-        verbose_name='Minuto',
-        help_text='Minuto de la donación (de 0 a 59)',
-        validators=[MinValueValidator(0), MaxValueValidator(59)]
+        help_text='Hora de la donación',
+        default="00:00:00"
     )
     amount = models.IntegerField(
         verbose_name='Cantidad',

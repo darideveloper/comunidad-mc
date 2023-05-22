@@ -60,9 +60,9 @@ class AdminUser (admin.ModelAdmin):
 @admin.register (models.Donation)
 class AdminDonation (admin.ModelAdmin):
     
-    list_display = ('id', 'user',  'stream_chat_link', 'hour', 'minute', 'amount', 'message', 'done')
+    list_display = ('id', 'user',  'stream_chat_link', 'time', 'amount', 'message', 'done')
     list_filter = ('done', 'user', 'user__user_auth')
-    ordering = ('-id', 'user', 'stream_chat_link', 'hour', 'minute', 'amount', 'message', 'done')
+    ordering = ('-id', 'user', 'stream_chat_link', 'time', 'amount', 'message', 'done')
     search_fields = ('user', 'stream_chat_link', 'message')
     list_per_page = 20
     
