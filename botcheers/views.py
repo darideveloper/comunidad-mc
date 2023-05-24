@@ -35,9 +35,14 @@ def get_donations(request):
     # Get current hour with timezone
     hour = timezone.localtime(timezone.now()).hour
     
-    # Get to do donations of the current time
-    donations = models.Donation.objects.filter(time__hour=hour, done=False, user__is_active=True).order_by('time')
-    
+    # Get today donations of the current hour
+    donations = models.Donation.objects.filter(
+        datetime__time__hour=hour, 
+        done=False, 
+        user__is_active=True,
+        datetime__date=timezone.now().date()
+    )
+                                               
     # Format data
     donations_formatted = []
     for donation in donations: 
@@ -46,7 +51,7 @@ def get_donations(request):
             "user": donation.user.name,
             "admin": donation.user.user_auth.username,
             "stream_chat_link": donation.stream_chat_link,
-            "time": donation.time,
+            "time": timezone.localtime(donation.datetime).time(),
             "amount": donation.amount,
             "message": donation.message,
             "cookies": donation.user.cookies,
