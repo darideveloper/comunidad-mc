@@ -70,10 +70,10 @@ class Donation(models.Model):
             )
         ]
     )
-    time = models.TimeField (
-        verbose_name='Hora',
-        help_text='Hora de la donación',
-        default="00:00:00"
+    datetime = models.DateTimeField(
+        verbose_name='Fecha y hora',
+        help_text='Fecha y hora de la donación',
+        default=timezone.now
     )
     amount = models.IntegerField(
         verbose_name='Cantidad',
