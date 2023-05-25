@@ -63,7 +63,7 @@ class AdminDonation (admin.ModelAdmin):
     list_display = ('id', 'user',  'stream_chat_link', 'datetime', 'amount', 'message', 'done')
     list_filter = ('done', 'user', 'user__user_auth')
     ordering = ('-id', 'user', 'stream_chat_link', 'datetime', 'amount', 'message', 'done')
-    search_fields = ('user', 'stream_chat_link', 'message')
+    search_fields = ('user__name', 'stream_chat_link', 'message')
     list_per_page = 20
     
     def get_form (self, request, object, **kwargs):
