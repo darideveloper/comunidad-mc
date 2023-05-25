@@ -25,7 +25,7 @@ class AdminUser (admin.ModelAdmin):
     list_display = ('id', 'name', 'last_update', 'is_active', 'user_auth')
     list_filter = ('is_active', 'last_update', 'user_auth__username')
     ordering = ('id', 'name', 'cookies', 'last_update', 'is_active', 'user_auth')
-    search_fields = ('name', 'cookies', 'is_active', 'user_auth')
+    search_fields = ('name', 'cookies', 'is_active', 'user_auth__username')
     list_per_page = 20
     
     def get_form (self, request, object, **kwargs):
