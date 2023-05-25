@@ -40,7 +40,7 @@ def get_donations(request):
         datetime__time__hour=hour, 
         done=False, 
         user__is_active=True,
-        datetime__date=timezone.now().date()
+        datetime__date= timezone.localtime(timezone.now()).date()
     )
                                                
     # Format data
