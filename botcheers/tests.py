@@ -91,6 +91,18 @@ class TestModels (TestCase):
         self.assertEqual(token.value, self.token_value)
         self.assertEqual(token.is_active, True)
 
+    def test_proxy (self):
+        """ Create and test proxy
+        """
+        
+        proxy = models.Proxy.objects.create(
+            host="test_host",
+            port=8080,
+        )
+        
+        self.assertEqual (proxy.host, "test_host")
+        self.assertEqual (proxy.port, 8080)
+        self.assertEqual (proxy.__str__(), "test_host:8080")
 
 class TestViews (TestCase):
 
@@ -130,6 +142,11 @@ class TestViews (TestCase):
             name="test_token",
             value="test_token_value",
             is_active=True,
+        )
+        
+        self.proxy = models.Proxy.objects.create(
+            host="test_host",
+            port=8080,
         )
 
     def test_get_dinations_invalid_token(self):

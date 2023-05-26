@@ -123,3 +123,15 @@ class Token(models.Model):
     class Meta:
         verbose_name = "Token"
         verbose_name_plural = "Tokens"
+        
+class Proxy(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='ID')
+    host = models.CharField(max_length=50, verbose_name='Host', help_text='Host del proxy')
+    port = models.IntegerField(verbose_name='Puerto', help_text='Puerto del proxy')
+    
+    def __str__(self):
+        return f"{self.host}:{self.port}"
+    
+    class Meta:
+        verbose_name = "Proxy"
+        verbose_name_plural = "Proxies"

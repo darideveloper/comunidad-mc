@@ -105,4 +105,12 @@ class AdminToken (admin.ModelAdmin):
     search_fields = ('name', 'value',)
     list_per_page = 20
     
-   
+@admin.register (models.Proxy)
+class AdminProxy (admin.ModelAdmin):
+    
+    list_display = ('id', 'host', 'port')
+    ordering = ('id', 'host', 'port')
+    search_fields = ('host', 'port')
+    list_per_page = 20
+
+    
