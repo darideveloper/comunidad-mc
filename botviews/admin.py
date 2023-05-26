@@ -14,18 +14,9 @@ class AdminUser (admin.ModelAdmin):
 @admin.register (models.Proxy)
 class AdminProxy (admin.ModelAdmin):
     
-    list_display = ('id', 'host', 'port', 'user', 'password', 'location')
-    list_filter = ('location__name', 'host')
-    ordering = ('id', 'host', 'port', 'user', 'password', 'location')
-    search_fields = ('host', 'port', 'user', 'password', 'location__name')
-    list_per_page = 20
-
-@admin.register (models.Location)
-class AdminLocations (admin.ModelAdmin):
-    
-    list_display = ('id', 'name')
-    ordering = ('id', 'name')
-    search_fields = ('name',)
+    list_display = ('id', 'host', 'port')
+    ordering = ('id', 'host', 'port')
+    search_fields = ('host', 'port')
     list_per_page = 20
     
 @admin.register (models.Setting)
