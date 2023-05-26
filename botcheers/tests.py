@@ -153,8 +153,7 @@ class TestViews (TestCase):
         """ Test donations using an invalid token
         """
 
-        response = self.client.get(
-            f"{self.endpoint_get_dinations}?token=invalid_token")
+        response = self.client.get(f"{self.endpoint_get_dinations}?token=invalid_token")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.content, b"Invalid token")
 
@@ -172,21 +171,26 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(
-            f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [
-            {
-                "id": donation.id,
-                "user": self.user.name,
-                "admin": self.user_auth.username,
-                "stream_chat_link": self.donation_stream_chat_link,
-                "time": self.donation_datetime.strftime("%H:%M:%S.%f")[:12],
-                "amount": self.donation_amount,
-                "message": self.donation_message,
-                "cookies": [{"test": "test"}]
+        self.assertEqual(response.json(), {
+             "donations": [
+                {
+                    "id": donation.id,
+                    "user": self.user.name,
+                    "admin": self.user_auth.username,
+                    "stream_chat_link": self.donation_stream_chat_link,
+                    "time": self.donation_datetime.strftime("%H:%M:%S.%f")[:12],
+                    "amount": self.donation_amount,
+                    "message": self.donation_message,
+                    "cookies": [{"test": "test"}]
+                }
+            ] ,
+            "proxy": {
+                "host": self.proxy.host,
+                "port": self.proxy.port,
             }
-        ])
+        })
 
     def test_get_donations_wrong_time(self):
         """ Test donations who return blank data, because the donations have other time
@@ -202,10 +206,15 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(
-            f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [])
+        self.assertEqual(response.json(), {
+             "donations": [] ,
+            "proxy": {
+                "host": self.proxy.host,
+                "port": self.proxy.port,
+            }
+        })
         
     def test_get_donations_wrong_date(self):
         """ Test donations who return blank data, because the donations have other date
@@ -221,10 +230,15 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(
-            f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [])
+        self.assertEqual(response.json(), {
+             "donations": [] ,
+            "proxy": {
+                "host": self.proxy.host,
+                "port": self.proxy.port,
+            }
+        })
 
     def test_disable_user(self):
         """ Test to disable specific user (by name), with endpoint

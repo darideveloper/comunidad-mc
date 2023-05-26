@@ -32,6 +32,13 @@ def get_json_model(model: django.db.models, get_objects=True) -> str:
 def get_donations(request):
     """ Returns donations to the current streams in json format """
     
+    # Get random proxy
+    proxy = models.Proxy.objects.order_by('?').first()
+    proxy_formatted = {
+        "host": proxy.host,
+        "port": proxy.port,   
+    }
+    
     # Get current hour with timezone
     hour = timezone.localtime(timezone.now()).hour
     
@@ -56,8 +63,13 @@ def get_donations(request):
             "message": donation.message,
             "cookies": donation.user.cookies,
         })
+        
+    data = {
+        "donations": donations_formatted,
+        "proxy": proxy_formatted,
+    }
 
-    return JsonResponse(donations_formatted, safe=False)
+    return JsonResponse(data, safe=False)
 
 @decorators.validate_token
 def disable_user (request, name:str):
