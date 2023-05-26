@@ -12,9 +12,8 @@ sys.path.append(parent_folder)
 import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
-from botviews import models
-
-LOCATION = 'usa'
+from botviews import models as views_models
+from botcheers import models as cheers_models
 
 # paths
 current_folder = os.path.dirname(__file__)
@@ -23,9 +22,11 @@ proxies_file = os.path.join(current_folder, 'proxies.txt')
 # read proxies
 with open(proxies_file, 'r') as file:
     proxies = file.readlines()
-    
-# Get location instance
-location = models.Location.objects.get(name=LOCATION)
+
+# Delete old proxies
+views_models.Proxy.objects.all().delete()
+cheers_models.Proxy.objects.all().delete()
+print ("Old proxies deleted\n")
 
 # Save each proxy in database
 for proxy in proxies:
@@ -34,13 +35,16 @@ for proxy in proxies:
     if not proxy:
         continue
      
-    host, port, user, password = proxy.split(':')
-    models.Proxy.objects.create(
+    host, port = proxy.split(':')
+    
+    views_models.Proxy.objects.create(
         host=host,
         port=port,
-        user=user,
-        password=password,
-        location=location
+    )
+    
+    cheers_models.Proxy.objects.create(
+        host=host,
+        port=port,
     )
     
     print (f"{proxy} saved")
