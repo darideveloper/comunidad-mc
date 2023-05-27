@@ -19,6 +19,8 @@ class Proxy (models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     host = models.CharField(max_length=50, verbose_name='Host', help_text='Host del proxy')
     port = models.IntegerField(verbose_name='Puerto', help_text='Puerto del proxy')
+    user = models.CharField(max_length=50, verbose_name='Usuario', help_text='Usuario del proxy', default='')
+    password = models.CharField(max_length=50, verbose_name='Contraseña', help_text='Contraseña del proxy', default='')
     
     def __str__(self):
         return f"{self.host}:{self.port}"
