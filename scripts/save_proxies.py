@@ -35,11 +35,13 @@ for proxy in proxies:
     if not proxy:
         continue
      
-    host, port = proxy.split(':')
+    host, port, user, password = proxy.split(':')
     
     views_models.Proxy.objects.create(
         host=host,
         port=port,
+        user=user,
+        password=password,
     )
     
     cheers_models.Proxy.objects.create(
