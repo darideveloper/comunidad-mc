@@ -79,8 +79,7 @@ class Stream (models.Model):
     is_vip = models.BooleanField(name='is_vip', verbose_name="vip", help_text="indica si el stream es vip (único en su hora)", default=False)
     
     def __str__(self):
-        formated_date = str(timezone.localtime(self.datetime))[0:-12] + "h"
-        return f"{formated_date} - {self.user.user_name}"
+        return f"{self.id}"
     
     class Meta:
         verbose_name = "Stream"
@@ -95,7 +94,7 @@ class Comment (models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, name='status', verbose_name="estado", help_text="estado del check", null=False, blank=False, default=1)
         
     def __str__(self):
-        return f"{self.user}: {self.comment} - {self.stream.user.user_name}"
+        return f"{self.user}: {self.comment} - stream: {self.stream}"
     
     class Meta:
         verbose_name = "Comentario"
@@ -109,7 +108,7 @@ class WhatchCheck (models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, name='status', verbose_name="estado", help_text="estado del check", null=False, blank=False, default=1)
     
     def __str__(self):
-        return f"{self.user}: {self.datetime} - {self.stream.user.user_name}"
+        return f"{self.user}: {self.datetime} - stream: {self.stream}"
     
     class Meta:
         verbose_name = "Check"
@@ -146,11 +145,7 @@ class GeneralPoint (models.Model):
     info = models.ForeignKey('InfoPoint', on_delete=models.CASCADE, name='info', verbose_name="información", help_text="información del punto", null=False, blank=False, default=1)
     
     def __str__(self):
-        stream_user = ""
-        if self.stream:
-            stream_user = f"- {self.stream.user.user_name}"
-        time_user = timezone.localtime(self.datetime, pytz.timezone(timezone.get_current_timezone_name()))
-        return f"{self.user} ({self.amount}): {time_user} {stream_user}"
+        return f"{self.user} ({self.amount}): {self.datetime} - stream: {self.stream}"
     
     class Meta:
         verbose_name = "Punto general"
@@ -202,7 +197,7 @@ class PointsHistory (models.Model):
     week_points_num = models.IntegerField(name='week_points_num', verbose_name="puntos semana", help_text="puntos semanales obtenidos a lo largo de la semana", null=False, blank=False, default=0)
     
     def __str__(self):
-        return f"{self.user} (general_points_num: {self.general_points_num}, general_points_week_num: {self.general_points_week_num}, week_points_num: {self.week_points_num})"
+        return f"{self.user}"
     
     class Meta:
         verbose_name = "Historial de puntos generales y semanales"
