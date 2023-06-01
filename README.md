@@ -62,58 +62,58 @@ Project type: **client's project**
 
 # Details
 
-The project include a dashboard where admins can manage the users, schedule streams, comments, etc. \r
-\r
-In order to create a new user, you should login with twitch, after that, the app will request you more info, like your phone number or country. \r
-\r
-Inside the app, in the page \\\"support\\\" you can see the live streams. If you watch streams and comments, you'll get points and a highest rank. With your points and rank, you can schedule (in the \\\"schedule\\\") your streams to be watched by the other users.\r
-\r
-In the \\\"points\\\" page, the users can see their own points history. \r
-\r
-In the \\\"ranking\\\" page, will be display best members of the las week. \r
-\r
-In the \\\"profile\\\" page, user can manage their own data.\r
-\r
-Finally, in the \\\"wallet\\\" page, users can withdraw their bits (as a reward for achieving the first places in the ranking).\r
-\r
+The project include a dashboard where admins can manage the users, schedule streams, comments, etc. 
+
+In order to create a new user, you should login with twitch, after that, the app will request you more info, like your phone number or country. 
+
+Inside the app, in the page "support" you can see the live streams. If you watch streams and comments, you'll get points and a highest rank. With your points and rank, you can schedule (in the "schedule") your streams to be watched by the other users.
+
+In the "points" page, the users can see their own points history. 
+
+In the "ranking" page, will be display best members of the las week. 
+
+In the "profile" page, user can manage their own data.
+
+Finally, in the "wallet" page, users can withdraw their bits (as a reward for achieving the first places in the ranking).
+
 The app includes too a referral system.
 
 # Roadmap
 
-- [x] General\r
-\t- [x] Header\r
-\t- [x] Footer\r
-\t- [x] Generate referral link\r
-\t- [x] Points card component\r
-\t- [x] Points system\r
-\t\t- [x] Read and save comments in stream\r
-\t\t- [x] Detect and save user watch time in stream\r
-- [x] Login\r
-\t- [x] Login with twitch\r
-\t- [x] Collect extra data\r
-\t- [x] User activation by WhatsApp\r
-- [x] Support\r
-\t- [x] Points card\r
-\t- [x] Current streams\r
-\t- [x] Referral links\r
-- [x] Points\r
-\t- [x] Points card\r
-\t- [x] History of points\r
-- [x] Schedule\r
-\t- [x] User streams\r
-\t- [x] Cancel user streams\r
-\t- [x] Form to schedule new stream\r
-- [x] Ranking\r
-\t- [x] Global ranking\r
-\t- [x] Today ranking\r
-- [x] Profile\r
-\t- [x] Display and update user twitch data\r
-\t- [x] Display and update user local data\r
-\t- [x] List of referred users\r
-\t- [x] Referral links\r
-- [x] Wallet\r
-\t- [x] Bits history\r
-\t- [x] Withdraw bits\r
-\t- [x] Display current bits
+- [x] General
+t- [x] Header
+t- [x] Footer
+t- [x] Generate referral link
+t- [x] Points card component
+t- [x] Points system
+tt- [x] Read and save comments in stream
+tt- [x] Detect and save user watch time in stream
+- [x] Login
+t- [x] Login with twitch
+t- [x] Collect extra data
+t- [x] User activation by WhatsApp
+- [x] Support
+t- [x] Points card
+t- [x] Current streams
+t- [x] Referral links
+- [x] Points
+t- [x] Points card
+t- [x] History of points
+- [x] Schedule
+t- [x] User streams
+t- [x] Cancel user streams
+t- [x] Form to schedule new stream
+- [x] Ranking
+t- [x] Global ranking
+t- [x] Today ranking
+- [x] Profile
+t- [x] Display and update user twitch data
+t- [x] Display and update user local data
+t- [x] List of referred users
+t- [x] Referral links
+- [x] Wallet
+t- [x] Bits history
+t- [x] Withdraw bits
+t- [x] Display current bits
 
 
