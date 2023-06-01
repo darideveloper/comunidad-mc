@@ -81,39 +81,39 @@ The app includes too a referral system.
 # Roadmap
 
 - [x] General
-t- [x] Header
-t- [x] Footer
-t- [x] Generate referral link
-t- [x] Points card component
-t- [x] Points system
-tt- [x] Read and save comments in stream
-tt- [x] Detect and save user watch time in stream
+	- [x] Header
+	- [x] Footer
+	- [x] Generate referral link
+	- [x] Points card component
+	- [x] Points system
+		- [x] Read and save comments in stream
+		- [x] Detect and save user watch time in stream
 - [x] Login
-t- [x] Login with twitch
-t- [x] Collect extra data
-t- [x] User activation by WhatsApp
+	- [x] Login with twitch
+	- [x] Collect extra data
+	- [x] User activation by WhatsApp
 - [x] Support
-t- [x] Points card
-t- [x] Current streams
-t- [x] Referral links
+	- [x] Points card
+	- [x] Current streams
+	- [x] Referral links
 - [x] Points
-t- [x] Points card
-t- [x] History of points
+	- [x] Points card
+	- [x] History of points
 - [x] Schedule
-t- [x] User streams
-t- [x] Cancel user streams
-t- [x] Form to schedule new stream
+	- [x] User streams
+	- [x] Cancel user streams
+	- [x] Form to schedule new stream
 - [x] Ranking
-t- [x] Global ranking
-t- [x] Today ranking
+	- [x] Global ranking
+	- [x] Today ranking
 - [x] Profile
-t- [x] Display and update user twitch data
-t- [x] Display and update user local data
-t- [x] List of referred users
-t- [x] Referral links
+	- [x] Display and update user twitch data
+	- [x] Display and update user local data
+	- [x] List of referred users
+	- [x] Referral links
 - [x] Wallet
-t- [x] Bits history
-t- [x] Withdraw bits
-t- [x] Display current bits
+	- [x] Bits history
+	- [x] Withdraw bits
+	- [x] Display current bits
 
 
