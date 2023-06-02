@@ -67,8 +67,10 @@ if today == RESTART_POINTS_WEEK_DAY:
         admin_type = tools.get_admin_type (user)
         if admin_type:
             # Found ranking to admins
-            admin_name = admin_type.replace ("admin", "").strip()
-            ranking_found = models.Ranking.objects.get (name=admin_name)
+            if admin_type == "admin diamante":
+                ranking_found = models.Ranking.objects.get (name="admin")
+            elif admin_type == "admin platino":
+                ranking_found = models.Ranking.objects.get (name="platino")            
         else:
             # Found ranking to normal users
             for ranking in rankings:
