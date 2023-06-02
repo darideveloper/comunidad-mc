@@ -134,7 +134,23 @@ def get_vips_num (user:models.User):
     
     return vips_num
     
+def get_frees_num (user:models.User):
+    """ return the number of free (only counter) streams of the user
+
+    Args:
+        user (models.User): user object
+
+    Returns:
+        int: counter of frees
+    """
     
+    frees_num = 0
+    frees = models.StreamFree.objects.filter(user=user)
+    if frees:
+        frees_num = frees.aggregate(Sum('amount'))['amount__sum']
+    
+    return frees_num
+
 def get_general_points (user:models.User):
     """ Return the general points (registers and counters) from specific user
 
@@ -243,6 +259,7 @@ def get_streams_formatted (streams:models.Stream, user_time_zone:pytz.timezone) 
         hour = stream_datetime.strftime("%H")
         is_cancellable = is_stream_cancelable(stream)
         is_vip = stream.is_vip
+        is_free = stream.is_free
         
         # Format date like: Lun, 01, Enero
         date_weekday_num = stream_datetime.weekday()
@@ -260,6 +277,7 @@ def get_streams_formatted (streams:models.Stream, user_time_zone:pytz.timezone) 
             "is_vip": is_vip,
             "date_formatted": date_formatted,
             "time_24": time_24,
+            "is_free": is_free            
         })
         
     return streams_data

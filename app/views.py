@@ -387,8 +387,9 @@ def schedule(request):
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
     
-    # Get if the user has vips
+    # Get if the user has vips and frees
     has_vips = tools.get_vips_num (user) > 0
+    has_frees = tools.get_frees_num (user) > 0
     
     # Validate if stream can be saved, in post 
     if request.method == "POST":
@@ -401,60 +402,70 @@ def schedule(request):
         form_date = request.POST.get("date", "")
         form_hour = request.POST.get("hour", "")
         form_vip = request.POST.get("vip", "")
+        form_free = request.POST.get("free", "")
         
         # Convert to datetime
         selected_datetime = datetime.datetime.strptime(form_date + " " + form_hour+":00", "%Y-%m-%d %H:%M")
         selected_datetime = user_time_zone.localize(selected_datetime)
         
         min_points_save_stream = int(models.Settings.objects.get (name="min_points_save_stream").value)
-        print (f"min_points_save_stream: {min_points_save_stream}")
         
         # Calculate available points
         available_points = general_points_num - user_streams_num * min_points_save_stream
-        print (f"available_points: {available_points}")
         
         # Validte if regular user have available streams
         max_streams = user.ranking.max_streams
         streams_extra = models.StreamExtra.objects.filter(user=user).all()
-        print (f"streams_extra: {streams_extra}")
         if streams_extra.count() > 0:
             streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
             max_streams += streams_extra_num
             
         available_stream = max_streams - user_streams_num > 0
-        print (f"available_stream: {available_stream}")
-        error = False
         if not available_stream or available_points < min_points_save_stream:
             # Save error ass cookie            
             request.session["error"] = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
-            error = True
+            return redirect("/schedule")
             
         # Validate if the date and time are free
-        if not error:
-            streams_match = models.Stream.objects.filter (datetime=selected_datetime)
-            if streams_match.count() > 1:
-                request.session["error"] = "Lo sentimos. Esa fecha y hora ya está agendada."
-                error = True
-                
+        streams_match = models.Stream.objects.filter (datetime=selected_datetime)
+        if streams_match.count() > 1:
+            request.session["error"] = "Lo sentimos. Esa fecha y hora ya está agendada."
+            return redirect("/schedule")
+        
         # Vips validation
-        if not error and form_vip:
+        if form_vip:
+        
             if has_vips:
-                # Decress vips
+                # Decrease vips
                 negative_vip = models.StreamVip (user=user, amount=-1)
                 negative_vip.save()    
                 
                 # Get if the user has vips (again)
-                has_vips = tools.get_vips_num (user) > 0            
+                has_vips = tools.get_vips_num (user) > 0
             else:
-                # Raise error if user dont have vips
-                request.session["error"] = "Error al guardar el stream, no tienes vips disponibles"
-                error = True
+                request.session["error"] = "Lo sentimos. Ya no cuentas con streams VIP"
+                return redirect("/schedule")
+        
+        # Frees validation
+        if form_free: 
+            
+            if has_frees:
+                # Decrease frees
+                negative_free = models.StreamFree (user=user, amount=-1)
+                negative_free.save()
                 
+                # Get if the user has vips (again)
+                has_frees = tools.get_frees_num (user) > 0
+            else:
+                request.session["error"] = "Lo sentimos. Ya no cuentas con streams VIP"
+                return redirect("/schedule")
+                            
         # Schedule stream
-        if not error:
-            new_stream = models.Stream (user=user, datetime=selected_datetime, is_vip=True if form_vip else False)
-            new_stream.save ()
-            request.session["message"] = "Stream agendado!"
+        is_vip = True if form_vip else False
+        is_free = True if form_free else False
+        new_stream = models.Stream (user=user, datetime=selected_datetime, is_vip=is_vip, is_free=is_free)
+        new_stream.save ()
+        request.session["message"] = "Stream agendado!"
             
         return redirect("/schedule")
             
@@ -609,6 +620,7 @@ def schedule(request):
         "hours": hours,
         "today_week_name": today_week_name,
         "has_vips": has_vips,
+        "has_frees": has_frees,
         "visible_schedule_panel": visible_schedule_panel,
     })
 

@@ -30,6 +30,9 @@
               {% if stream.is_vip %}
                 <img class="vip" src="{% static 'app/imgs/icon_oro.png' %}" alt="icono stream vip" title="Stream VIP">
               {% endif %}
+              {% if stream.is_free %}
+                <img class="vip" src="{% static 'app/imgs/icon_plata.png' %}" alt="icono stream free" title="Stream Free">
+              {% endif %}
             </td>
             <td>{{stream.date_formatted}}</td>
             <td>{{stream.time_24}} HRS</td>
@@ -98,9 +101,18 @@
 
           {% if has_vips %}
           <div class="checkbox-wrapper">
-            <label class="">
+            <label class="vip-free" title="Ùnico stream en la hora">
               Stream VIP
               <input type="checkbox" name="vip" id="vip">
+            </label>
+          </div>          
+          {% endif %}
+
+          {% if has_frees %}
+          <div class="checkbox-wrapper">
+            <label class="vip-free" title="Stream sin perder puntos por viwers">
+              Stream FREE
+              <input type="checkbox" name="free" id="free">
             </label>
           </div>          
           {% endif %}
