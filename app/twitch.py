@@ -304,21 +304,27 @@ class TwitchApi:
                 logger.info(
                     f"First stream detected from referred user {streamer}")
 
-                # Get ranking "diamente"
-                ranking = models.Ranking.objects.get(name="diamante")
-
                 # Update streamer data
                 streamer.first_stream_done = True
                 streamer.save()
 
-                # Update referred_user_from data
-                referred_user_from.ranking = ranking
-                referred_user_from.save()
+                # Add 10 general points to referred_user_from
+                info_point = models.InfoPoint.objects.get(info="primer stream de referido")
+                models.GeneralPoint.objects.create(
+                    user=referred_user_from,
+                    amount=10,
+                    info=info_point,
+                ).save ()
 
                 # Add bits to streamer
                 models.Bit.objects.create(
-                    user=referred_user_from, amount=100, details=f"Referido {streamer}")
-
+                    user=referred_user_from, 
+                    amount=100, 
+                    details=f"Referido {streamer}"
+                ).save ()
+                
+                logger.info (f"Reward added to user {referred_user_from}")
+                                
             # Save in each watch in database
             for user in valid_users:
 
