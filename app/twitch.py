@@ -310,18 +310,23 @@ class TwitchApi:
 
                 # Add 10 general points to referred_user_from
                 info_point = models.InfoPoint.objects.get(info="primer stream de referido")
-                models.GeneralPoint.objects.create(
+                general_point = models.GeneralPoint.objects.create(
                     user=referred_user_from,
                     amount=10,
                     info=info_point,
-                ).save ()
+                )
+                
+                # Add weekly points to referred_user_from
+                models.WeeklyPoint.objects.create(
+                    general_point=general_point,                    
+                )
 
                 # Add bits to streamer
                 models.Bit.objects.create(
                     user=referred_user_from, 
                     amount=100, 
                     details=f"Referido {streamer}"
-                ).save ()
+                )
                 
                 logger.info (f"Reward added to user {referred_user_from}")
                                 
