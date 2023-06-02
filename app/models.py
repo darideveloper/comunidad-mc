@@ -239,6 +239,18 @@ class StreamVip (models.Model):
         verbose_name = "Stream Vip"
         verbose_name_plural = "Streams Vip"
         
+class StreamFree (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del free extra", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario  al que se le ha asignado el free", null=False, blank=False)
+    amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de frees", null=False, blank=False, default=1)
+    
+    def __str__(self):
+        return f"({self.amount}) {self.user}"
+    
+    class Meta:
+        verbose_name = "Stream Free"
+        verbose_name_plural = "Streams Free"
+        
 class Settings (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id de la configuración", null=False, blank=False, editable=False)
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre de la configuración", null=False, blank=False, max_length=100, unique=True)

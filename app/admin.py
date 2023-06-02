@@ -231,6 +231,15 @@ class AdminVips (admin.ModelAdmin):
     search_fields = ('user',)
     list_per_page = 20
     
+@admin.register (models.StreamFree)
+class AdminFrees (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'amount')
+    ordering = ('-id', 'user', 'amount')
+    list_filter = ('user',)
+    search_fields = ('user',)
+    list_per_page = 20
+    
 @admin.register (models.Settings)
 class AdminSettings (admin.ModelAdmin):
     
