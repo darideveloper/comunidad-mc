@@ -442,12 +442,12 @@ class TwitchApi:
 
                 # Subtract point to streamer (except rankings: admin and free streams)
                 admin_type = tools.get_admin_type(user=streamer)
-                if not admin_type and not stream.is_free:
+                if not admin_type and not stream.is_free and not force:
                     tools.set_negative_point(streamer, 1, "viwer asistió a stream", stream)
 
                 # Set tripple point if stream is vip or if triple time
                 is_triple_time = tools.is_triple_time()
-                if stream.is_vip or is_triple_time:
+                if (stream.is_vip or is_triple_time) and not force:
                     # Add 2 points to user
                     info = models.InfoPoint.objects.get(info="ver stream (puntos extra)")
                     models.GeneralPoint (user=user, stream=stream, amount=2, info=info).save()
@@ -471,7 +471,7 @@ class TwitchApi:
                 daily_points_hour = models.DailyPoint.objects.filter(
                     general_point__user=user, general_point__stream__datetime__range=[start_time, end_time])
                 
-                if daily_points_hour:
+                if daily_points_hour and not force:
                     logger.info (f"User {user} already have a daily point in this hour: {daily_points_hour}")
                 else:
 
@@ -594,13 +594,13 @@ class TwitchApi:
 
         return True
 
-    def add_cero_point(self, user: models.User, stream: models.Stream):
+    def add_cero_point(self, user: models.User, stream: models.Stream, force: bool = False):
         """ Set a point register with amount in 0 when is the first check or comment of the user in the stream """
 
         # Validate if the user already have a point in the stream
         general_points = models.GeneralPoint.objects.filter(
             user=user, stream=stream)
-        if general_points.count() == 0:
+        if general_points.count() == 0 or force:
 
             # Save general point
             info = models.InfoPoint.objects.get(
