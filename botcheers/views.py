@@ -31,29 +31,22 @@ def get_json_model(model: django.db.models, get_objects=True) -> str:
 @decorators.validate_token
 def get_donations(request):
     """ Returns donations to the current streams in json format """
-    
-    # Get random proxy
-    proxy = models.Proxy.objects.order_by('?').first()
-    proxy_formatted = {
-        "host": proxy.host,
-        "port": proxy.port,   
-    }
-    
+
     # Get current hour with timezone
     hour = timezone.localtime(timezone.now()).hour
-    
+
     # Get today donations of the current hour
     donations = models.Donation.objects.filter(
-        datetime__time__hour=hour, 
-        done=False, 
+        datetime__time__hour=hour,
+        done=False,
         user__is_active=True,
-        datetime__date= timezone.localtime(timezone.now()).date()
+        datetime__date=timezone.localtime(timezone.now()).date()
     )
-                                               
+
     # Format data
     donations_formatted = []
-    for donation in donations: 
-        donations_formatted.append ({
+    for donation in donations:
+        donations_formatted.append({
             "id": donation.id,
             "user": donation.user.name,
             "admin": donation.user.user_auth.username,
@@ -63,49 +56,70 @@ def get_donations(request):
             "message": donation.message,
             "cookies": donation.user.cookies,
         })
-        
-    data = {
-        "donations": donations_formatted,
-        "proxy": proxy_formatted,
-    }
 
-    return JsonResponse(data, safe=False)
+    return JsonResponse({
+        "donations": donations_formatted,
+    }, safe=False)
+
 
 @decorators.validate_token
-def disable_user (request, name:str):
+def get_proxy(request):
+    """ Returns random proxy in json format """
+
+    # Get random proxy
+    proxy = models.Proxy.objects.order_by('?').first()
+    
+    # Empry data by default
+    proxy_formatted = {
+        "host": "",
+        "port": "",
+    }
+
+    # Update data
+    if proxy:
+        proxy_formatted["host"] = proxy.host
+        proxy_formatted["port"] = proxy.port
+
+    return JsonResponse({
+        "proxy": proxy_formatted,
+    }, safe=False)
+
+
+@decorators.validate_token
+def disable_user(request, name: str):
     """ Set is_active status to False, to specific user
 
     Args:
         name (str): name of the user to disable
     """
-    
-    user = models.User.objects.filter (name=name)
+
+    user = models.User.objects.filter(name=name)
     if user:
         user = user[0]
         user.is_active = False
         user.save()
-        
+
         return HttpResponse("User disabled")
-    
+
     else:
         return HttpResponse("User not found")
-    
+
 
 @decorators.validate_token
-def upodate_donation (request, id:int):
+def upodate_donation(request, id: int):
     """ Set done status to True, to specific donation
 
     Args:
         id (int): donation id
     """
-    
-    donation = models.Donation.objects.filter (id=id)
+
+    donation = models.Donation.objects.filter(id=id)
     if donation:
         donation = donation[0]
         donation.done = True
         donation.save()
-        
+
         return HttpResponse("Donation updated")
-    
+
     else:
         return HttpResponse("Donation not found")

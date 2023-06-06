@@ -116,6 +116,7 @@ class TestViews (TestCase):
         self.endpoint_get_dinations = f"/botcheers/donations/"
         self.endpoint_disable_user = f"/botcheers/disable-user" # add username
         self.endpoint_update_donation = f"/botcheers/update-donation" # add donation id
+        self.endpoint_proxy = f"/botcheers/proxy/"
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
         self.donation_datetime = timezone.localtime(timezone.now())
@@ -185,11 +186,7 @@ class TestViews (TestCase):
                     "message": self.donation_message,
                     "cookies": [{"test": "test"}]
                 }
-            ] ,
-            "proxy": {
-                "host": self.proxy.host,
-                "port": self.proxy.port,
-            }
+            ]
         })
 
     def test_get_donations_wrong_time(self):
@@ -209,11 +206,7 @@ class TestViews (TestCase):
         response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
-             "donations": [] ,
-            "proxy": {
-                "host": self.proxy.host,
-                "port": self.proxy.port,
-            }
+             "donations": []
         })
         
     def test_get_donations_wrong_date(self):
@@ -233,11 +226,7 @@ class TestViews (TestCase):
         response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
-             "donations": [] ,
-            "proxy": {
-                "host": self.proxy.host,
-                "port": self.proxy.port,
-            }
+             "donations": []
         })
 
     def test_disable_user(self):
@@ -310,8 +299,35 @@ class TestViews (TestCase):
         # Validate models
         donation = models.Donation.objects.filter(id=donation_id)
         self.assertEqual(donation.count(), 0)
-    
-
+        
+    def test_proxy (self):
+        """ Test to get a proxy with endpoint
+        """
+        
+        response = self.client.get(f"{self.endpoint_proxy}?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+             "proxy": {
+                "host": self.proxy.host,
+                "port": self.proxy.port,
+             }
+        })
+        
+    def test_no_proxy (self):
+        """ Test to get a proxy with endpoint, where there is no proxies in database
+        """
+        
+        # Delete current proxy
+        self.proxy.delete()
+        
+        response = self.client.get(f"{self.endpoint_proxy}?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+             "proxy": {
+                "host": "",
+                "port": "",
+             }
+        })
 
 class TestAdmin (TestCase):
 
