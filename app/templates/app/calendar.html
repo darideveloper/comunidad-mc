@@ -1,0 +1,56 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="content regular-width">
+  <h1>Calendario de streams</h1>
+  <div id="calendar"></div>
+</div>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block js %}
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: { center: 'dayGridMonth,timeGridDay' }, // buttons for switching between views
+      views: {
+        dayGridMonth: {},
+        timeGridDay: {},
+      }      
+    });
+    calendar.render();
+    // Add streams as events
+
+    // Change languaje to espanish
+    calendar.setOption('locale', 'es');
+    
+    {% for stream in streams_data %}
+    console.log ('{{ stream.datetime }}');
+    console.log ('{{ stream.user }}');
+
+    calendar.addEvent({
+      title: '{{ stream.user }}',
+      start: '{{ stream.start }}',
+      end: '{{ stream.end }}',
+      allDay: false,
+      url: '{{ stream.url }}'
+    });
+    {% endfor %}
+
+    // calendar.addEvent({
+    //   title: 'Sample Event',
+    //   start: '2023-06-07T20:00:00',
+    //   end: '2023-06-07T21:00:00',
+    //   allDay: false
+    // });
+  });
+</script>
+{% endblock %}

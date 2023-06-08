@@ -43,6 +43,7 @@ for user in users:
         json_data = res.json()
         
         if "data" in json_data:
+            error = ""
             break
         
         # Auto update user token

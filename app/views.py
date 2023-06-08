@@ -953,9 +953,40 @@ def testing (request):
     
     return HttpResponse(live)
 
-# @decorators.validate_login_active
-# @decorators.validate_admin
-# def calendar
+@decorators.validate_login_active
+@decorators.validate_admin
+def calendar (request):
+    """ Page for show the calendar of the streams """
+    
+    streams = models.Stream.objects.all().order_by("datetime")
+    
+    # Filter only next streams, and streams of the last 7 days
+    start_date = timezone.now() - datetime.timedelta(days=2)
+    streams = list(filter(lambda stream: stream.datetime > start_date, streams))
+    
+    # Format streams data
+    streams_data = []
+    for stream in streams:
+        
+        # Locate date in time zone
+        date = stream.datetime.astimezone(pytz.timezone("America/Mexico_City"))
+        
+        # Format and save
+        streams_data.append ({
+            "user": stream.user.user_name,
+            "start": date.strftime("%Y-%m-%dT%H:%M:%S"),
+            "end": (date + datetime.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S"),
+        })
+    
+    # Render page
+    return render(request, 'app/calendar.html', {
+        # General context
+        "current_page": "calendar",
+        "user_active": True,
+                
+        # Specific context
+        "streams_data": streams_data,
+    })
 
 @decorators.validate_login_active
 def cancel_stream (request, id):
