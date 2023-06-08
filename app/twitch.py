@@ -49,29 +49,6 @@ class TwitchApi:
 
         return current_streams
 
-    # def get_current_streams_node(self):
-    #     """ Get the current live streams from databse
-
-    #     Returns:
-    #         models.Stream.objects: Streams instances
-    #     """
-
-    #     # Get date ranges
-    #     logger.debug ("Getting streams from database for current hour")
-    #     now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE))
-    #     start_hour = now_datetime.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
-    #     end_hour = now_datetime.replace(minute=59, second=59, microsecond=999999) + datetime.timedelta(hours=1)
-
-    #     # Get current streams
-    #     current_streams = models.Stream.objects.filter(
-    #         datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
-
-    #     if not current_streams:
-    #         logger.info("No streams found")
-    #         return []
-
-    #     return current_streams
-
     def submit_streams_node(self):
         """ Submit streams to node.js api for start reading comments
 
@@ -218,7 +195,7 @@ class TwitchApi:
             "client_id": self.twitch_client_id,
             "redirect_uri": redirect_url,
             "response_type": "code",
-            "force_verify": "true",
+            "force_verify": "false",
             "scope": " ".join(twitch_scope),
             "state": "sample_string",
             "claims": '{"userinfo":{"picture":null, "email":null, "name":null, "user": null, "preferred_username": null}}'
