@@ -61,10 +61,10 @@ def login(request):
                 new_user.user_name = user_name
                 new_user.ranking = lower_ranking
 
-                # Save user id in session nand tookens
-                new_user.access_token = user_token
-                new_user.refresh_token = refresh_token
-                new_user.save()
+            # Save user id in session nand tookens
+            new_user.access_token = user_token
+            new_user.refresh_token = refresh_token
+            new_user.save()
                 
             request.session["user_id"] = new_user.id
 
