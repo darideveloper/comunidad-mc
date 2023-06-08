@@ -21,9 +21,15 @@ twitch = TwitchApi ()
 
 users = models.User.objects.all()
 
+update_results = []
+counters = {
+    "error": 0,
+    "ok": 0
+}
 for user in users:
     
     # Loop for update token if is invalid
+    error = ""
     for _ in range (2):
 
         user_id = user.id
@@ -37,13 +43,27 @@ for user in users:
         json_data = res.json()
         
         if "data" in json_data:
-            logger.info (f"user {user}: done")
             break
         
         # Auto update user token
         if "message" in json_data:
             message = json_data["message"]
-            logger.error (f"user {user}: {message}")
+            error = message
             twitch.update_token (user)
             
         sleep (10)
+        
+    if error:
+        update_results.append (f"user {user}: {error}")
+        counters["error"] += 1
+    else:
+        update_results.append (f"user {user}: OK")
+        counters["ok"] += 1
+        
+print ("\nSummary: ")
+print (f"Users updated: {counters['ok']}")
+print (f"Users update errors: {counters['error']}")
+
+print ("\nDetails: ")
+for result in update_results:
+    print (result)
