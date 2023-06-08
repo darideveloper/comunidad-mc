@@ -149,5 +149,5 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
 
 # End session when browser is closed or after 12 hours
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 10 * 60 * 60
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 7 * 24 * 60 * 60 # 7 days
