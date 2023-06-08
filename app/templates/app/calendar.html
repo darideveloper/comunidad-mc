@@ -33,9 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.setOption('locale', 'es');
     
     {% for stream in streams_data %}
-    console.log ('{{ stream.datetime }}');
-    console.log ('{{ stream.user }}');
-
     calendar.addEvent({
       title: '{{ stream.user }}',
       start: '{{ stream.start }}',
