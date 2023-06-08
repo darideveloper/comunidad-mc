@@ -109,6 +109,14 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.StreamFree (user=first_user).save ()
     logger.info ("Vip added to first user")
     
+    # backuop weekly points
+    models.WeeklyPointBackup.objects.all().delete()
+    logger.info ("weekly points backup deleted")
+    weekly_points = models.WeeklyPoint.objects.all()
+    for weekly_point in weekly_points:
+        models.WeeklyPointBackup (general_point=weekly_point.general_point).save()
+    logger.info ("weekly points backup created")
+    
     # Delete week points
     models.WeeklyPoint.objects.all().delete()
     logger.info ("week points deleted")
