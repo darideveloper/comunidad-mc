@@ -162,6 +162,17 @@ class WeeklyPoint (models.Model):
         verbose_name = "Punto semanal"
         verbose_name_plural = "Puntos semanales"
         
+class WeeklyPointBackup (models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
+    general_point = models.ForeignKey('GeneralPoint', on_delete=models.CASCADE, name='general_point', verbose_name="punto general", help_text="punto general al que pertenece el punto", null=False, blank=False)
+
+    def __str__(self):
+        return "(copy) "+ str(self.general_point)
+    
+    class Meta:
+        verbose_name = "Punto semanal respaldo"
+        verbose_name_plural = "Puntos semanales respaldo"
+        
 class DailyPoint (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del punto", null=False, blank=False, editable=False)
     general_point = models.ForeignKey('GeneralPoint', on_delete=models.CASCADE, name='general_point', verbose_name="punto general", help_text="punto general al que pertenece el punto", null=False, blank=False)

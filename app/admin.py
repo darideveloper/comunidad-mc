@@ -169,6 +169,16 @@ class AdminWeeklyPoint (admin.ModelAdmin):
     search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
     list_per_page = 20
     
+@admin.register (models.WeeklyPointBackup)
+class AdminWeeklyPointBackup (admin.ModelAdmin):
+    
+    raw_id_fields = ('general_point',)
+    list_display = ('id', 'general_point')
+    ordering = ('-id', 'general_point')
+    list_filter = (FilterWeeklyDailyPoints,)
+    search_fields = ('general_point__user__user_name', 'general_point__stream__user__user_name')
+    list_per_page = 20
+    
 @admin.register (models.DailyPoint)
 class AdminDailyPoint (admin.ModelAdmin):
     
