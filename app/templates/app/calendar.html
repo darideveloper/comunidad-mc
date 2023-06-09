@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Change languaje to espanish
     calendar.setOption('locale', 'es');
-
+    
     streams.map (stream => {
       calendar.addEvent({
         title: stream.bits ? `${stream.user} (${ stream.bits })` :  stream.user,
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         end: stream.end,
         allDay: false,
         url: stream.url,
-        color: stream.bits ? (stream.bits_done == "True" ? 'gray' : 'green') : 'blue'
+        color: stream.bits ? (stream.bits_done == "True" ? '#5db897' : '#a34d4d') : '#7a70b3'
       });
     })
   });
