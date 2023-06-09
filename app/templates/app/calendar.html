@@ -17,6 +17,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+    // data from django
+    const streams = {{ streams|safe }};
+
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -31,23 +34,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Change languaje to espanish
     calendar.setOption('locale', 'es');
-    
-    {% for stream in streams_data %}
-    calendar.addEvent({
-      title: '{{ stream.user }}',
-      start: '{{ stream.start }}',
-      end: '{{ stream.end }}',
-      allDay: false,
-      url: '{{ stream.url }}'
-    });
-    {% endfor %}
 
-    // calendar.addEvent({
-    //   title: 'Sample Event',
-    //   start: '2023-06-07T20:00:00',
-    //   end: '2023-06-07T21:00:00',
-    //   allDay: false
-    // });
+    streams.map (stream => {
+      calendar.addEvent({
+        title: stream.bits ? `${stream.user} (${ stream.bits })` :  stream.user,
+        start: stream.start,
+        end: stream.end,
+        allDay: false,
+        url: stream.url,
+        color: stream.bits ? (stream.bits_done == "True" ? 'gray' : 'green') : 'blue'
+      });
+    })
   });
 </script>
 {% endblock %}

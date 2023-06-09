@@ -972,11 +972,30 @@ def calendar (request):
         # Locate date in time zone
         date = stream.datetime.astimezone(pytz.timezone("America/Mexico_City"))
         
+        # Check claim bits in stream
+        bits_num = 0
+        bits_claimed = models.Bit.objects.filter(stream=stream, amount__lt=0)
+        bits_done = False
+        if bits_claimed:
+            bits_claimed = bits_claimed.first()
+            bits_num = abs(bits_claimed.amount)
+            if bits_claimed.is_bits_done:
+                bits_done = True
+                
+        # Generate url of admin (stream url or bits url)
+        if bits_claimed:
+            url = f"/admin/app/bit/{bits_claimed.id}/change/"
+        else:
+            url = f"/admin/app/stream/{stream.id}/change/"
+        
         # Format and save
         streams_data.append ({
             "user": stream.user.user_name,
             "start": date.strftime("%Y-%m-%dT%H:%M:%S"),
             "end": (date + datetime.timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S"),
+            "bits": bits_num,
+            "bits_done": str(bits_done),
+            "url": url,
         })
     
     # Render page
@@ -986,7 +1005,7 @@ def calendar (request):
         "user_active": True,
                 
         # Specific context
-        "streams_data": streams_data,
+        "streams": streams_data,
     })
 
 @decorators.validate_login_active
