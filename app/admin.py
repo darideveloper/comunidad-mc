@@ -119,6 +119,7 @@ class AdminStream (admin.ModelAdmin):
 @admin.register (models.Comment)
 class AdminComment (admin.ModelAdmin):
     
+    raw_id_fields = ('stream',)
     list_display = ('id', 'user', 'stream', 'comment', 'datetime', 'status')
     ordering = ('-id', 'user', 'stream', 'datetime', 'datetime', 'status')
     list_filter = ('datetime', 'status', 'user')
@@ -128,6 +129,7 @@ class AdminComment (admin.ModelAdmin):
 @admin.register (models.WhatchCheck)
 class AdminWhatchCheck (admin.ModelAdmin):
     
+    raw_id_fields = ('stream',)
     list_display = ('id', 'user', 'stream', 'datetime', 'status')
     ordering = ('-id', 'user', 'stream', 'datetime', 'status')
     list_filter = ('datetime', 'status', 'user')
@@ -153,6 +155,7 @@ class AdminInfoPoint (admin.ModelAdmin):
 @admin.register (models.GeneralPoint)
 class AdminGeneralPoint (admin.ModelAdmin):
     
+    raw_id_fields = ('stream',)
     list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
     ordering = ('-id', 'user', 'amount', 'stream', 'info', 'datetime')
     list_filter = ('info', 'datetime', 'user')
@@ -208,6 +211,7 @@ class AdminPointsHistory (admin.ModelAdmin):
 @admin.register (models.Bit)
 class AdminBit (admin.ModelAdmin):
     
+    raw_id_fields = ('stream',)
     list_display = ('id', 'user', 'timestamp', 'amount', 'is_bits_done', 'details', )
     ordering = ('-id', 'user', 'timestamp', 'is_bits_done', 'amount')
     list_filter = ('timestamp', 'is_bits_done', 'details', 'user')
