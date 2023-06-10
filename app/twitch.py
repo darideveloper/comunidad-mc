@@ -246,6 +246,7 @@ class TwitchApi:
 
         # Get current streams and loop
         current_streams = self.get_current_streams()
+        current_streams_ids = list(map(lambda stream: stream.id, current_streams))
         if not current_streams:
             return None
 
@@ -299,8 +300,8 @@ class TwitchApi:
             # Save in each watch in database
             for user in valid_users:
 
-                # Skip if user is the streamer
-                if user.id == streamer.id:
+                # Skip if user is live
+                if user.id in current_streams_ids:
                     continue
                 
                 # Validate if user already have a general point in the stream
