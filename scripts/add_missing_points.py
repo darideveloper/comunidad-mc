@@ -1,4 +1,4 @@
-# Conver today general points with amount in 0, to weekly points with amount in 1, and save them as week points
+# Add or update a general and daily pont to all users, in speciic streams
 
 # Add parent folder to path
 import os
@@ -18,8 +18,7 @@ from app import models
 
 # UPDATE THIS
 streamers = [
-    "Soy_Jorge_8a",
-    "timbomx",
+    "gamora_0292",
 ]
 
 users = models.User.objects.all ()
@@ -32,18 +31,38 @@ for streamer in streamers:
 
     for user in users:
         
-        print (f"Adding points to {user.user_name} in {stream}")
+        # Validate if already have points
+        point = models.GeneralPoint.objects.filter (user=user, stream=stream)
+        if point:
+            
+            print (f"Updating points to {user.user_name} in {stream}")
+            
+            # Update point data
+            general_point = point.first ()
+            if general_point.amount == 0:
+                general_point.amount = 1
+            general_point.info = models.InfoPoint.objects.get (info="ver stream")
+            general_point.save ()
+        else:
         
-        # Add general to each user
-        general_point = models.GeneralPoint (
-            user=user, 
-            stream=stream, 
-            datetime=stream.datetime, 
-            info=models.InfoPoint.objects.get (info="ver stream"), 
-            amount=1
-        )
-        general_point.save ()
-        
-        # Add daily to each user
-        models.DailyPoint (general_point=general_point).save ()
+            print (f"Adding points to {user.user_name} in {stream}")
+            
+            # Add general to each user
+            general_point = models.GeneralPoint (
+                user=user, 
+                stream=stream, 
+                datetime=stream.datetime, 
+                info=models.InfoPoint.objects.get (info="ver stream"), 
+                amount=1
+            )
+            general_point.save ()
+            
+        # Validate if already have daily points
+        daily_point = models.DailyPoint.objects.filter (general_point=general_point)
+        if not daily_point:
+            
+            print (f"Adding daily points to {user.user_name} in {stream}")            
+            
+            # Add daily to each user
+            models.DailyPoint (general_point=general_point).save ()
     
