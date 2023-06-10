@@ -15,7 +15,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
-from app.logs import logger
 
 twitch = TwitchApi ()
 

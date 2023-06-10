@@ -66,18 +66,6 @@ class TwitchApi:
         logger.info(
             f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}")
 
-        # Detect unique user of the streams
-        users = list(
-            set(map(lambda current_stream: current_stream.user, current_streams)))
-        users_names = list(map(lambda user: user.user_name, users))
-
-        # Refresh tokens
-        logger.info(f"Refreshing tokens for users: {','.join(users_names)}")
-        for user in users:
-            token_updated = self.update_token(user)
-            if not token_updated:
-                logger.error(f"Error updating token for user: {user}")
-
         streams_data = {"streams": []}
         for stream in current_streams:
             # Get and stremer data
@@ -213,8 +201,8 @@ class TwitchApi:
             stream (models.Stream): stream to get users
         """
         
-         # Loop for get data and update token
-        while True:
+        # Loop for get data and update token
+        for _ in range(2):
 
             # Request data
             user_id = streamer.id
@@ -248,7 +236,8 @@ class TwitchApi:
 
         # Get users in chat
         users_active = list(
-            map(lambda user: user["user_id"], json_data.get("data", [])))
+            map(lambda user: user["user_id"], json_data.get("data", []))
+        )
         
         return users_active
 
@@ -510,7 +499,7 @@ class TwitchApi:
         """
         
         is_live = False
-        while True:
+        for _ in range (2):
             
             print (f"Checking if user {user} is live")
                     
