@@ -342,14 +342,14 @@ class TwitchApi:
         res = requests.post(url, data=params)
         if res.status_code != 200:
             logger.error(
-                f"Error updating user refresh_token: ({res.status_code}) refresh_token")
+                f"Error updating user refresh_token: ({res.status_code}) {refresh_token}")
             return ""
 
         json_data = res.json()
         access_token = json_data.get("access_token", "")
         if not access_token:
             logger.error(
-                f"Error updating user refresh_token: ({res.status_code}) refresh_token")
+                f"Error updating user refresh_token: ({res.status_code}) {refresh_token}")
             return ""
 
         return access_token
