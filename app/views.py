@@ -672,7 +672,7 @@ def support(request):
     referral_link = tools.get_referral_link (user)
     
     # Validate if is triple time and show message
-    info = ""
+    info = "¡Importante! Ya se están corregiendo los puntos diarios negativos y los puntos generales faltantes. No es necesario hacer un ticket de soporte."
     is_triple_time = tools.is_triple_time()
     if is_triple_time and not message:
         info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
@@ -682,7 +682,7 @@ def support(request):
         # General context
         "name": user.user_name,
         "message": message,
-        "info": "",
+        "info": info,
         "current_page": "support",
         "error": error,
         "user_active": True,
