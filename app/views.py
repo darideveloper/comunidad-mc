@@ -258,63 +258,6 @@ def logout(request):
     # Redirect to home
     return redirect("home")
 
-@csrf_exempt
-def add_comment(request):
-    """ Add comment to stream """
-
-    # Get data from request
-    json_data = json.loads(request.body)
-    stream_id = json_data.get("stream_id", "")
-    user_id = json_data.get("user_id", "")
-    comment = json_data.get("comment", "")
-
-    if not user_id or not stream_id or not comment:
-        return HttpResponseBadRequest("stream_id, user_id and comment are required")
-
-    # Get stream
-    stream = models.Stream.objects.filter(id=stream_id).first()
-
-    # Get user
-    user = models.User.objects.filter(id=user_id).first()
-    
-    # Raise error if user or stream not found
-    if not user:
-        return HttpResponseBadRequest(f"user id '{user_id}' not found")
-    
-    if not stream:
-        return HttpResponseBadRequest(f"stream id '{stream_id}' not found")
-    
-    # Ignore streamer comments
-    streamer = stream.user
-    if user == streamer:
-        return HttpResponseBadRequest(f"streamer comment")
-    
-    # Validate if user already have a general point in the stream
-    general_point_found = models.GeneralPoint.objects.filter(
-        user=user, stream=stream, amount__gt=0)
-    if general_point_found:
-        return HttpResponseBadRequest(f"user already have a general point")
-    
-    try:
-        # Create comment
-        comment_obj = models.Comment(stream=stream, comment=comment, user=user)
-        comment_obj.save()
-        logger.info (f"Comment added: {comment_obj.id}")
-        
-        # Add cero point (initial default point) to user
-        twitch.add_cero_point (user, stream)
-        
-        # Try to add point to user
-        twitch.add_point(user, stream)
-
-        return JsonResponse({
-            "success": True
-        })
-
-    except Exception as e:
-        logger.error(f"Error adding comment: {e}")
-        return HttpResponseBadRequest(f"Error adding comment: {e}")
-
 @decorators.validate_login_active
 def points(request):
     """ Page for show the points of the user """
