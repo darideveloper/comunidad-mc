@@ -14,5 +14,5 @@ django.setup()
 from app.twitch import TwitchApi
 
 # Submit data to nodejs api, for start reading chat
-twitch = TwitchApi ()
+twitch = TwitchApi (logs_prefix="read_chat -")
 twitch.submit_streams_node()

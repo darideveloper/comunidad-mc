@@ -14,9 +14,12 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
+from app.logs import logger
 from app.twitch import TwitchApi
 
-twitch = TwitchApi ()
+logs_prefix = "update_tokens -"
+
+twitch = TwitchApi (logs_prefix=logs_prefix)
 
 users = models.User.objects.all()
 
@@ -60,10 +63,10 @@ for user in users:
         update_results.append (f"user {user}: OK")
         counters["ok"] += 1
         
-print ("\nSummary: ")
-print (f"Users updated: {counters['ok']}")
-print (f"Users update errors: {counters['error']}")
+logger.info (f"\n{logs_prefix} Summary: ")
+logger.info (f"{logs_prefix} Users updated: {counters['ok']}")
+logger.info (f"{logs_prefix} Users update errors: {counters['error']}")
 
-print ("\nDetails: ")
+logger.info (f"\n{logs_prefix} Details: ")
 for result in update_results:
-    print (result)
+    logger.info (f"{logs_prefix} {result}")
