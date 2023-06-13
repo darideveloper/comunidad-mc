@@ -398,7 +398,7 @@ class TwitchApi:
         # Subtract point to streamer (except rankings: admin and free streams)
         admin_type = tools.get_admin_type(user=streamer)
         if not admin_type and not stream.is_free and not force and amount >= 1:
-            tools.set_negative_point(streamer, 1, "viwer asistió a stream", stream, prefix=self.logs_prefix)
+            tools.set_negative_point(streamer, 1, "viwer asistió a stream", prefix=self.logs_prefix)
 
         # Set tripple point if stream is vip or if triple time
         is_triple_time = tools.is_triple_time()
@@ -444,7 +444,10 @@ class TwitchApi:
             daily_points = models.DailyPoint.objects.filter(
                 general_point__user=user
             )
-            current_daily_points = daily_points.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
+            daily_points_positive = daily_points.filter(
+                general_point__amount__gte=1
+            )
+            current_daily_points = daily_points_positive.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
             if not current_daily_points:
                 current_daily_points = 0
 
