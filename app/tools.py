@@ -167,7 +167,7 @@ def get_general_points (user:models.User):
     now_datetime = timezone.now().astimezone(pytz.timezone (settings.TIME_ZONE)) 
     last_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
     # now_hour = int (now_datetime.strftime("%H"))
-    general_points = general_points.filter(datetime__lt=last_hour)
+    # general_points = general_points.filter(datetime__lt=last_hour)
     general_points_num = general_points.aggregate(Sum('amount'))['amount__sum']
     
     if not general_points_num:
