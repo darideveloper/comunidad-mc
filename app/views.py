@@ -21,6 +21,7 @@ from django.views.generic import ListView
 load_dotenv()
 HOST = os.environ.get("HOST")
 SCHEDULE_DAY =int(os.environ.get("SCHEDULE_DAY"))
+INFO = os.environ.get("INFO")
 
 # Twitch instance
 twitch = TwitchApi ()
@@ -671,8 +672,10 @@ def support(request):
     # Gerate referral link
     referral_link = tools.get_referral_link (user)
     
+    # Default info from environment variables
+    info = INFO
+    
     # Validate if is triple time and show message
-    info = ""
     is_triple_time = tools.is_triple_time()
     if is_triple_time and not message:
         info = "Felicidades! Recibirás 3 veces los puntos por cada stream que veas en esta hora"
