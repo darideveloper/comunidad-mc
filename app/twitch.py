@@ -27,8 +27,11 @@ class TwitchApi:
         # Logs
         self.logs_prefix = logs_prefix
 
-    def get_current_streams(self):
+    def get_current_streams(self, back_hours:int=0):
         """ Get the current live streams from databse
+        
+        Args:
+            back_hours (int, optional): hours to go back in time. Defaults to 0.
 
         Returns:
             models.Stream.objects: Streams instances
@@ -36,10 +39,11 @@ class TwitchApi:
 
         # Get date ranges
         logger.debug(f"{self.logs_prefix} Getting streams from database for current hour")
-        now_datetime = timezone.now().astimezone(pytz.timezone(settings.TIME_ZONE))
+        now_datetime = timezone.now().astimezone(pytz.timezone(settings.TIME_ZONE)) - datetime.timedelta(hours=back_hours)
         start_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
         end_hour = now_datetime.replace(
-            minute=59, second=59, microsecond=999999)
+            minute=59, second=59, microsecond=999999
+        )
 
         # Get current streams
         current_streams = models.Stream.objects.filter(
@@ -394,7 +398,7 @@ class TwitchApi:
         # Subtract point to streamer (except rankings: admin and free streams)
         admin_type = tools.get_admin_type(user=streamer)
         if not admin_type and not stream.is_free and not force and amount >= 1:
-            tools.set_negative_point(streamer, 1, "viwer asistió a stream", stream) # debug
+            tools.set_negative_point(streamer, 1, "viwer asistió a stream", stream, prefix=self.logs_prefix)
 
         # Set tripple point if stream is vip or if triple time
         is_triple_time = tools.is_triple_time()
@@ -430,7 +434,10 @@ class TwitchApi:
         )
         
         if daily_points_hour and not force:
-            logger.info (f"{self.logs_prefix} User {user} already have a daily point in this hour: {daily_points_hour}")
+            id = daily_points_hour.first().general_point.id
+            logger.info (
+                f"{self.logs_prefix} User {user} already have a daily point in this hour: {id}"
+            )
         else:
 
             # Validate if the user have less than the max number of daily points
@@ -561,6 +568,8 @@ class TwitchApi:
         current_streams = self.get_current_streams()
         if not current_streams:
             logger.info (f"{self.logs_prefix} No streams found at this hour")
+        stream_text = ",".join(list(map(lambda stream: stream.user.user_name, current_streams)))
+        logger.info (f"{self.logs_prefix} Calculating points for streams: {stream_text}")
         
         users = models.User.objects.all()    
         
@@ -578,7 +587,7 @@ class TwitchApi:
                 # Validate comment ammount          
                 if (comments_num < self.min_comments):
                     # Add cero point
-                    logger.info (f"{self.logs_prefix} User {user} have only {comments_num}  comments in stream {stream}")
+                    logger.info (f"{self.logs_prefix} User {user} have only {comments_num} comments in stream {stream}")
                     self.add_cero_point (user, stream, info_text="faltaron comentarios")
                     continue
                 

@@ -352,13 +352,15 @@ def is_stream_cancelable (stream):
     else:
         return False
 
-def set_negative_point (user:models.User, amount:int, reason:str, stream:models.Stream):
+def set_negative_point (user:models.User, amount:int, reason:str, 
+                        prefix:str=""):
     """ Set negative point to user if it is possible
 
     Args:
         user (models.User): user to set points
         amount (int): number of negative points to set
         reason (str): info_point text
+        prefix (str, optional): prefix for logs. Defaults to "".
         
     Returns:
         bool: True if point was set, False if not
@@ -374,7 +376,7 @@ def set_negative_point (user:models.User, amount:int, reason:str, stream:models.
     if amount <= 0:
         return False
         
-    logger.info (f"Adding {amount} negative points to {user} for: {reason}")
+    logger.info (f"{prefix} Adding {amount} negative points to {user} for: {reason}")
     
     # Get info point
     info_point = models.InfoPoint.objects.get (info=reason)
