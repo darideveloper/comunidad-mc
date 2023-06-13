@@ -245,87 +245,6 @@ class TwitchApi:
         
         return users_active
 
-    # def check_users_in_chat(self):
-    #     """ Get list of users in chat of the current streams and save in databse """
-
-    #     # Get current streams and loop
-    #     current_streams = self.get_current_streams()
-    #     current_streams_ids = list(map(lambda stream: stream.id, current_streams))
-    #     print (f"Checking users in chat of streams {current_streams}")
-    #     if not current_streams:
-    #         return None
-
-    #     for stream in current_streams:
-            
-    #         # Get current stream
-    #         streamer = stream.user
-            
-    #         # Get watch users of the current streams
-    #         watch_users = self.__get_watch_users__(streamer)
-
-    #         # Filter only user who exist in database
-    #         valid_users = models.User.objects.filter(id__in=watch_users)
-    #         if len(valid_users) == 1:
-    #             logger.info(f"No users in stream: {stream}")
-
-    #         # Update first_stream_done from user
-    #         referred_user_from = streamer.referred_user_from
-    #         first_stream_done = streamer.first_stream_done
-    #         if valid_users and not first_stream_done and referred_user_from:
-
-    #             logger.info(
-    #                 f"First stream detected from referred user {streamer}")
-
-    #             # Update streamer data
-    #             streamer.first_stream_done = True
-    #             streamer.save()
-
-    #             # Add 10 general points to referred_user_from
-    #             info_point = models.InfoPoint.objects.get(info="primer stream de referido")
-    #             general_point = models.GeneralPoint.objects.create(
-    #                 user=referred_user_from,
-    #                 amount=10,
-    #                 info=info_point,
-    #             )
-                
-    #             # Add weekly points to referred_user_from
-    #             models.WeeklyPoint.objects.create(
-    #                 general_point=general_point,                    
-    #             )
-
-    #             # Add bits to streamer
-    #             models.Bit.objects.create(
-    #                 user=referred_user_from, 
-    #                 amount=100, 
-    #                 details=f"Referido {streamer}"
-    #             )
-                
-    #             logger.info (f"Reward added to user {referred_user_from}")
-                                
-    #         # Save in each watch in database
-    #         for user in valid_users:
-
-    #             # Skip if user is live
-    #             if user.id in current_streams_ids:
-    #                 continue
-                
-    #             # Validate if user already have a general point in the stream
-    #             general_point_found = models.GeneralPoint.objects.filter(stream=stream, user=user, amount__gte=1).exists()
-    #             if general_point_found:
-    #                 logger.info (f"User {user} already have a general point in stream {stream}. Check skipped.")
-    #                 continue
-                
-    #             # Save check in database
-    #             new_check = models.WhatchCheck(stream=stream, user=user)
-    #             new_check.save()
-    #             logger.info(f"Check saved. User: {user}, Stream: {stream}")
-
-    #             # Add cero point (initial default point) to user
-    #             self.add_cero_point(user, stream)
-
-    #             # Try to add point to user
-    #             self.add_point(user, stream)
-
     def get_new_user_token(self, refresh_token: str):
         """ Update user token
 
@@ -410,6 +329,7 @@ class TwitchApi:
                 stream=stream,
                 amount=2,
                 info=info,
+                datetime=stream.datetime,
             )
 
 
@@ -421,6 +341,7 @@ class TwitchApi:
             stream=stream,
             amount=amount,
             info=info,
+            datetime=stream.datetime,
         )
         
         logger.info(f"{self.logs_prefix} Added {amount} general points to user: {user}")
@@ -562,7 +483,11 @@ class TwitchApi:
             info=info_text
         )
         models.GeneralPoint.objects.create( # debug
-            user=user, stream=stream, amount=0, info=info
+            user=user, 
+            stream=stream, 
+            amount=0, 
+            info=info, 
+            datetime=stream.datetime
         )
 
     def calculate_points (self):
