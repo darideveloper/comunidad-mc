@@ -62,11 +62,19 @@ def login(request):
                 new_user.user_name = user_name
                 new_user.ranking = lower_ranking
 
-            # Save user id in session nand tookens
+            # Save user id in session and tookens
             new_user.access_token = user_token
             new_user.refresh_token = refresh_token
+            
+            # Save data 
             new_user.save()
-                
+            
+            # Submit again stream to node if the user is streaming
+            current_streams = twitch.get_current_streams()
+            current_streams_users = list(map(lambda stream: stream.user.id, current_streams))
+            if user_id in current_streams_users:
+                twitch.submit_streams_node ()
+            
             request.session["user_id"] = new_user.id
 
         else:
