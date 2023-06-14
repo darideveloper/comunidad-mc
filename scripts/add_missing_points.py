@@ -1,4 +1,6 @@
-# Add or update a general and daily pont to all users, in speciic streams
+# Add or update a general and daily pont to all users, 
+# in speciic streams, with optional adding tripple points,
+# or creating points if not exists
 
 # Add parent folder to path
 import os
@@ -20,31 +22,16 @@ MAX_DAILY_POINTS = int (os.getenv ("MAX_DAILY_POINTS"))
 
 # UPDATE THIS
 create_points = False
-streamers = [
-    "Lucifer__TV__",
-    "Jelay28",
-    "popetalove",
-    "elkin161",
-    "kurolaos",
-    "jeza1989",
-    "goldstk",
-    "SrOscuro_",
-    "Kerjos_",
-    "Danncrimson",
-    "PaquilloMad",
+triple_time = True
+streams_ids = [
+    "2732"
 ]
-
-
 users = models.User.objects.all ()
 
-for streamer in streamers:
+for stream_id in streams_ids:
     
-    
-    # Get last stream of today
-    today = timezone.now ().replace (hour=0, minute=0, second=0, microsecond=0)
-    start_date = today.replace (hour=0, minute=0, second=0, microsecond=0)
-    end_date = today.replace (hour=23, minute=59, second=59, microsecond=999999)
-    stream = models.Stream.objects.filter (user__user_name=streamer, datetime__range=(start_date, end_date)).order_by ("-datetime").first ()
+    # Get last stream with id
+    stream = models.Stream.objects.get (id=stream_id)
     
     if not stream:
         continue
@@ -64,8 +51,17 @@ for streamer in streamers:
             general_point.info = models.InfoPoint.objects.get (info="ver stream")
             general_point.save ()
             
-            point_added = True
-            
+            # Add triple time points
+            if triple_time:
+                print (f"Adding triple time points to {user.user_name} in {stream}")
+                
+                triple_time_point = models.GeneralPoint.objects.create (
+                    user=user, 
+                    stream=stream, 
+                    info= models.InfoPoint.objects.get (info="ver stream (puntos extra)"),
+                    amount=2
+                )
+             
         else:
             
             if not create_points:
@@ -82,9 +78,7 @@ for streamer in streamers:
                 amount=1
             )
             general_point.save ()
-            
-            point_added = True
-        
+                    
         # Validate if already have daily points
         daily_point = models.DailyPoint.objects.filter (general_point=general_point)
         if daily_point:
