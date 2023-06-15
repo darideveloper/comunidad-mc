@@ -126,16 +126,6 @@ class AdminComment (admin.ModelAdmin):
     search_fields = ('user__user_name', 'stream__user__user_name', 'comment')
     list_per_page = 20
     
-@admin.register (models.WhatchCheck)
-class AdminWhatchCheck (admin.ModelAdmin):
-    
-    raw_id_fields = ('stream',)
-    list_display = ('id', 'user', 'stream', 'datetime', 'status')
-    ordering = ('-id', 'user', 'stream', 'datetime', 'status')
-    list_filter = ('datetime', 'status', 'user')
-    search_fields = ('user__user_name', 'stream__user__user_name')
-    list_per_page = 20
-    
 @admin.register (models.Status)
 class AdminStatus (admin.ModelAdmin):
     

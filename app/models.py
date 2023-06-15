@@ -100,20 +100,6 @@ class Comment (models.Model):
         verbose_name = "Comentario"
         verbose_name_plural = "Comentarios"
         
-class WhatchCheck (models.Model):
-    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del check", null=False, blank=False, editable=False)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que asistió al stream", null=False, blank=False)
-    stream = models.ForeignKey('Stream', on_delete=models.CASCADE, name='stream', verbose_name="stream", help_text="stream al que pertenece el check", null=False, blank=False)
-    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del check", null=False, blank=False, default=timezone.now)
-    status = models.ForeignKey('Status', on_delete=models.CASCADE, name='status', verbose_name="estado", help_text="estado del check", null=False, blank=False, default=1)
-    
-    def __str__(self):
-        return f"{self.user}: {self.datetime} - stream: {self.stream}"
-    
-    class Meta:
-        verbose_name = "Check"
-        verbose_name_plural = "Checks"
-        
 class Status (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del estado", null=False, blank=False, editable=False)
     name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del estado", null=False, blank=False, max_length=100)
