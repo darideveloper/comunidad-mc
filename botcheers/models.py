@@ -15,6 +15,12 @@ class User (models.Model):
         help_text='Nambre del usuario', 
         unique=True
     )
+    password = models.CharField(
+        max_length=50,
+        verbose_name='Contraseña',
+        help_text='Contraseña del usuario',
+        default=''
+    )
     cookies = models.JSONField(
         verbose_name='Cookies', 
         help_text='Cookies de sesión del usuario'
