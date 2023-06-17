@@ -6,4 +6,5 @@ urlpatterns = [
     path('proxy/', views.get_proxy, name='proxy'),
     path('disable-user/<name>/', views.disable_user, name='disable_user'),
     path('update-donation/<int:id>/', views.upodate_donation, name='update_donation'),
+    path('users/', views.get_users, name='get_users'),
 ]

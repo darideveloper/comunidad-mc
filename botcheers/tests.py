@@ -14,6 +14,7 @@ class TestModels (TestCase):
         self.user_name = "test_user"
         self.user_cookies = [{"test": "test"}]
         self.user_is_active = True
+        self.user_password = "test_password"
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
         self.donation_datetime = timezone.localtime(timezone.now())
@@ -38,12 +39,14 @@ class TestModels (TestCase):
 
         user = models.User.objects.create(
             name=self.user_name,
+            password=self.user_password,
             cookies=self.user_cookies,
             is_active=self.user_is_active,
             user_auth=self.user_auth,
         )
 
         self.assertEqual(user.name, self.user_name)
+        self.assertEqual(user.password, self.user_password)
         self.assertEqual(user.cookies, self.user_cookies)
         self.assertEqual(user.is_active, self.user_is_active)
         self.assertEqual(user.user_auth, self.user_auth)
@@ -109,14 +112,16 @@ class TestViews (TestCase):
     def setUp(self):
 
         self.user_name = "test_user"
+        self.user_password = "test_password"
 
         # Test data
         self.token_value = "test_token_value"
 
-        self.endpoint_get_dinations = f"/botcheers/donations/"
+        self.endpoint_get_donations = f"/botcheers/donations/"
         self.endpoint_disable_user = f"/botcheers/disable-user" # add username
         self.endpoint_update_donation = f"/botcheers/update-donation" # add donation id
         self.endpoint_proxy = f"/botcheers/proxy/"
+        self.endpoint_users = f"/botcheers/get_users/"
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
         self.donation_datetime = timezone.localtime(timezone.now())
@@ -134,6 +139,7 @@ class TestViews (TestCase):
 
         self.user = models.User.objects.create(
             name=self.user_name,
+            password=self.user_password,
             cookies=[{"test": "test"}],
             is_active=True,
             user_auth=self.user_auth,
@@ -150,11 +156,11 @@ class TestViews (TestCase):
             port=8080,
         )
 
-    def test_get_dinations_invalid_token(self):
+    def test_get_donations_invalid_token(self):
         """ Test donations using an invalid token
         """
 
-        response = self.client.get(f"{self.endpoint_get_dinations}?token=invalid_token")
+        response = self.client.get(f"{self.endpoint_get_donations}?token=invalid_token")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.content, b"Invalid token")
 
@@ -172,7 +178,7 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_donations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
              "donations": [
@@ -203,7 +209,7 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_donations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
              "donations": []
@@ -223,7 +229,7 @@ class TestViews (TestCase):
         )
 
         # Test response
-        response = self.client.get(f"{self.endpoint_get_dinations}?token={self.token_value}")
+        response = self.client.get(f"{self.endpoint_get_donations}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
              "donations": []
@@ -329,6 +335,24 @@ class TestViews (TestCase):
              }
         })
 
+       
+    def test_get_users (self):
+        """ Test getting users with endpoint
+        """
+        
+        response = self.client.get(f"{self.endpoint_users}?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+             "users": [
+                 {
+                    "username": self.user_name,
+                    "password": self.user_password,
+                 }
+             ]
+        })
+
+        
+        
 class TestAdmin (TestCase):
 
     def setUp(self):

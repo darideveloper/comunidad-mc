@@ -2,31 +2,7 @@ import django
 from . import decorators
 from . import models
 from django.http import HttpResponse, JsonResponse
-from django.core import serializers
 from django.utils import timezone
-
-
-def get_json_model(model: django.db.models, get_objects=True) -> str:
-    """ Serializes a model to json
-
-    Args:
-        model (django.db.models): model to serialize
-
-    Returns:
-        str: json data
-    """
-
-    # Get all objects from table
-    if get_objects:
-        objects = model.objects.all()
-    else:
-        objects = model
-
-    # Format objects to json
-    objects_json = serializers.serialize('json', objects)
-
-    return objects_json
-
 
 @decorators.validate_token
 def get_donations(request):
@@ -123,3 +99,25 @@ def upodate_donation(request, id: int):
 
     else:
         return HttpResponse("Donation not found")
+
+
+
+@decorators.validate_token
+def get_users(request):
+    """ Returns all user names and passwords in json format """
+
+    # Get all users
+    users = models.User.objects.all()
+    
+    # Formmat only username and password
+    users_formatted = []
+    for user in users:
+        users_formatted.append ({
+            "username": user.name,
+            "password": user.password,
+        })
+        
+    return JsonResponse({
+        "users": users_formatted    
+    }, safe=False)
+    
