@@ -5,10 +5,7 @@ from django.utils import timezone
 
 
 class User (models.Model):
-    id = models.AutoField(
-        primary_key=True,
-        verbose_name='ID'
-    )
+    id = models.AutoField(primary_key=True, verbose_name='ID')
     name = models.CharField(
         max_length=50, 
         verbose_name='Name',
@@ -19,7 +16,7 @@ class User (models.Model):
         max_length=50,
         verbose_name='Contraseña',
         help_text='Contraseña del usuario',
-        default=''
+        default='ComunidadMC'
     )
     cookies = models.JSONField(
         verbose_name='Cookies', 
@@ -131,9 +128,19 @@ class Token(models.Model):
         verbose_name_plural = "Tokens"
         
 class Proxy(models.Model):
-    id = models.AutoField(primary_key=True, verbose_name='ID')
-    host = models.CharField(max_length=50, verbose_name='Host', help_text='Host del proxy')
-    port = models.IntegerField(verbose_name='Puerto', help_text='Puerto del proxy')
+    id = models.AutoField(
+        primary_key=True, 
+        verbose_name='ID'
+    )
+    host = models.CharField(
+        max_length=50, 
+        verbose_name='Host', 
+        help_text='Host del proxy'
+    )
+    port = models.IntegerField(
+        verbose_name='Puerto', 
+        help_text='Puerto del proxy'
+    )
     
     def __str__(self):
         return f"{self.host}:{self.port}"
@@ -141,3 +148,86 @@ class Proxy(models.Model):
     class Meta:
         verbose_name = "Proxy"
         verbose_name_plural = "Proxies"
+        
+class BitsHistory (models.Model):
+    id = models.AutoField(
+        primary_key=True,
+        verbose_name='ID'
+    ),
+    datetime = models.DateTimeField(
+        verbose_name='Fecha y hora',
+        default=timezone.now
+    ),
+    donation = models.ForeignKey(
+        'Donation',
+        on_delete=models.CASCADE,
+        name='Donación',
+        help_text='Donación asociada al historial',
+        null=True,
+        blank=True,
+    ),
+    amount = models.IntegerField(
+        verbose_name='Cantidad',
+        null=True,
+        blank=True,
+        default=0
+    )
+    
+    def save(self, *args, **kwargs):
+        
+        # Get or create bit summary
+        bit_summary = BitsSummary.objects.get_or_create(
+            bot=self.donation.user
+        )        
+        # Get bot and amounts
+        bot = self.donation.user
+        amount_donation = self.donation.amount
+        amount_history = self.amount
+        
+        # Save negative amount if donation is done
+        donation_done = self.donation.done
+        if donation_done:
+            bit_summary.balance -= amount_donation
+        
+        # Save amount from history
+        if amount_history:
+            bit_summary.balance += amount_history
+            
+        # Save summary
+        bit_summary.last_update = self.datetime
+        bit_summary.save()
+        
+        super(BitsHistory, self).save(*args, **kwargs)
+        
+    def __str__ (self):
+        return self.id
+    
+    class Meta:
+        verbose_name = "Historial de bits"
+        verbose_name_plural = "Historiales de bits"
+
+class BitsSummary (models.Model):
+    id = models.AutoField(
+        primary_key=True,
+        verbose_name='ID'
+    ),
+    bot = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        help_text='Bot de bits',
+    ),
+    last_update = models.DateTimeField(
+        verbose_name='Fecha y hora',
+        default=timezone.now
+    ),
+    balance = models.IntegerField(
+        verbose_name='Balance',
+        default=0
+    )
+    
+    def __str__ (self):
+        return self.id
+    
+    class Meta:
+        verbose_name = "Resumen de bits"
+        verbose_name_plural = "Resúmenes de bits"
