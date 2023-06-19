@@ -118,27 +118,7 @@ def get_proxy(request):
 
     return JsonResponse({
         "proxy": proxy_formatted,
-    }, safe=False)
-    
-@decorators.validate_token
-def get_users(request):
-    """ Returns all user names and passwords in json format """
-
-    # Get all users
-    users = models.User.objects.all()
-    
-    # Formmat only username and password
-    users_formatted = []
-    for user in users:
-        users_formatted.append ({
-            "username": user.name,
-            "password": user.password,
-        })
-        
-    return JsonResponse({
-        "users": users_formatted    
-    }, safe=False)
-    
+    }, safe=False)    
 
 @decorators.validate_token
 @csrf_exempt
