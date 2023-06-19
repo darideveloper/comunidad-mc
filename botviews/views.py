@@ -1,4 +1,5 @@
 import os
+import json
 import django
 from dotenv import load_dotenv
 from . import models
@@ -7,6 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from app.twitch import TwitchApi
+from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()
 
@@ -95,3 +97,86 @@ def disable_user (request, name:str):
     user.save()
     
     return HttpResponse("User disabled")
+
+@decorators.validate_token
+def get_proxy(request):
+    """ Returns random proxy in json format """
+
+    # Get random proxy
+    proxy = models.Proxy.objects.order_by('?').first()
+    
+    # Empry data by default
+    proxy_formatted = {
+        "host": "",
+        "port": "",
+    }
+
+    # Update data
+    if proxy:
+        proxy_formatted["host"] = proxy.host
+        proxy_formatted["port"] = proxy.port
+
+    return JsonResponse({
+        "proxy": proxy_formatted,
+    }, safe=False)
+    
+@decorators.validate_token
+def get_users(request):
+    """ Returns all user names and passwords in json format """
+
+    # Get all users
+    users = models.User.objects.all()
+    
+    # Formmat only username and password
+    users_formatted = []
+    for user in users:
+        users_formatted.append ({
+            "username": user.name,
+            "password": user.password,
+        })
+        
+    return JsonResponse({
+        "users": users_formatted    
+    }, safe=False)
+    
+
+@decorators.validate_token
+@csrf_exempt
+def update_cookies(request, name):
+    """ Update cookies from specific user """
+    
+    # Get user by name 
+    user = models.User.objects.filter(name=name)
+    if not user: 
+        # Return error if user not found
+        return JsonResponse({
+            "status": "error",
+            "message": "User not found"    
+        }, safe=False)
+    
+    
+    # Get json data
+    json_data = json.loads(request.body)
+    
+    # Validate cookies inside json
+    if not "cookies" in json_data:
+        # Return error if cookies not found
+        return JsonResponse({
+            "status": "error",
+            "message": "Cookies not found"    
+        }, safe=False)
+    
+    # Update cookies
+    user.cookies = json_data["cookies"]
+    
+    # Activate user
+    user = user[0]
+    user.is_active = True
+    
+    # Save user
+    user.save()
+    
+    return JsonResponse({
+        "status": "ok",
+        "message": "Cookies updated" 
+    })

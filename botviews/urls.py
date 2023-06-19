@@ -8,4 +8,6 @@ urlpatterns = [
     path('locations/', views.get_locations, name='locations'),
     path('streams/', views.get_streams, name='streams'),
     path('disable-user/<name>/', views.disable_user, name='disable_user'),
+    path('update-cookies/<name>/', views.update_cookies, name='get_user'),
+    path('proxy/', views.get_proxy, name='proxy'),
 ]

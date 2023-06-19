@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 
 
-class NoTestModels (TestCase):
+class TestModels (TestCase):
 
     def setUp(self):
 
@@ -398,7 +398,7 @@ class TestViews (TestCase):
             "message": "Cookies updated" 
         })
         
-class NoTestAdmin (TestCase):
+class TestAdmin (TestCase):
 
     def setUp(self):
 
