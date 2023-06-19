@@ -4,6 +4,7 @@ from app import models as app_models
 class User (models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     name = models.CharField(max_length=50, verbose_name='Name', help_text='Nambre del usuario', unique=True)
+    password = models.CharField(max_length=50, verbose_name='Password', help_text='Contraseña del usuario', default='ComunidadMC')
     cookies = models.JSONField(verbose_name='Cookies', help_text='Cookies de sesión del usuario')
     is_active = models.BooleanField(default=True, verbose_name='Activo', help_text='Indica si el usuario está activo')
     last_update = models.DateTimeField(auto_now=True, verbose_name='Última actualización', help_text='Fecha y hora de la última actualización')
