@@ -1,3 +1,4 @@
+import json
 from . import models
 from django.test import TestCase
 from django.utils import timezone
@@ -6,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 
 
-class TestModels (TestCase):
+class NoTestModels (TestCase):
 
     def setUp(self):
 
@@ -121,7 +122,8 @@ class TestViews (TestCase):
         self.endpoint_disable_user = f"/botcheers/disable-user" # add username
         self.endpoint_update_donation = f"/botcheers/update-donation" # add donation id
         self.endpoint_proxy = f"/botcheers/proxy/"
-        self.endpoint_users = f"/botcheers/get_users/"
+        self.endpoint_users = f"/botcheers/users/"
+        self.endpoint_update_cookies = f"/botcheers/update-cookies" # add username
 
         self.donation_stream_chat_link = "https://www.twitch.tv/popout/auronplay/chat?popout="
         self.donation_datetime = timezone.localtime(timezone.now())
@@ -350,10 +352,53 @@ class TestViews (TestCase):
                  }
              ]
         })
-
         
+    def test_update_cookies_invalid_user (self):
+        """ Test try to update user who no exist
+        """
         
-class TestAdmin (TestCase):
+        response = self.client.post(
+            f"{self.endpoint_update_cookies}/this-user-not-exist/?token={self.token_value}",
+            json.dumps({"cookies": {"sample": "sample"}}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "error",
+            "message": "User not found"
+        })
+        
+    def test_update_cookies_invalid_data (self):
+        """ Test update cookies of user
+        """    
+        
+        response = self.client.post(
+            f"{self.endpoint_update_cookies}/{self.user_name}/?token={self.token_value}",
+            json.dumps({"sample": "data"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "error",
+            "message": "Cookies not found"    
+        })
+    
+    def test_update_cookies (self):
+        """ Test update cookies of user
+        """    
+        
+        response = self.client.post(
+            f"{self.endpoint_update_cookies}/{self.user_name}/?token={self.token_value}",
+            json.dumps({"cookies": {"sample": "sample"}}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "ok",
+            "message": "Cookies updated" 
+        })
+        
+class NoTestAdmin (TestCase):
 
     def setUp(self):
 

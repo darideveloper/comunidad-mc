@@ -1,8 +1,9 @@
-import django
+import json
 from . import decorators
 from . import models
-from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @decorators.validate_token
 def get_donations(request):
@@ -121,3 +122,44 @@ def get_users(request):
         "users": users_formatted    
     }, safe=False)
     
+
+@decorators.validate_token
+@csrf_exempt
+def update_cookies(request, name):
+    """ Update cookies from specific user """
+    
+    # Get user by name 
+    user = models.User.objects.filter(name=name)
+    if not user: 
+        # Return error if user not found
+        return JsonResponse({
+            "status": "error",
+            "message": "User not found"    
+        }, safe=False)
+    
+    
+    # Get json data
+    json_data = json.loads(request.body)
+    
+    # Validate cookies inside json
+    if not "cookies" in json_data:
+        # Return error if cookies not found
+        return JsonResponse({
+            "status": "error",
+            "message": "Cookies not found"    
+        }, safe=False)
+    
+    # Update cookies
+    user.cookies = json_data["cookies"]
+    
+    # Activate user
+    user = user[0]
+    user.is_active = True
+    
+    # Save user
+    user.save()
+    
+    return JsonResponse({
+        "status": "ok",
+        "message": "Cookies updated" 
+    })
