@@ -113,4 +113,22 @@ class AdminProxy (admin.ModelAdmin):
     search_fields = ('host', 'port')
     list_per_page = 20
 
+# @admin.register (models.BitsHistory)
+# class AdminBitsHistory (admin.ModelAdmin):
     
+#     list_display = ('id', 'datetime', 'donation', 'amount')
+#     list_filter = ('donation__user', 'donation__user__user_auth', 'datetime')
+#     ordering = ('-id', 'datetime', 'donation', 'amount')
+#     search_fields = ('donation__user', 'donation__user__user_auth', 'donation__stream_chat_link')
+#     list_per_page = 20
+#     raw_id_fields = ('donation',)
+    
+# @admin.register (models.BitsSummary)
+# class AdminBitsSummary (admin.ModelAdmin):
+    
+#     list_display = ('id', 'user', 'last_update', 'balance')
+#     list_filter = ('user', "user__user_auth", 'last_update')
+#     ordering = ('-id', 'user', 'last_update', 'balance')
+#     search_fields = ('user__name', 'user__user_auth', 'donation__stream_chat_link')
+#     list_per_page = 20
+#     raw_id_fields = ('user',)

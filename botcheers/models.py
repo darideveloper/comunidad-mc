@@ -5,7 +5,10 @@ from django.utils import timezone
 
 
 class User (models.Model):
-    id = models.AutoField(primary_key=True, verbose_name='ID')
+    id = models.AutoField(
+        primary_key=True, 
+        verbose_name='ID'
+    )
     name = models.CharField(
         max_length=50, 
         verbose_name='Name',
@@ -41,6 +44,31 @@ class User (models.Model):
         blank=True, 
         related_name='user_auth_cheers'
     )
+    balance = models.IntegerField(
+        verbose_name='Balance',
+        help_text='Balance de bits del usuario',
+        default=0
+    )
+    
+    @staticmethod
+    def update_balance (self):
+        
+        # Calculate bits donated
+        donations = Donation.objects.filter(user=self, done=True)
+        bits_donated = 0
+        for donation in donations:
+            bits_donated += donation.amount
+            
+        # Calculatebits form history
+        histories = BitsHistory.objects.filter(user=self)
+        bits_history = 0
+        for history in histories:
+            bits_history += history.amount
+            
+        # Calculate balance
+        balance = bits_history - bits_donated
+        self.balance = balance
+        self.save()
 
     def __str__(self):
         return self.name
@@ -100,7 +128,14 @@ class Donation(models.Model):
         verbose_name = "Donación"
         verbose_name_plural = "Donaciones"
 
+    def save(self, *args, **kwargs):
+        
+        super(BitsHistory, self).save(*args, **kwargs)
 
+        # Update bot balance
+        if self.user:
+            self.user.update_balance ()
+        
 class Token(models.Model):
     name = models.CharField(
         max_length=50,
@@ -152,82 +187,40 @@ class Proxy(models.Model):
 class BitsHistory (models.Model):
     id = models.AutoField(
         primary_key=True,
-        verbose_name='ID'
-    ),
+        verbose_name='ID',
+    )
     datetime = models.DateTimeField(
         verbose_name='Fecha y hora',
-        default=timezone.now
-    ),
-    donation = models.ForeignKey(
-        'Donation',
+        default=timezone.now,
+    )
+    user = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
-        name='Donación',
-        help_text='Donación asociada al historial',
-        null=True,
-        blank=True,
-    ),
+        verbose_name='Bot de bits',
+        default=None,
+    )
     amount = models.IntegerField(
         verbose_name='Cantidad',
-        null=True,
-        blank=True,
-        default=0
+        default=0,
     )
     
+    def __str__ (self):
+        return self.id
+    
+    class Meta:
+        verbose_name = "Bits historial"
+        verbose_name_plural = "Bits historiales"
+        
     def save(self, *args, **kwargs):
-        
-        # Get or create bit summary
-        bit_summary = BitsSummary.objects.get_or_create(
-            bot=self.donation.user
-        )        
-        # Get bot and amounts
-        bot = self.donation.user
-        amount_donation = self.donation.amount
-        amount_history = self.amount
-        
-        # Save negative amount if donation is done
-        donation_done = self.donation.done
-        if donation_done:
-            bit_summary.balance -= amount_donation
-        
-        # Save amount from history
-        if amount_history:
-            bit_summary.balance += amount_history
-            
-        # Save summary
-        bit_summary.last_update = self.datetime
-        bit_summary.save()
         
         super(BitsHistory, self).save(*args, **kwargs)
         
-    def __str__ (self):
-        return self.id
-    
-    class Meta:
-        verbose_name = "Historial de bits"
-        verbose_name_plural = "Historiales de bits"
+        # Update bot balance
+        if self.user:
+            self.user.update_balance ()
+        
+        
 
-class BitsSummary (models.Model):
-    id = models.AutoField(
-        primary_key=True,
-        verbose_name='ID'
-    ),
-    bot = models.ForeignKey(
-        'User',
-        on_delete=models.CASCADE,
-        help_text='Bot de bits',
-    ),
-    last_update = models.DateTimeField(
-        verbose_name='Fecha y hora',
-        default=timezone.now
-    ),
-    balance = models.IntegerField(
-        verbose_name='Balance',
-        default=0
-    )
-    
-    def __str__ (self):
-        return self.id
-    
-    class Meta:
-        verbose_name = "Resumen de bits"
-        verbose_name_plural = "Resúmenes de bits"
+        
+        
+        
