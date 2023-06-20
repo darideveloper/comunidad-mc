@@ -51,24 +51,24 @@ class User (models.Model):
     )
     
     @staticmethod
-    def update_balance (self):
+    def update_balance (user):
         
         # Calculate bits donated
-        donations = Donation.objects.filter(user=self, done=True)
+        donations = Donation.objects.filter(user=user, done=True)
         bits_donated = 0
         for donation in donations:
             bits_donated += donation.amount
             
         # Calculatebits form history
-        histories = BitsHistory.objects.filter(user=self)
+        histories = BitsHistory.objects.filter(user=user)
         bits_history = 0
         for history in histories:
             bits_history += history.amount
             
         # Calculate balance
         balance = bits_history - bits_donated
-        self.balance = balance
-        self.save()
+        user.balance = balance
+        user.save()
 
     def __str__(self):
         return self.name
@@ -130,11 +130,11 @@ class Donation(models.Model):
 
     def save(self, *args, **kwargs):
         
-        super(BitsHistory, self).save(*args, **kwargs)
+        super(Donation, self).save(*args, **kwargs)
 
         # Update bot balance
         if self.user:
-            self.user.update_balance ()
+            self.user.update_balance (self.user)
         
 class Token(models.Model):
     name = models.CharField(
@@ -217,7 +217,7 @@ class BitsHistory (models.Model):
         
         # Update bot balance
         if self.user:
-            self.user.update_balance ()
+            self.user.update_balance (self.user)
         
         
 
