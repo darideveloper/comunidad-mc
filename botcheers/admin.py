@@ -22,9 +22,9 @@ def get_admin_group (user_auth:django.contrib.auth.models.User) -> list:
 @admin.register (models.User)
 class AdminUser (admin.ModelAdmin):
         
-    list_display = ('id', 'name', 'last_update', 'is_active', 'user_auth')
+    list_display = ('id', 'name', 'balance', 'last_update', 'is_active', 'user_auth')
     list_filter = ('is_active', 'last_update', 'user_auth__username')
-    ordering = ('id', 'name', 'cookies', 'last_update', 'is_active', 'user_auth')
+    ordering = ('id', 'name', 'balance', 'cookies', 'last_update', 'is_active', 'user_auth')
     search_fields = ('name', 'cookies', 'is_active', 'user_auth__username')
     list_per_page = 20
     
@@ -112,23 +112,13 @@ class AdminProxy (admin.ModelAdmin):
     ordering = ('id', 'host', 'port')
     search_fields = ('host', 'port')
     list_per_page = 20
-
-# @admin.register (models.BitsHistory)
-# class AdminBitsHistory (admin.ModelAdmin):
+   
+@admin.register (models.BitsHistory)
+class AdminBitsSummary (admin.ModelAdmin):
     
-#     list_display = ('id', 'datetime', 'donation', 'amount')
-#     list_filter = ('donation__user', 'donation__user__user_auth', 'datetime')
-#     ordering = ('-id', 'datetime', 'donation', 'amount')
-#     search_fields = ('donation__user', 'donation__user__user_auth', 'donation__stream_chat_link')
-#     list_per_page = 20
-#     raw_id_fields = ('donation',)
-    
-# @admin.register (models.BitsSummary)
-# class AdminBitsSummary (admin.ModelAdmin):
-    
-#     list_display = ('id', 'user', 'last_update', 'balance')
-#     list_filter = ('user', "user__user_auth", 'last_update')
-#     ordering = ('-id', 'user', 'last_update', 'balance')
-#     search_fields = ('user__name', 'user__user_auth', 'donation__stream_chat_link')
-#     list_per_page = 20
-#     raw_id_fields = ('user',)
+    list_display = ('id', 'datetime', 'user', 'amount', 'donation')
+    list_filter = ('user', "user__user_auth", 'donation__stream_chat_link')
+    ordering = ('-id', 'datetime', 'user', 'amount')
+    search_fields = ('user__name', 'user__user_auth')
+    list_per_page = 20
+    raw_id_fields = ('user', 'donation')

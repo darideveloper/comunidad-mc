@@ -130,7 +130,7 @@ class Donation(models.Model):
         if not bits_history and self.done:
             bits_history = BitsHistory.objects.create(
                 user=self.user,
-                amount=self.amount,
+                amount=-self.amount,
                 donation=self
             )
         
@@ -210,7 +210,7 @@ class BitsHistory (models.Model):
     )
     
     def __str__ (self):
-        return self.id
+        return f"{self.id}"
     
     class Meta:
         verbose_name = "Bits historial"
