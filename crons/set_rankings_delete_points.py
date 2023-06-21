@@ -107,9 +107,11 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
     logger.info (f"{logs_prefix} Bits added to first, second and third users")
     
-    # Add a free to first user
+    # Add a free and a extra to first user
     models.StreamFree (user=first_user).save ()
-    logger.info (f"{logs_prefix} Vip added to first user")
+    logger.info (f"{logs_prefix} free added to first user")
+    models.StreamExtra (user=first_user).save ()
+    logger.info (f"{logs_prefix} extra added to first user")
     
     # backuop weekly points
     models.WeeklyPointBackup.objects.all().delete()
