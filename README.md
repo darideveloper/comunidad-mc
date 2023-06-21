@@ -1,5 +1,5 @@
-<div><a href='https://github.com/github.com/darideveloper/blob/master/LICENSE' target='_blank'>
-            <img src='https://img.shields.io/github/license/github.com/darideveloper.svg?style=for-the-badge' alt='MIT License' height='30px'/>
+<div><a href='https://github.com/darideveloper/comunidad-mc/blob/master/LICENSE' target='_blank'>
+            <img src='https://img.shields.io/github/license/darideveloper/comunidad-mc.svg?style=for-the-badge' alt='MIT License' height='30px'/>
         </a><a href='https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/' target='_blank'>
                 <img src='https://img.shields.io/static/v1?style=for-the-badge&message=LinkedIn&color=0A66C2&logo=LinkedIn&logoColor=FFFFFF&label=' alt='Linkedin' height='30px'/>
             </a><a href='https://t.me/darideveloper' target='_blank'>
@@ -20,11 +20,7 @@ Visit at: **[comunidadmc.com](https://comunidadmc.com/)**
 
 Web App for streams, with a points system who allow you to schedule your streams to be seen by other community members
 
-Start date: **2023-05-11**
-
-Last update: **2023-05-11**
-
-Project type: **client's project**
+Project type: **client**
 
 </div><br><details>
             <summary>Table of Contents</summary>
@@ -42,7 +38,7 @@ Project type: **client's project**
 
 # Related projects
 
-<div align='center'><a href='https://github.com/darideveloper/twitch-chat-reader' target='_blank'> <img src='https://github.com/darideveloper/twitch-chat-reader/blob/master/logo.png?raw=true' alt='Twitch Chat Reader' title='Twitch Chat Reader' height='50px'/> </a><a href='https://github.com/darideveloper/twitch-viwer-bot' target='_blank'> <img src='https://github.com/darideveloper/twitch-viwer-bot/blob/master/logo.png?raw=true' alt='Twitch Viwer Bot' title='Twitch Viwer Bot' height='50px'/> </a><a href='https://github.com/darideveloper/twitch-cheer-bot' target='_blank'> <img src='https://github.com/darideveloper/twitch-cheer-bot/blob/master/logo.png?raw=true' alt='Twitch Cheer Bot' title='Twitch Cheer Bot' height='50px'/> </a></div>
+<div align='center'><a href='https://github.com/darideveloper/twitch-chat-reader' target='_blank'> <img src='https://github.com/darideveloper/twitch-chat-reader/blob/master/logo.png?raw=true' alt='Twitch Chat Reader' title='Twitch Chat Reader' height='50px'/> </a><a href='https://github.com/darideveloper/twitch-viwer-bot' target='_blank'> <img src='https://github.com/darideveloper/twitch-viwer-bot/blob/master/logo.png?raw=true' alt='Twitch Viwer Bot' title='Twitch Viwer Bot' height='50px'/> </a><a href='https://github.com/darideveloper/twitch-cheer-bot' target='_blank'> <img src='https://github.com/darideveloper/twitch-cheer-bot/blob/master/logo.png?raw=true' alt='Twitch Cheer Bot' title='Twitch Cheer Bot' height='50px'/> </a><a href='https://github.com/darideveloper/twitch-cookies-getter/tree/master' target='_blank'> <img src='https://github.com/darideveloper/twitch-cookies-getter/blob/master/logo.png?raw=true' alt='Twitch Cookies Getter' title='Twitch Cookies Getter' height='50px'/> </a></div>
 
 # Media
 
@@ -115,5 +111,4 @@ The app includes too a referral system.
 	- [x] Bits history
 	- [x] Withdraw bits
 	- [x] Display current bits
-
 
