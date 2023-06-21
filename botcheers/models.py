@@ -3,7 +3,6 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User as UserAuth
 from django.utils import timezone
 
-
 class User (models.Model):
     id = models.AutoField(
         primary_key=True, 
@@ -47,26 +46,20 @@ class User (models.Model):
     balance = models.IntegerField(
         verbose_name='Balance',
         help_text='Balance de bits del usuario',
-        default=0
+        default=0,
+        editable=False
     )
     
     @staticmethod
     def update_balance (user):
-        
-        # Calculate bits donated
-        donations = Donation.objects.filter(user=user, done=True)
-        bits_donated = 0
-        for donation in donations:
-            bits_donated += donation.amount
-            
-        # Calculatebits form history
+                
+        # Calculate bits form history
         histories = BitsHistory.objects.filter(user=user)
-        bits_history = 0
+        balance = 0
         for history in histories:
-            bits_history += history.amount
+            balance += history.amount
             
         # Calculate balance
-        balance = bits_history - bits_donated
         user.balance = balance
         user.save()
 
@@ -131,10 +124,15 @@ class Donation(models.Model):
     def save(self, *args, **kwargs):
         
         super(Donation, self).save(*args, **kwargs)
-
-        # Update bot balance
-        if self.user:
-            self.user.update_balance (self.user)
+        
+        # Save nww bits history, if the donation is done
+        bits_history = BitsHistory.objects.filter(donation=self)
+        if not bits_history and self.done:
+            bits_history = BitsHistory.objects.create(
+                user=self.user,
+                amount=self.amount,
+                donation=self
+            )
         
 class Token(models.Model):
     name = models.CharField(
@@ -202,6 +200,13 @@ class BitsHistory (models.Model):
     amount = models.IntegerField(
         verbose_name='Cantidad',
         default=0,
+    )
+    donation = models.ForeignKey(
+        Donation,
+        on_delete=models.CASCADE,
+        verbose_name='Donación',
+        null=True,
+        blank=True,        
     )
     
     def __str__ (self):
