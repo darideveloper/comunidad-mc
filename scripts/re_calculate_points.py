@@ -1,4 +1,4 @@
-""" Set points to the users in the current streams """
+""" Set points to the users, in old streams """
 
 # Add parent folder to path
 import os
@@ -12,6 +12,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 from app.twitch import TwitchApi
+from app import models
 
 prefix = "calculate points -"
 
@@ -19,7 +20,7 @@ prefix = "calculate points -"
 twitch = TwitchApi (prefix)
 
 # Get streams
-current_streams = twitch.get_current_streams()
+streams = models.Stream.objects.filter (id=2723)
 
 # Calculate points
-twitch.calculate_points(current_streams)
+twitch.calculate_points(streams)
