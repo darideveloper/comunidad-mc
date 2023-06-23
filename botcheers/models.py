@@ -50,13 +50,20 @@ class User (models.Model):
     )
     
     @staticmethod
-    def update_balance (user):
-                
+    def get_balance (user):
+        
         # Calculate bits form history
         histories = BitsHistory.objects.filter(user=user)
         balance = 0
         for history in histories:
             balance += history.amount
+            
+        return balance
+    
+    @staticmethod
+    def update_balance (user):
+        
+        balance = User.get_balance (user)
             
         # Calculate balance
         user.balance = balance
@@ -65,11 +72,7 @@ class User (models.Model):
     def save(self, *args, **kwargs):
         
         # Validate if balance has changed, or if is a new user
-        old_user = User.objects.filter (id=self.id)
-        if not old_user:
-            old_balance = 0
-        else:
-            old_balance = old_user[0].balance
+        old_balance = User.get_balance (self)
                     
         # Get difference
         difference = self.balance - old_balance
