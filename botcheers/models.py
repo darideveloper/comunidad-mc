@@ -47,7 +47,6 @@ class User (models.Model):
         verbose_name='Balance',
         help_text='Balance de bits del usuario',
         default=0,
-        editable=False
     )
     
     @staticmethod
@@ -62,6 +61,28 @@ class User (models.Model):
         # Calculate balance
         user.balance = balance
         user.save()
+        
+    def save(self, *args, **kwargs):
+        
+        # Validate if balance has changed, or if is a new user
+        old_user = User.objects.filter (id=self.id)
+        if not old_user:
+            old_balance = 0
+        else:
+            old_balance = old_user[0].balance
+                    
+        # Get difference
+        difference = self.balance - old_balance
+        
+        super(User, self).save(*args, **kwargs)
+        
+        # Save bit history if difference is not 0
+        if difference != 0:
+            BitsHistory.objects.create (
+                user=self,
+                amount=difference,
+                donation=None,
+            )
 
     def __str__(self):
         return self.name
