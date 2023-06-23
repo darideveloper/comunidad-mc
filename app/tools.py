@@ -353,7 +353,7 @@ def is_stream_cancelable (stream):
         return False
 
 def set_negative_point (user:models.User, amount:int, reason:str, 
-                        prefix:str=""):
+                        prefix:str="", stream:models.Stream=None,):
     """ Set negative point to user if it is possible
 
     Args:
@@ -385,7 +385,7 @@ def set_negative_point (user:models.User, amount:int, reason:str,
         info_point.save ()
     
     # Search if already exist nevative a point for the stream
-    general_points = models.GeneralPoint.objects.filter (user=user, info=info_point)
+    general_points = models.GeneralPoint.objects.filter (user=user, info=info_point, stream=stream)
     if general_points:
         
         # Incress negative point
@@ -396,7 +396,13 @@ def set_negative_point (user:models.User, amount:int, reason:str,
     else:
                 
         # Add new point
-        general_point = models.GeneralPoint (user=user, datetime=timezone.now(), amount=-amount, info=info_point)
+        general_point = models.GeneralPoint (
+            user=user, 
+            datetime=timezone.now(), 
+            amount=-amount, 
+            info=info_point,
+            stream=stream
+        )
         general_point.save ()
     
     return True

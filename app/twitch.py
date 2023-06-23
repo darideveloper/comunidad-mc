@@ -317,7 +317,13 @@ class TwitchApi:
         # Subtract point to streamer (except rankings: admin and free streams)
         admin_type = tools.get_admin_type(user=streamer)
         if not admin_type and not stream.is_free and not force and amount >= 1:
-            tools.set_negative_point(streamer, 1, "viwer asistió a stream", prefix=self.logs_prefix)
+            tools.set_negative_point(
+                streamer, 
+                1, 
+                "viwer asistió a stream", 
+                prefix=self.logs_prefix, 
+                stream=stream
+            )
 
         # Set tripple point if stream is vip or if triple time
         is_triple_time = tools.is_triple_time()
