@@ -13,6 +13,13 @@ django.setup()
 
 from app.twitch import TwitchApi
 
+prefix = "calculate points -"
+
 # Submit data to nodejs api, for start reading chat
-twitch = TwitchApi (logs_prefix="calculate points -")
-twitch.calculate_points()
+twitch = TwitchApi ()
+
+# Get streams
+current_streams = twitch.get_current_streams()
+
+# Calculate points
+twitch.calculate_points(current_streams)

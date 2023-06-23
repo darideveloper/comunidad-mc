@@ -47,7 +47,8 @@ class TwitchApi:
 
         # Get current streams
         current_streams = models.Stream.objects.filter(
-            datetime__range=[start_hour, end_hour]).all().order_by('user__user_name')
+            datetime__range=[start_hour, end_hour]
+        ).all().order_by('user__user_name')
 
         if not current_streams:
             logger.info(f"{self.logs_prefix} No streams found")
@@ -496,12 +497,14 @@ class TwitchApi:
             datetime=stream.datetime
         )
 
-    def calculate_points (self):
+    def calculate_points (self, current_streams:models.Stream=None):
         """ Count comments in the current streams and set points to users """
         
-        current_streams = self.get_current_streams()
-        if not current_streams:
+        # Show status
+        if current_streams.count() == 0:
             logger.info (f"{self.logs_prefix} No streams found at this hour")
+            return None
+        
         stream_text = ",".join(list(map(lambda stream: stream.user.user_name, current_streams)))
         logger.info (f"{self.logs_prefix} Calculating points for streams: {stream_text}")
         
