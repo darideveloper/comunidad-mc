@@ -501,7 +501,7 @@ class TwitchApi:
         """ Count comments in the current streams and set points to users """
         
         # Show status
-        if current_streams.count() == 0:
+        if len(current_streams) == 0:
             logger.info (f"{self.logs_prefix} No streams found at this hour")
             return None
         
