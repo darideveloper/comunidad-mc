@@ -149,12 +149,12 @@ def update_cookies(request, name):
             "message": "Cookies not found"    
         }, safe=False)
     
-    # Update cookies
-    user.cookies = json_data["cookies"]
-    
     # Activate user
     user = user[0]
     user.is_active = True
+    
+    # Update cookies
+    user.cookies = json_data["cookies"]
     
     # Save user
     user.save()
