@@ -3,7 +3,11 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User as UserAuth
 from django.utils import timezone
 
+def get_default_cookies ():
+    return {"sample": "sample"}
+
 class User (models.Model):
+    
     id = models.AutoField(
         primary_key=True, 
         verbose_name='ID'
@@ -22,7 +26,9 @@ class User (models.Model):
     )
     cookies = models.JSONField(
         verbose_name='Cookies', 
-        help_text='Cookies de sesión del usuario'
+        help_text='Cookies de sesión del usuario',
+        default=get_default_cookies,
+        editable=False,
     )
     is_active = models.BooleanField(
         default=True, 
