@@ -1032,3 +1032,10 @@ def register_referred_user_from (request, user_from_id):
         
         # Redirect to landing
         return redirect('landing')
+    
+# def get_general_point_error (request, id):
+#     """ Get the error message bause a user didn't get a general point """
+    
+#     general_point = models.GeneralPoint.objects.filter(id=id).first()
+#     stream = general_point.stream
+#     user = general_point.user

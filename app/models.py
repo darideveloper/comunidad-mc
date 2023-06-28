@@ -129,6 +129,7 @@ class GeneralPoint (models.Model):
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del punto", null=False, blank=False, default=timezone.now)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de puntos", null=False, blank=False, default=1)
     info = models.ForeignKey('InfoPoint', on_delete=models.CASCADE, name='info', verbose_name="información", help_text="información del punto", null=False, blank=False, default=1)
+    details = models.CharField(name='details', verbose_name="detalles", help_text="detalles del punto", null=False, blank=True, max_length=100)
     
     def __str__(self):
         return f"{self.user} ({self.amount}): {self.datetime} - stream: {self.stream}"

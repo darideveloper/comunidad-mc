@@ -476,13 +476,14 @@ class TwitchApi:
 
         return True
 
-    def add_cero_point(self, user: models.User, stream:models.Stream, info_text:str):
+    def add_cero_point(self, user: models.User, stream:models.Stream, info_text:str, details:str):
         """ Set a point register with amount in 0 when is the first check or comment of the user in the stream
 
         Args:
             user (models.User): user object
             stream (models.Stream): stream object
             info_text (str, optional): details of the point.
+            details (str, optional): details of the point.
         """
 
         # Save general point
@@ -494,7 +495,8 @@ class TwitchApi:
             stream=stream, 
             amount=0, 
             info=info, 
-            datetime=stream.datetime
+            datetime=stream.datetime,
+            details=details
         )
 
     def calculate_points (self, current_streams:models.Stream=None):
@@ -524,19 +526,22 @@ class TwitchApi:
                 # Validate comment ammount          
                 if (comments_num < self.min_comments):
                     # Add cero point
-                    logger.info (f"{self.logs_prefix} User {user} have only {comments_num} comments in stream {stream}")
-                    self.add_cero_point (user, stream, info_text="faltaron comentarios")
+                    details = f"Solo se detectaron {comments_num} comentarios en el stream. Debes comentar más para ganar puntos"
+                    logger.info (f"{self.logs_prefix} No point - User: {user}, Stream: {stream}, Comments num: {comments_num}")
+                    self.add_cero_point (user, stream, info_text="faltaron comentarios", details=details)
                     continue
                 
                 # Validate distance between first and last comment  
                 first_comment = comments.first()
                 last_comment = comments.last()
-                time_between = (last_comment.datetime - first_comment.datetime).total_seconds() / 60.0
+                time_between = (last_comment.datetime - first_comment.datetime).total_seconds() // 60
                 if (time_between < self.min_time_comments):
                     
                     # Add cero point
-                    logger.info (f"{self.logs_prefix} User {user} have less than {self.min_time_comments} minutes between first and last comment in stream {stream}")
-                    self.add_cero_point (user, stream, info_text="faltó tiempo de visualización")
+                    details = f"El tiempo entre el primer y último comentario fue de {time_between} minutos."
+                    details += "Debes ver el stream por más tiempo y espaciar mas tus comentarios para ganar puntos"
+                    logger.info (f"{self.logs_prefix} No point - User: {user}, Stream: {stream}, Minutes between: {time_between}")
+                    self.add_cero_point (user, stream, info_text="faltó tiempo de visualización", details=details)
                     continue
                 
                 # Add point
