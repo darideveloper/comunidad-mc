@@ -58,7 +58,7 @@ export function show_details_point (details) {
       Swal.fire({
         icon: 'info',
         title: 'Importante',
-        html: "<b>Para abrir un ticket</b>, en caso de que comentaras correctamente en el stream, deberás contar con <b>capturas de pantalla de tus comentarios</b> <br><br> Si abres el ticket pero <b>no tienes capturas</b>, se te penalizará con <b>20 pountos</b>",
+        html: "<b>Para abrir un ticket</b>, en caso de que comentaras correctamente en el stream, deberás contar con <b>capturas de pantalla de tus comentarios</b> <br><br> Si abres el ticket pero <b>no tienes capturas</b>, se te penalizará con <b>20 puntos</b>",
         showDenyButton: true,
         confirmButtonText: 'No tengo capturas',
         denyButtonText: 'Sí tengo capturas, abrir ticket',
