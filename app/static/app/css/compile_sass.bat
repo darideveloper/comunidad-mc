@@ -1,12 +1,25 @@
 echo Compaling files... & ^
+echo Compaling 404... & ^
 sass 404.sass 404.css & ^
+echo Compaling admin... & ^
 sass admin.sass admin.css & ^
+echo Compaling calendar... & ^
+sass calendar.sass calendar.css & ^
+echo Compaling landing... & ^
 sass landing.sass landing.css & ^
+echo Compaling points... & ^
 sass points.sass points.css & ^
+echo Compaling profile... & ^
+sass profile.sass profile.css & ^
+echo Compaling ranking... & ^
 sass ranking.sass ranking.css & ^
+echo Compaling register... & ^
 sass register.sass register.css & ^
+echo Compaling schedule... & ^
 sass schedule.sass schedule.css & ^
+echo Compaling support... & ^
 sass support.sass support.css & ^
-sass whatsapp.sass whatsapp.css & ^
-sass users-points.sass users-points.css & ^
-sass profile.sass profile.css
+echo Compaling wallet... & ^
+sass wallet.sass wallet.css & ^
+echo Compaling whatsapp... & ^
+sass whatsapp.sass whatsapp.css

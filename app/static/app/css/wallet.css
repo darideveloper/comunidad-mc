@@ -148,7 +148,6 @@
 }
 #header nav .menu-wrapper ul li.active a {
   color: #5db897;
-  cursor: default;
 }
 #header nav .menu-wrapper ul li.active:hover {
   border: none;
@@ -257,10 +256,10 @@ a {
 }
 
 .regular-width {
-  max-width: 1100px;
+  max-width: 1350px;
   margin: 0 auto;
 }
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1400px) {
   .regular-width {
     padding: 0 5%;
     width: 90%;
@@ -365,7 +364,35 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   justify-content: center;
   margin: 0 auto;
   margin-top: 50px;
+  width: 80%;
+  background: #0e1119;
+  padding: 16px 24px;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.01);
+}
+.referral::after {
+  position: absolute;
+  content: "";
+  top: 15px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: 100%;
   width: 100%;
+  transform: scale(0.9) translateZ(0);
+  filter: blur(15px);
+  background: linear-gradient(to left, #ff5770, #e4428d, #c42da8, #9e16c3, #6501de, #9e16c3, #c42da8, #e4428d, #ff5770);
+  background-size: 200% 200%;
+  animation: animateGlow 1.25s linear infinite;
+}
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
 }
 .referral p {
   text-transform: uppercase;
