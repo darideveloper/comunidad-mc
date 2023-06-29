@@ -146,10 +146,10 @@ class AdminInfoPoint (admin.ModelAdmin):
 class AdminGeneralPoint (admin.ModelAdmin):
     
     raw_id_fields = ('stream',)
-    list_display = ('id', 'user', 'amount', 'stream', 'info', 'datetime')
-    ordering = ('-id', 'user', 'amount', 'stream', 'info', 'datetime')
+    list_display = ('id', 'user', 'amount', 'stream', 'info', 'details', 'datetime')
+    ordering = ('-id', 'user', 'amount', 'stream', 'info', 'details', 'datetime')
     list_filter = ('info', 'datetime', 'user')
-    search_fields = ('user__user_name', 'stream__user__user_name')
+    search_fields = ('user__user_name', 'stream__user__user_name', 'details',)
     list_per_page = 20
     
 @admin.register (models.WeeklyPoint)
