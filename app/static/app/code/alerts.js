@@ -43,6 +43,35 @@ export function show_info (message) {
   })
 }
 
+export function show_details_point (details) {
+  // Create alert
+  Swal.fire({
+    icon: 'error',
+    title: 'Punto no obtenido',
+    text: details,
+    showDenyButton: true,
+    confirmButtonText: 'Ok',
+    denyButtonText: `Abrir un ticket`,
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isDenied) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Importante',
+        html: "<b>Para abrir un ticket</b>, en caso de que comentaras correctamente en el stream, deberás contar con <b>capturas de pantalla de tus comentarios</b> <br><br> Si abres el ticket pero <b>no tienes capturas</b>, se te penalizará con <b>20 pountos</b>",
+        showDenyButton: true,
+        confirmButtonText: 'No tengo capturas',
+        denyButtonText: 'Sí tengo capturas, abrir ticket',
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isDenied) {
+          window.open("https://discord.gg/2rjN8nmr", '_blank');
+        }
+      })
+    }
+  })
+}
+
 if (error) {
     show_error(error)
 }

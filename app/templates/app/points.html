@@ -15,6 +15,7 @@
           <th>Hora</th>
           <th>Mis pts</th>
           <th>Pts obtenidos</th>
+          <th>Canal</th>
           <th>Detalles</th>
         </tr>
       </thead>
@@ -32,9 +33,22 @@
             <td>+ {{point.points}}</td>
           {% else %}
             <td >{{point.points}}</td>
-            {% endif %}
-          <td>{{point.details}}</td>
+          {% endif %}
 
+          <td>{{point.chanel}}</td>
+          
+          <!-- Details button -->
+          <td>
+          {% if point.details %}
+          <button class="btn form regular more-info" data-details="{{point.details}}">
+            <div class="content">
+              <span>
+                  mas info
+              </span>
+            </div>
+          </button>
+          {% endif %}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -45,4 +59,5 @@
 
 {% block js %}
 <script src="{% static 'app/code/profile-card.js' %}"></script>
+<script src="{% static 'app/code/details-general-point.js' %}" type="module"></script>
 {% endblock %}

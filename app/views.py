@@ -296,14 +296,15 @@ def points(request):
         time = datetime_user.strftime("%I %p")
         channel = ""
         if point.stream:
-            channel = f" ({point.stream.user.user_name})"
+            channel = point.stream.user.user_name
         
         points_data.append ({
             "date": date,
             "time": time,
             "my_points": current_points,
             "points": point.amount, 
-            "details": point.info.info + channel,
+            "chanel": channel,
+            "details": point.details,
             "user_active": True,
         })
         
@@ -1033,9 +1034,3 @@ def register_referred_user_from (request, user_from_id):
         # Redirect to landing
         return redirect('landing')
     
-# def get_general_point_error (request, id):
-#     """ Get the error message bause a user didn't get a general point """
-    
-#     general_point = models.GeneralPoint.objects.filter(id=id).first()
-#     stream = general_point.stream
-#     user = general_point.user
