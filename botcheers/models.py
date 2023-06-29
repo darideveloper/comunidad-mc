@@ -28,7 +28,7 @@ class User (models.Model):
         verbose_name='Cookies', 
         help_text='Cookies de sesión del usuario',
         default=get_default_cookies,
-        editable=False,
+        # editable=False,
     )
     is_active = models.BooleanField(
         default=True, 
