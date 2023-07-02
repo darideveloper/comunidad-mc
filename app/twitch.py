@@ -514,6 +514,13 @@ class TwitchApi:
         
         for stream in current_streams:
             
+            # Update first_stream_done if is the first stream of the user
+            streamer = stream.user
+            if not streamer.first_stream_done:
+                print (f"first stream done: {streamer}")
+                streamer.first_stream_done = True
+                streamer.save()
+                
             for user in users:
                 
                 
