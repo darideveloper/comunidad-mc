@@ -516,10 +516,39 @@ class TwitchApi:
             
             # Update first_stream_done if is the first stream of the user
             streamer = stream.user
-            if not streamer.first_stream_done:
-                print (f"first stream done: {streamer}")
+            referred_user_from = streamer.referred_user_from
+            first_stream_done = streamer.first_stream_done
+            if not first_stream_done and referred_user_from:
+
+                logger.info(
+                    f"First stream detected from referred user {streamer}"
+                )
+
+                # Update streamer data
                 streamer.first_stream_done = True
                 streamer.save()
+
+                # Add 10 general points to referred_user_from
+                info_point = models.InfoPoint.objects.get(info="primer stream de referido")
+                general_point = models.GeneralPoint.objects.create(
+                    user=referred_user_from,
+                    amount=10,
+                    info=info_point,
+                )
+                
+                # Add weekly points to referred_user_from
+                models.WeeklyPoint.objects.create(
+                    general_point=general_point,                    
+                )
+
+                # Add bits to streamer
+                models.Bit.objects.create(
+                    user=referred_user_from, 
+                    amount=100, 
+                    details=f"Referido {streamer}"
+                )
+                
+                logger.info (f"Reward added to user {referred_user_from}")
                 
             for user in users:
                 
