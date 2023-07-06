@@ -2,6 +2,7 @@ import pytz
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User as UserAuth
+from django import forms
 
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
@@ -262,20 +263,22 @@ class Settings (models.Model):
         verbose_name_plural = "Ajustes"
         
 class Log (models.Model):
-    ORIGIN_CHOICES = [
-        ("set_ranking_delete_points", "Set Ranking Delete Points"),
-        ("node_comments", "Node Comments"),
-        ("read_chat", "Read Chat"),
-        ("calculate_points", "Calculate Points"),
-        ("update_tokens", "Update Tokens"),
-    ]
-    origin = models.CharField(name='origin', verbose_name="origen", help_text="origen del log", null=False, blank=False, max_length=100, choices=ORIGIN_CHOICES)
+    origin = models.ForeignKey('LogOrigin', on_delete=models.CASCADE, name='origin', verbose_name="origen", help_text="origen del log", null=False, blank=False)
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del log", null=False, blank=False, default=timezone.now)
     details = models.CharField(name='details', verbose_name="detalles", help_text="detalles del log", null=False, blank=True, max_length=100)
+    log_type = models.ForeignKey('LogType', on_delete=models.CASCADE, name='log_type', verbose_name="tipo de log", help_text="tipo de log", null=False, blank=False, default=1)
     
     def __str__ (self):
         return f"{self.origin} ({self.datetime})"
-    
-    class Meta:
-        verbose_name = "Log"
-        verbose_name_plural = "Logs"
+
+class LogType (models.Model):
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del tipo de log", null=False, blank=False, max_length=100)
+
+    def __str__ (self):
+        return f"{self.name}"
+
+class LogOrigin (models.Model):
+    name = models.CharField(name='name', verbose_name="nombre", help_text="nombre del origen del log", null=False, blank=False, max_length=100)
+
+    def __str__ (self):
+        return f"{self.name}"

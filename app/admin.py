@@ -255,8 +255,22 @@ class AdminSettings (admin.ModelAdmin):
 @admin.register (models.Log)
 class AdminLog (admin.ModelAdmin):
     
-    list_display = ('id', 'datetime', 'origin', 'details')
-    ordering = ('-id', 'datetime', 'origin', 'details')
-    list_filter = ('datetime', 'origin')
-    search_fields = ('origin', 'details')
+    list_display = ('id', 'datetime', 'origin', 'details', 'log_type')
+    ordering = ('-id', 'datetime', 'origin', 'details', 'log_type')
+    list_filter = ('datetime', 'origin', 'log_type')
+    search_fields = ('origin', 'details', 'log_type')
+    list_per_page = 50
+    
+@admin.register (models.LogType)
+class AdminLogType (admin.ModelAdmin):
+    
+    list_display = ('id', 'name',)
+    ordering = ('id', 'name',)
+    list_per_page = 50
+    
+@admin.register (models.LogOrigin)
+class AdminLogOrigin (admin.ModelAdmin):
+    
+    list_display = ('id', 'name',)
+    ordering = ('id', 'name',)
     list_per_page = 50
