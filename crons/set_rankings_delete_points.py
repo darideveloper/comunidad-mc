@@ -18,7 +18,7 @@ from app import tools
 from app.logs import logger
 from django.utils import timezone
 
-logs_prefix="read_chat -"
+logs_origin="set_ranking_delete_points"
 
 # Get ranbkings and required points
 rankings = models.Ranking.objects.all().order_by("points").reverse()
@@ -39,12 +39,20 @@ if RESTART_DAY:
 today = timezone.now().weekday()
 
 # Convert each daily point to weekly point
-logger.info (f"{logs_prefix} Converting dailly points to weekly points")
+models.Log.objects.create (
+    origin=logs_origin,
+    details="Converting dailly points to weekly points"
+)
+
 daily_points = models.DailyPoint.objects.all()
 for daily_point in daily_points:
     general_point = daily_point.general_point
     models.WeeklyPoint(general_point=general_point).save()
-logger.info (f"{logs_prefix} Done. Daily points converted to weekly points")
+    
+models.Log.objects.create (
+    origin=logs_origin,
+    details="Done. Daily points converted to weekly points"
+)
 
 # validate week date
 if today == RESTART_POINTS_WEEK_DAY:    
@@ -95,7 +103,10 @@ if today == RESTART_POINTS_WEEK_DAY:
         ).save()
         
         # Show status
-        logger.info (f"{logs_prefix} Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}")
+        models.Log.objects.create ( 
+            origin=logs_origin,
+            details="Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}"
+        )
     
     # Add bits to first, second and third users in points table
     points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()
@@ -105,30 +116,54 @@ if today == RESTART_POINTS_WEEK_DAY:
     models.Bit (user=first_user, amount=RANKING_FIRST_BITS, details="1er lugar del Ranking Semanal").save ()
     models.Bit (user=second_user, amount=RANKING_SECOND_BITS, details="2do lugar del Ranking Semanal").save ()
     models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
-    logger.info (f"{logs_prefix} Bits added to first, second and third users")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"Bits added to first, second and third users ({first_user}, {second_user}, {third_user}))"
+    )
     
     # Add a free and a extra to first user
     models.StreamFree (user=first_user).save ()
-    logger.info (f"{logs_prefix} free added to first user")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"free added to first user {first_user}"
+    )
     models.StreamExtra (user=first_user).save ()
-    logger.info (f"{logs_prefix} extra added to first user")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"extra added to first user {first_user}"
+    )
     
     # backuop weekly points
     models.WeeklyPointBackup.objects.all().delete()
-    logger.info (f"{logs_prefix} weekly points backup deleted")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"weekly points backup deleted"
+    )
     weekly_points = models.WeeklyPoint.objects.all()
     for weekly_point in weekly_points:
         models.WeeklyPointBackup (general_point=weekly_point.general_point).save()
-    logger.info (f"{logs_prefix} weekly points backup created")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"weekly points backup created"
+    )
     
     # Delete week points
     models.WeeklyPoint.objects.all().delete()
-    logger.info (f"{logs_prefix} week points deleted")
+    models.Log.objects.create ( 
+        origin=logs_origin,
+        details=f"week points deleted"
+    )
 
 # delete all daily points
 models.DailyPoint.objects.all().delete()
-logger.info (f"{logs_prefix} today points deleted")
+models.Log.objects.create ( 
+    origin=logs_origin,
+    details=f"today points deleted"
+)
 
 # delete top daily points
 models.TopDailyPoint.objects.all().delete()
-logger.info (f"{logs_prefix} top points deleted")
+models.Log.objects.create ( 
+    origin=logs_origin,
+    details=f"top points deleted"
+)
