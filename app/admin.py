@@ -251,3 +251,12 @@ class AdminSettings (admin.ModelAdmin):
     ordering = ('id', 'name', 'value')
     search_fields = ('name', 'value')
     list_per_page = 20
+    
+@admin.register (models.Log)
+class AdminLog (admin.ModelAdmin):
+    
+    list_display = ('id', 'datetime', 'origin', 'details')
+    ordering = ('-id', 'datetime', 'origin', 'details')
+    list_filter = ('datetime', 'origin')
+    search_fields = ('origin', 'details')
+    list_per_page = 50
