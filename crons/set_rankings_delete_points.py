@@ -15,10 +15,9 @@ django.setup()
 # Django imports
 from app import models
 from app import tools
-from app.logs import logger
 from django.utils import timezone
 
-logs_origin="set_ranking_delete_points"
+logs_origin = models.LogOrigin.objects.get (name="Set Ranking Delete Points")
 
 # Get ranbkings and required points
 rankings = models.Ranking.objects.all().order_by("points").reverse()
