@@ -586,9 +586,6 @@ def support(request):
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
-    # Validate if node server its running
-    is_node_working = twitch.is_node_working()
-    
     # Validate if the current user its admin and donnot
     is_admin = tools.get_admin_type (user)
     is_donnor = user.is_donnor
@@ -618,10 +615,6 @@ def support(request):
         bits.save()
         
         return redirect("support")
-
-    # Valide if node server is working
-    if not is_node_working:
-        error = "El bot no está disponible en este momento (tus puntos no serán contabilizados)"
 
     # Get current streams and format
     streams = []
