@@ -387,6 +387,11 @@ class TwitchApi:
                 info=info,
                 datetime=stream.datetime,
             )
+            
+            models.Log.objects.create (
+                origin=self.log_origin,
+                details=f"Added 2 general extra points to user: {user} in stream: {stream}",
+            )
 
 
         # add general point
