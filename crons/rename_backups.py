@@ -1,4 +1,14 @@
+# Add parent folder to path
 import os
+import sys
+parent_folder = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(parent_folder)
+
+# Setup django settings
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
+django.setup()
+
 import shutil
 from datetime import datetime
 from app import models
@@ -31,7 +41,7 @@ try:
         
         models.Log.objects.create (
             origin=log_origin,
-            details=f"Renamed backup file to {backup_file_path_new}"
+            details=f"Done. Filenam to: {backup_file_path_new}"
         )
     else:
         models.Log.objects.create (
