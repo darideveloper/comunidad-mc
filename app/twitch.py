@@ -402,7 +402,7 @@ class TwitchApi:
         
         models.Log.objects.create (
             origin=self.log_origin,
-            details=f"Added {amount} general points to user: {user}",
+            details=f"Added {amount} general points to user: {user} in stream: {stream}",
         )
         
         # Validate if user already have a daily point in this hour
