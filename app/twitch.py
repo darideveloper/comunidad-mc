@@ -13,7 +13,7 @@ from . import tools
 
 class TwitchApi:
 
-    def __init__(self, logs_origin_name:str=""):
+    def __init__(self, log_origin_name:str=""):
         # Load and get credentials
         load_dotenv()
         self.node_api = os.environ.get("NODE_API")
@@ -25,8 +25,8 @@ class TwitchApi:
         self.wait_minutes_points = int(os.getenv("WAIT_MINUTES_POINTS"))
         
         # Logs
-        self.logs_origin = models.LogOrigin.objects.get(name=logs_origin_name)
-        self.logs_type_error = models.LogType.objects.get(name="error")
+        self.log_origin = models.LogOrigin.objects.get(name=log_origin_name)
+        self.log_type_error = models.LogType.objects.get(name="error")
 
     def get_current_streams(self, back_hours:int=0):
         """ Get the current live streams from databse
@@ -40,7 +40,7 @@ class TwitchApi:
 
         # Get date ranges
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details="Getting streams from database for current hour"
         )
         now_datetime = timezone.now().astimezone(pytz.timezone(settings.TIME_ZONE)) - datetime.timedelta(hours=back_hours)
@@ -56,7 +56,7 @@ class TwitchApi:
 
         if not current_streams:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details="No streams found"
             )
             return []
@@ -76,13 +76,13 @@ class TwitchApi:
         node_error = False
         current_streams = self.get_current_streams()
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Starting sending streams to node.js api: {len(current_streams)}"
         )
         
         # debug streams found
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}"
         )
 
@@ -105,16 +105,16 @@ class TwitchApi:
         # Send data to node.js api for start readding comments, and catch errors
         try:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Sending streams to node.js api"
             )
             res = requests.post(self.node_api, json=streams_data)
             res.raise_for_status()
         except Exception as e:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Error sending streams to node.js api: {e}",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
             node_error = True
 
@@ -131,16 +131,16 @@ class TwitchApi:
         """
 
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Checking if node.js api is working"
         )
         try:
             res = requests.post(self.node_api)
         except Exception as e:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Error checking if node.js api is working: {e}",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
             return False
         else:
@@ -158,11 +158,11 @@ class TwitchApi:
         """
         
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Checking if node.js api is working"
         )
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details="getting tokens from twitch api"
         )
 
@@ -266,17 +266,17 @@ class TwitchApi:
             # Debug scope errors
             if "Missing scope" in json_data["message"]:
                 models.Log.objects.create (
-                    origin=self.logs_origin,
+                    origin=self.log_origin,
                     details=f"Unauthorized to get chat users for user {streamer}: {json_data}",
-                    log_type=self.logs_type_error
+                    log_type=self.log_type_error
                 )
                 return []
             
             # Show error and try again
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Token expired for {streamer}. Details: {json_data})",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
             return []
 
@@ -308,9 +308,9 @@ class TwitchApi:
         res = requests.post(url, data=params)
         if res.status_code != 200:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Error updating user refresh_token: ({res.status_code}) {refresh_token}",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
             return ""
 
@@ -318,9 +318,9 @@ class TwitchApi:
         access_token = json_data.get("access_token", "")
         if not access_token:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Error updating user refresh_token: ({res.status_code}) {refresh_token}",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
 
         return access_token
@@ -339,9 +339,9 @@ class TwitchApi:
         new_access_token = self.get_new_user_token(user.refresh_token)
         if not new_access_token:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Error generating new token for user: {user}",
-                log_type=self.logs_type_error
+                log_type=self.log_type_error
             )
             return False
 
@@ -349,8 +349,8 @@ class TwitchApi:
         user.access_token = new_access_token
         user.save()
         models.Log.objects.create (
-            origin=self.logs_origin,
-            details=f"{self.logs_origin} User token updated: {user}",
+            origin=self.log_origin,
+            details=f"{self.log_origin} User token updated: {user}",
         )
         return True
 
@@ -375,7 +375,7 @@ class TwitchApi:
                 streamer, 
                 1, 
                 "viwer asistió a stream", 
-                prefix=str(self.logs_origin), 
+                prefix=str(self.log_origin), 
                 stream=stream
             )
 
@@ -405,7 +405,7 @@ class TwitchApi:
         )
         
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Added {amount} general points to user: {user}",
         )
         
@@ -420,7 +420,7 @@ class TwitchApi:
         if daily_points_hour and not force:
             id = daily_points_hour.first().general_point.id
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"User {user} already have a daily point in this hour: {id}",
             )
         else:
@@ -450,7 +450,7 @@ class TwitchApi:
                     )
                     
                     models.Log.objects.create (
-                        origin=self.logs_origin,
+                        origin=self.log_origin,
                         details=f"Added daily to user: {user}",
                     )
 
@@ -469,7 +469,7 @@ class TwitchApi:
                             position=current_tops+1, user=user
                         )
                         models.Log.objects.create (
-                            origin=self.logs_origin,
+                            origin=self.log_origin,
                             details=f"User {user} already have 10 points. Added to Ranking of daily points",
                         )
 
@@ -485,7 +485,7 @@ class TwitchApi:
         
         is_live = False
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Checking if user {user} is live",
         )
                 
@@ -507,16 +507,23 @@ class TwitchApi:
                 is_live = True
         else:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"Can't check live. Invalid token for user {user}",
-                log_type=self.logs_type_error,
+                log_type=self.log_type_error,
             )
+            
+            return False
         
-        models.Log.objects.create (
-            origin=self.logs_origin,
-            details=f"User {user} is live: {is_live}",
-        )  
-
+        if is_live:
+            models.Log.objects.create (
+                origin=self.log_origin,
+                details=f"User {user} is live: {is_live}",
+            )  
+        else:
+            models.Log.objects.create (
+                origin=self.log_origin,
+                details=f"User {user} isn't live: {is_live}",
+            )  
         return is_live
 
     def update_twitch_data(self, user: models.User):
@@ -578,14 +585,14 @@ class TwitchApi:
         # Show status
         if len(current_streams) == 0:
             models.Log.objects.create (
-                origin=self.logs_origin,
+                origin=self.log_origin,
                 details=f"No streams found at this hour",
             )  
             return None
         
         stream_text = ",".join(list(map(lambda stream: stream.user.user_name, current_streams)))
         models.Log.objects.create (
-            origin=self.logs_origin,
+            origin=self.log_origin,
             details=f"Calculating points for streams: {stream_text}",
         ) 
         
@@ -600,7 +607,7 @@ class TwitchApi:
             if not first_stream_done and referred_user_from:
 
                 models.Log.objects.create (
-                    origin=self.logs_origin,
+                    origin=self.log_origin,
                     details=f"First stream detected from referred user {streamer}",
                 ) 
 
@@ -629,7 +636,7 @@ class TwitchApi:
                 )
                 
                 models.Log.objects.create (
-                    origin=self.logs_origin,
+                    origin=self.log_origin,
                     details=f"Reward added to user {referred_user_from}",
                 ) 
                 
@@ -647,7 +654,7 @@ class TwitchApi:
                     # Add cero point
                     details = f"Solo se detectaron {comments_num} comentarios en el stream. Debes comentar más para ganar puntos"
                     models.Log.objects.create (
-                        origin=self.logs_origin,
+                        origin=self.log_origin,
                         details=f"No point - User: {user}, Stream: {stream}, Comments num: {comments_num}",
                     ) 
                     self.add_cero_point (user, stream, info_text="faltaron comentarios", details=details)
@@ -663,7 +670,7 @@ class TwitchApi:
                     details = f"El tiempo entre el primer y último comentario fue de {time_between} minutos."
                     details += "Debes ver el stream por más tiempo y espaciar mas tus comentarios para ganar puntos"
                     models.Log.objects.create (
-                        origin=self.logs_origin,
+                        origin=self.log_origin,
                         details=f"No point - User: {user}, Stream: {stream}, Minutes between: {time_between}",
                     ) 
                     self.add_cero_point (user, stream, info_text="faltó tiempo de visualización", details=details)
