@@ -17,7 +17,7 @@ from app import models
 from app.twitch import TwitchApi
 from app.logs import logger
 
-twitch = TwitchApi ()
+twitch = TwitchApi ("Script")
 
 users = models.User.objects.all()
 

@@ -14,7 +14,7 @@ django.setup()
 from app.twitch import TwitchApi
 from app import models
 
-prefix = "calculate points -"
+prefix = "Script"
 
 # Submit data to nodejs api, for start reading chat
 twitch = TwitchApi (prefix)

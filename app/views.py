@@ -24,7 +24,7 @@ SCHEDULE_DAY =int(os.environ.get("SCHEDULE_DAY"))
 INFO = os.environ.get("INFO")
 
 # Twitch instance
-twitch = TwitchApi ()
+twitch = TwitchApi ("Views App")
 
 # Create your views here.
 def login(request):

@@ -375,7 +375,7 @@ def set_negative_point (user:models.User, amount:int, reason:str,
                 
     if amount <= 0:
         return False
-        
+    
     logger.info (f"{prefix} Adding {amount} negative points to {user} for: {reason}")
     
     # Get info point

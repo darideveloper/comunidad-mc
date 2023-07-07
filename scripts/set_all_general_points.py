@@ -21,7 +21,7 @@ from app.twitch import TwitchApi
 users = models.User.objects.all()
 
 # Connect to twitch class
-twitch_api = TwitchApi ()
+twitch_api = TwitchApi ("Script")
 
 # Get streamers
 streams = models.Stream.objects.filter(id__in=STREAMS_IDS)

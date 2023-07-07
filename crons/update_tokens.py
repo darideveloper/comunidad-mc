@@ -17,9 +17,7 @@ from app import models
 from app.logs import logger
 from app.twitch import TwitchApi
 
-logs_prefix = "update_tokens -"
-
-twitch = TwitchApi (logs_prefix=logs_prefix)
+twitch = TwitchApi ("Update Tokens")
 
 users = models.User.objects.all()
 
@@ -63,10 +61,10 @@ for user in users:
         update_results.append (f"user {user}: OK")
         counters["ok"] += 1
         
-logger.info (f"\n{logs_prefix} Summary: ")
-logger.info (f"{logs_prefix} Users updated: {counters['ok']}")
-logger.info (f"{logs_prefix} Users update errors: {counters['error']}")
+logger.info (f"\n{logs_origin} Summary: ")
+logger.info (f"{logs_origin} Users updated: {counters['ok']}")
+logger.info (f"{logs_origin} Users update errors: {counters['error']}")
 
-logger.info (f"\n{logs_prefix} Details: ")
+logger.info (f"\n{logs_origin} Details: ")
 for result in update_results:
-    logger.info (f"{logs_prefix} {result}")
+    logger.info (f"{logs_origin} {result}")

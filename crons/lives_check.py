@@ -16,10 +16,8 @@ from app.twitch import TwitchApi
 from app.logs import logger
 from app import tools
 
-logs_prefix = "lives check -"
-
 # Get live streams
-twitch = TwitchApi (logs_prefix=logs_prefix)
+twitch = TwitchApi ("Lives Check")
 streams = twitch.get_current_streams ()
 
 # Validate if each stream is live
@@ -34,6 +32,6 @@ for stream in streams:
         tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo", stream)
                 
         # Delete stream
-        logger.info (f"{logs_prefix} delete stream {stream}")
+        logger.info (f"{logs_origin} delete stream {stream}")
         stream.delete()
     

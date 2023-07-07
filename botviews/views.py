@@ -3,6 +3,7 @@ import json
 import django
 from dotenv import load_dotenv
 from . import models
+from app import models as app_models
 from . import decorators
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -14,7 +15,6 @@ load_dotenv()
 
 # Load enviroment variables
 DEBUG = os.getenv("DEBUG") == "True"
-
 
 def get_json_model(model: django.db.models, get_objects=True) -> str:
     """ Serializes a model to json
@@ -70,7 +70,7 @@ def get_streams(request):
     """ Returns names of the current streamers in comunidad mc, as json format """
 
     # get current streams
-    twitch = TwitchApi()
+    twitch = TwitchApi("Views BotViews")
     streams = twitch.get_current_streams()
 
     # Get streamers

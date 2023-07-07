@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 load_dotenv ()
 API_TOKEN_PROXIES = os.getenv ('API_TOKEN_PROXIES')
 
-logs_prefix = "update_proxies -"
+logs_origin = "update_proxies -"
 
 # Get proxies
 res = requests.get (
@@ -31,20 +31,20 @@ res = requests.get (
     }
 )
 if res.status_code != 200:
-    logger.error (f"{logs_prefix} Error getting proxies: {res.status_code} - {res.text}")
+    logger.error (f"{logs_origin} Error getting proxies: {res.status_code} - {res.text}")
     sys.exit (1)
 
 try:
     json_data = res.json ()
     proxies = json_data['results']
 except Exception as e:
-    logger.error (f"{logs_prefix} Error getting proxies: {e}")
+    logger.error (f"{logs_origin} Error getting proxies: {e}")
     sys.exit (1)
 
 # Delete old proxies
 views_models.Proxy.objects.all().delete()
 cheers_models.Proxy.objects.all().delete()
-logger.info (f"{logs_prefix} Old proxies deleted")
+logger.info (f"{logs_origin} Old proxies deleted")
 
 # Save each proxy in database
 for proxy in proxies:
@@ -64,9 +64,9 @@ for proxy in proxies:
         port=proxy["port"],
     )
     
-    logger.info (f"{logs_prefix} {proxy['id']} saved")
+    logger.info (f"{logs_origin} {proxy['id']} saved")
 
 # SHow proxies counter
-logger.info (f"{logs_prefix} {len(proxies)} proxies saved")
+logger.info (f"{logs_origin} {len(proxies)} proxies saved")
 
 print ()

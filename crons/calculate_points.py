@@ -12,11 +12,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 from app.twitch import TwitchApi
-
-prefix = "calculate points -"
+from app import models
 
 # Submit data to nodejs api, for start reading chat
-twitch = TwitchApi (prefix)
+twitch = TwitchApi ("Calculate Points")
 
 # Get streams
 current_streams = twitch.get_current_streams()
