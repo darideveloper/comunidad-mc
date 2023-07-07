@@ -71,6 +71,14 @@ class TwitchApi:
 
         node_error = False
         current_streams = self.get_current_streams()
+        
+        if not current_streams:
+            models.Log.objects.create (
+                origin=self.log_origin,
+                details=f"No streams found to send to node.js api",
+            )
+            return None
+        
         models.Log.objects.create (
             origin=self.log_origin,
             details=f"Starting sending streams to node.js api: {len(current_streams)}"
