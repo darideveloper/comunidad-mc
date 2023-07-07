@@ -14,57 +14,74 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
-from app.logs import logger
 from app.twitch import TwitchApi
 
-twitch = TwitchApi ("Update Tokens")
+log_origin_name = "Update Tokens"
+log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+try:
+    twitch = TwitchApi (log_origin_name)
 
-users = models.User.objects.all()
+    users = models.User.objects.all()
 
-update_results = []
-counters = {
-    "error": 0,
-    "ok": 0
-}
-for user in users:
-    
-    # Loop for update token if is invalid
-    error = ""
-    for _ in range (2):
-
-        user_id = user.id
-        user_token = user.access_token
-        url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
-        headers = {
-            "Authorization": f"Bearer {user_token}",
-            "Client-Id": "p1yxg1ystvc7ikxem39q7mhqq9fk59" # twitch client id from .env
-        }
-        res = requests.get(url, headers=headers)
-        json_data = res.json()
+    errors = []
+    counters = {
+        "error": 0,
+        "ok": 0
+    }
+    for user in users:
         
-        if "data" in json_data:
-            error = ""
-            break
-        
-        # Auto update user token
-        if "message" in json_data:
-            message = json_data["message"]
-            error = message
-            twitch.update_token (user)
+        # Loop for update token if is invalid
+        error = ""
+        for _ in range (2):
+
+            user_id = user.id
+            user_token = user.access_token
+            url = f"https://api.twitch.tv/helix/chat/chatters?broadcaster_id={user_id}&moderator_id={user_id}"
+            headers = {
+                "Authorization": f"Bearer {user_token}",
+                "Client-Id": "p1yxg1ystvc7ikxem39q7mhqq9fk59" # twitch client id from .env
+            }
+            res = requests.get(url, headers=headers)
+            json_data = res.json()
             
-        sleep (10)
-        
-    if error:
-        update_results.append (f"user {user}: {error}")
-        counters["error"] += 1
-    else:
-        update_results.append (f"user {user}: OK")
-        counters["ok"] += 1
-        
-logger.info (f"\n{logs_origin} Summary: ")
-logger.info (f"{logs_origin} Users updated: {counters['ok']}")
-logger.info (f"{logs_origin} Users update errors: {counters['error']}")
+            if "data" in json_data:
+                error = ""
+                break
+            
+            # Auto update user token
+            if "message" in json_data:
+                message = json_data["message"]
+                error = message
+                twitch.update_token (user)
+                
+            sleep (10)
+            
+        if error:
+            errors.append (f"user {user}: {error}")
+            counters["error"] += 1
+        else:
+            counters["ok"] += 1
+    
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Summary: {counters['ok']} updated, {counters['error']} errors",
+    )
+ 
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Details: ",
+    )
+    
+    for error in errors:
+        models.Log.objects.create (
+            origin=log_origin,
+            details=error
+        )
 
-logger.info (f"\n{logs_origin} Details: ")
-for result in update_results:
-    logger.info (f"{logs_origin} {result}")
+except Exception as e:
+    log_type_error = models.LogType.objects.get (name="error")
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Uhknown error: {e}",
+        log_type=log_type_error,
+    )

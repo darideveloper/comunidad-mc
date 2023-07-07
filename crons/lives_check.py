@@ -13,25 +13,36 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 
 from app.twitch import TwitchApi
-from app.logs import logger
 from app import tools
+from app import models
 
-# Get live streams
-twitch = TwitchApi ("Lives Check")
-streams = twitch.get_current_streams ()
 
-# Validate if each stream is live
-for stream in streams:
-    
-    # Get user and live status
-    user = stream.user
-    is_live = twitch.is_user_live (user)
+log_origin_name = "Lives Check"
+try:
+    # Get live streams
+    twitch = TwitchApi (log_origin_name)
+    streams = twitch.get_current_streams ()
+
+    # Validate if each stream is live
+    for stream in streams:
         
-    if not is_live:        
-        # Add negative points
-        tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo", stream)
-                
-        # Delete stream
-        logger.info (f"{logs_origin} delete stream {stream}")
-        stream.delete()
+        # Get user and live status
+        user = stream.user
+        is_live = twitch.is_user_live (user)
+            
+        if not is_live:        
+            # Add negative points
+            tools.set_negative_point (user, 50, "penalización por no abrir stream a tiempo", stream)
+                    
+            # Delete stream
+            stream.delete()
+            
+except Exception as e:
+    log_type_error = models.LogType.objects.get (name="error")
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Uhknown error: {e}",
+        log_type=log_type_error,
+    )
     

@@ -17,152 +17,165 @@ from app import models
 from app import tools
 from django.utils import timezone
 
-logs_origin = models.LogOrigin.objects.get (name="Set Ranking Delete Points")
-
-# Get ranbkings and required points
-rankings = models.Ranking.objects.all().order_by("points").reverse()
-
-# Load environment variables
 load_dotenv ()
-RESTART_POINTS_WEEK_DAY = int(os.getenv('RESTART_POINTS_WEEK_DAY'))
-RESTART_DAY = False
-RANKING_FIRST_BITS = int(os.getenv('RANKING_FIRST_BITS'))
-RANKING_SECOND_BITS = int(os.getenv('RANKING_SECOND_BITS'))
-RANKING_THIRD_BITS = int(os.getenv('RANKING_THIRD_BITS'))
 
-# Overwrite restart date in debug mode
-if RESTART_DAY:
-    RESTART_POINTS_WEEK_DAY = timezone.now().weekday()
+log_origin_name = "Set Ranking Delete Points"
+try:
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
 
-# Get current week day
-today = timezone.now().weekday()
+    # Get ranbkings and required points
+    rankings = models.Ranking.objects.all().order_by("points").reverse()
 
-# Convert each daily point to weekly point
-models.Log.objects.create (
-    origin=logs_origin,
-    details="Converting dailly points to weekly points"
-)
+    # Load environment variables
+    RESTART_POINTS_WEEK_DAY = int(os.getenv('RESTART_POINTS_WEEK_DAY'))
+    RESTART_DAY = False
+    RANKING_FIRST_BITS = int(os.getenv('RANKING_FIRST_BITS'))
+    RANKING_SECOND_BITS = int(os.getenv('RANKING_SECOND_BITS'))
+    RANKING_THIRD_BITS = int(os.getenv('RANKING_THIRD_BITS'))
 
-daily_points = models.DailyPoint.objects.all()
-for daily_point in daily_points:
-    general_point = daily_point.general_point
-    models.WeeklyPoint(general_point=general_point).save()
-    
-models.Log.objects.create (
-    origin=logs_origin,
-    details="Done. Daily points converted to weekly points"
-)
+    # Overwrite restart date in debug mode
+    if RESTART_DAY:
+        RESTART_POINTS_WEEK_DAY = timezone.now().weekday()
 
-# validate week date
-if today == RESTART_POINTS_WEEK_DAY:    
-    
-    # Delete points history for global ranking
-    models.PointsHistory.objects.all().delete()
-    
-    # Delete extra streams
-    models.StreamExtra.objects.all().delete()
-    
-    # Delete vips
-    models.StreamVip.objects.all().delete()
+    # Get current week day
+    today = timezone.now().weekday()
+
+    # Convert each daily point to weekly point
+    models.Log.objects.create (
+        origin=log_origin,
+        details="Converting dailly points to weekly points"
+    )
+
+    daily_points = models.DailyPoint.objects.all()
+    for daily_point in daily_points:
+        general_point = daily_point.general_point
+        models.WeeklyPoint(general_point=general_point).save()
         
-    # Get and loop all users to update ranking
-    users = models.User.objects.all()
-    for user in users:
+    models.Log.objects.create (
+        origin=log_origin,
+        details="Done. Daily points converted to weekly points"
+    )
+
+    # validate week date
+    if today == RESTART_POINTS_WEEK_DAY:    
         
-        # Get user week points
-        general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
+        # Delete points history for global ranking
+        models.PointsHistory.objects.all().delete()
         
-        ranking_found = None
-        admin_type = tools.get_admin_type (user)
-        if admin_type:
-            # Found ranking to admins
-            if admin_type == "admin diamante":
-                ranking_found = models.Ranking.objects.get (name="admin")
-            elif admin_type == "admin platino":
-                ranking_found = models.Ranking.objects.get (name="platino")            
-        else:
-            # Found ranking to normal users
-            for ranking in rankings:
-                if weekly_points_num >= ranking.points:
-                    ranking_found = ranking
-                    break
-                
-        # Update ranking    
-        user.ranking = ranking_found  
-        user.save()
+        # Delete extra streams
+        models.StreamExtra.objects.all().delete()
         
-        general_points_week, general_points_week_num = tools.get_general_points_last_week (user)
+        # Delete vips
+        models.StreamVip.objects.all().delete()
+            
+        # Get and loop all users to update ranking
+        users = models.User.objects.all()
+        for user in users:
+            
+            # Get user week points
+            general_points, weekly_points, daily_points, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
+            
+            ranking_found = None
+            admin_type = tools.get_admin_type (user)
+            if admin_type:
+                # Found ranking to admins
+                if admin_type == "admin diamante":
+                    ranking_found = models.Ranking.objects.get (name="admin")
+                elif admin_type == "admin platino":
+                    ranking_found = models.Ranking.objects.get (name="platino")            
+            else:
+                # Found ranking to normal users
+                for ranking in rankings:
+                    if weekly_points_num >= ranking.points:
+                        ranking_found = ranking
+                        break
+                    
+            # Update ranking    
+            user.ranking = ranking_found  
+            user.save()
+            
+            general_points_week, general_points_week_num = tools.get_general_points_last_week (user)
+            
+            # Save pouints history
+            models.PointsHistory (
+                user=user, 
+                general_points_num=general_points_num, 
+                general_points_week_num=general_points_week_num,
+                week_points_num=weekly_points_num,
+            ).save()
+            
+            # Show status
+            models.Log.objects.create ( 
+                origin=log_origin,
+                details="Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}"
+            )
         
-        # Save pouints history
-        models.PointsHistory (
-            user=user, 
-            general_points_num=general_points_num, 
-            general_points_week_num=general_points_week_num,
-            week_points_num=weekly_points_num,
-        ).save()
-        
-        # Show status
+        # Add bits to first, second and third users in points table
+        points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()
+        first_user = points_history_all[0].user
+        second_user = points_history_all[1].user
+        third_user = points_history_all[2].user
+        models.Bit (user=first_user, amount=RANKING_FIRST_BITS, details="1er lugar del Ranking Semanal").save ()
+        models.Bit (user=second_user, amount=RANKING_SECOND_BITS, details="2do lugar del Ranking Semanal").save ()
+        models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
         models.Log.objects.create ( 
-            origin=logs_origin,
-            details="Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}"
+            origin=log_origin,
+            details=f"Bits added to first, second and third users ({first_user}, {second_user}, {third_user}))"
         )
-    
-    # Add bits to first, second and third users in points table
-    points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()
-    first_user = points_history_all[0].user
-    second_user = points_history_all[1].user
-    third_user = points_history_all[2].user
-    models.Bit (user=first_user, amount=RANKING_FIRST_BITS, details="1er lugar del Ranking Semanal").save ()
-    models.Bit (user=second_user, amount=RANKING_SECOND_BITS, details="2do lugar del Ranking Semanal").save ()
-    models.Bit (user=third_user, amount=RANKING_THIRD_BITS, details="3er lugar del Ranking Semanal").save ()
+        
+        # Add a free and a extra to first user
+        models.StreamFree (user=first_user).save ()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"free added to first user {first_user}"
+        )
+        models.StreamExtra (user=first_user).save ()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"extra added to first user {first_user}"
+        )
+        
+        # backuop weekly points
+        models.WeeklyPointBackup.objects.all().delete()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"weekly points backup deleted"
+        )
+        weekly_points = models.WeeklyPoint.objects.all()
+        for weekly_point in weekly_points:
+            models.WeeklyPointBackup (general_point=weekly_point.general_point).save()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"weekly points backup created"
+        )
+        
+        # Delete week points
+        models.WeeklyPoint.objects.all().delete()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"week points deleted"
+        )
+
+    # delete all daily points
+    models.DailyPoint.objects.all().delete()
     models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"Bits added to first, second and third users ({first_user}, {second_user}, {third_user}))"
-    )
-    
-    # Add a free and a extra to first user
-    models.StreamFree (user=first_user).save ()
-    models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"free added to first user {first_user}"
-    )
-    models.StreamExtra (user=first_user).save ()
-    models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"extra added to first user {first_user}"
-    )
-    
-    # backuop weekly points
-    models.WeeklyPointBackup.objects.all().delete()
-    models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"weekly points backup deleted"
-    )
-    weekly_points = models.WeeklyPoint.objects.all()
-    for weekly_point in weekly_points:
-        models.WeeklyPointBackup (general_point=weekly_point.general_point).save()
-    models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"weekly points backup created"
-    )
-    
-    # Delete week points
-    models.WeeklyPoint.objects.all().delete()
-    models.Log.objects.create ( 
-        origin=logs_origin,
-        details=f"week points deleted"
+        origin=log_origin,
+        details=f"today points deleted"
     )
 
-# delete all daily points
-models.DailyPoint.objects.all().delete()
-models.Log.objects.create ( 
-    origin=logs_origin,
-    details=f"today points deleted"
-)
-
-# delete top daily points
-models.TopDailyPoint.objects.all().delete()
-models.Log.objects.create ( 
-    origin=logs_origin,
-    details=f"top points deleted"
-)
+    # delete top daily points
+    models.TopDailyPoint.objects.all().delete()
+    models.Log.objects.create ( 
+        origin=log_origin,
+        details=f"top points deleted"
+    )
+except Exception as e:
+    
+    log_type_error = models.LogType.objects.get (name="error")
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Uhknown error: {e}",
+        log_type=log_type_error,
+    )
+    

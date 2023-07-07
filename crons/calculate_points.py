@@ -14,11 +14,21 @@ django.setup()
 from app.twitch import TwitchApi
 from app import models
 
-# Submit data to nodejs api, for start reading chat
-twitch = TwitchApi ("Calculate Points")
+log_origin_name = "Calculate Points"
+try:
+    # Submit data to nodejs api, for start reading chat
+    twitch = TwitchApi (log_origin_name)
 
-# Get streams
-current_streams = twitch.get_current_streams()
+    # Get streams
+    current_streams = twitch.get_current_streams()
 
-# Calculate points
-twitch.calculate_points(current_streams)
+    # Calculate points
+    twitch.calculate_points(current_streams)
+except Exception as e:
+    log_type_error = models.LogType.objects.get (name="error")
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Uhknown error: {e}",
+        log_type=log_type_error,
+    )

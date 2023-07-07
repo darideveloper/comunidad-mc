@@ -3,39 +3,50 @@ import shutil
 from datetime import datetime
 from app import models
 
-# Current date
-now = datetime.now()
-now_str = now.strftime("%Y-%m-%dT%H-%M-%S")
+log_origin_name = "Rename Backups"
+log_type_error = models.LogType.objects.get (name="error")
+try:
 
-# Get new backup file
-current_folder = os.path.dirname(os.path.abspath(__file__))
-parent_folder = os.path.dirname(current_folder)
-backup_folder = os.path.join(parent_folder, 'sql', 'backups')
+    # Current date
+    now = datetime.now()
+    now_str = now.strftime("%Y-%m-%dT%H-%M-%S")
 
-backup_files = os.listdir(backup_folder)
-new_backup_files = [file for file in backup_files if file == "backup"]
+    # Get new backup file
+    current_folder = os.path.dirname(os.path.abspath(__file__))
+    parent_folder = os.path.dirname(current_folder)
+    backup_folder = os.path.join(parent_folder, 'sql', 'backups')
 
-logs_origin = models.LogOrigin.objects.get (name="Rename Backups")
-logs_type_error = models.LogType.objects.get (name="error")
+    backup_files = os.listdir(backup_folder)
+    new_backup_files = [file for file in backup_files if file == "backup"]
 
-if new_backup_files:
-    backup_file = new_backup_files[0]
-    
-    # Rename file
-    backup_file_path = os.path.join(backup_folder, backup_file)
-    backup_file_path_new = os.path.join(backup_folder, f"backup_{now_str}")
-    shutil.move (backup_file_path, backup_file_path_new)
-    
-    models.Log.objects.create (
-        origin=logs_origin,
-        details=f"Renamed backup file to {backup_file_path_new}"
-    )
-else:
-    models.Log.objects.create (
-        origin=logs_origin,
-        details=f"No new backup files found",
-        log_type=logs_type_error
-    )
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+
+    if new_backup_files:
+        backup_file = new_backup_files[0]
         
+        # Rename file
+        backup_file_path = os.path.join(backup_folder, backup_file)
+        backup_file_path_new = os.path.join(backup_folder, f"backup_{now_str}")
+        shutil.move (backup_file_path, backup_file_path_new)
+        
+        models.Log.objects.create (
+            origin=log_origin,
+            details=f"Renamed backup file to {backup_file_path_new}"
+        )
+    else:
+        models.Log.objects.create (
+            origin=log_origin,
+            details=f"No new backup files found",
+            log_type=log_type_error
+        )
+            
+except Exception as e:
     
+    log_type_error = models.LogType.objects.get (name="error")
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+    models.Log.objects.create (
+        origin=log_origin,
+        details=f"Uhknown error: {e}",
+        log_type=log_type_error,
+    )
     
