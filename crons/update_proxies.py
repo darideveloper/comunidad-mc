@@ -25,7 +25,7 @@ try:
     load_dotenv ()
     API_TOKEN_PROXIES = os.getenv ('API_TOKEN_PROXIES')
 
-    log_origin = "update_proxies -"
+    log_origin = models.LogOrigin.objects.get (name=log_origin_name)
 
     # Get proxies
     res = requests.get (
