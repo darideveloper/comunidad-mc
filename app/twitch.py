@@ -39,10 +39,6 @@ class TwitchApi:
         """
 
         # Get date ranges
-        models.Log.objects.create (
-            origin=self.log_origin,
-            details="Getting streams from database for current hour"
-        )
         now_datetime = timezone.now().astimezone(pytz.timezone(settings.TIME_ZONE)) - datetime.timedelta(hours=back_hours)
         start_hour = now_datetime.replace(minute=0, second=0, microsecond=0)
         end_hour = now_datetime.replace(
