@@ -350,7 +350,7 @@ class TwitchApi:
         user.save()
         models.Log.objects.create (
             origin=self.log_origin,
-            details=f"{self.log_origin} User token updated: {user}",
+            details=f"User token updated: {user}",
         )
         return True
 
