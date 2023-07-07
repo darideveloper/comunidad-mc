@@ -51,10 +51,6 @@ class TwitchApi:
         ).all().order_by('user__user_name')
 
         if not current_streams:
-            models.Log.objects.create (
-                origin=self.log_origin,
-                details="No streams found"
-            )
             return []
 
         return current_streams
