@@ -268,6 +268,10 @@ class Log (models.Model):
     details = models.CharField(name='details', verbose_name="detalles", help_text="detalles del log", null=False, blank=True, max_length=100)
     log_type = models.ForeignKey('LogType', on_delete=models.CASCADE, name='log_type', verbose_name="tipo de log", help_text="tipo de log", null=False, blank=False, default=1)
     
+    def save(self, *args, **kwargs):
+        print (f"Log {self.log_type}: {self.origin} ({self.datetime}): {self.details}")
+        super(Log, self).save(*args, **kwargs)
+    
     def __str__ (self):
         return f"{self.origin} ({self.datetime})"
 
