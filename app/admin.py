@@ -258,7 +258,7 @@ class AdminLog (admin.ModelAdmin):
     list_display = ('id', 'datetime', 'origin', 'details', 'log_type')
     ordering = ('-id', 'datetime', 'origin', 'details', 'log_type')
     list_filter = ('datetime', 'origin', 'log_type')
-    search_fields = ('origin', 'details', 'log_type')
+    search_fields = ('details',)
     list_per_page = 50
     
 @admin.register (models.LogType)
