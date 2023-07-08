@@ -887,7 +887,8 @@ def wallet(request):
         "bits": bits_num,
         "streams": streams,
         "history": bits_history,
-        "bits_icon": bits_icon
+        "bits_icon": bits_icon,
+        "withdraw_enabled": False,
     })
     
 def testing (request):

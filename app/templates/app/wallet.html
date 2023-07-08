@@ -66,8 +66,10 @@
 
 {% block js %}
 <!-- Set variables from backend -->
-<script>
+<script> 
+withdrawEnabled = "{{withdraw_enabled}}" == "True"
+console.log ({withdrawEnabled})
 </script>
 
-<script src="{% static 'app/code/wallet.js' %}"></script>
+<script src="{% static 'app/code/wallet.js' %}" type="module"></script>
 {% endblock %}
