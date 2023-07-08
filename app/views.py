@@ -892,12 +892,8 @@ def wallet(request):
     
 def testing (request):
     """ Page for tests """
-
-    dari = models.User.objects.filter(user_name='darideveloper').first()
     
-    live = twitch.is_user_live(dari)
-    
-    return HttpResponse(live)
+    return HttpResponse("ok")
 
 @decorators.validate_login_active
 @decorators.validate_admin
