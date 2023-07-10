@@ -265,7 +265,7 @@ class Settings (models.Model):
 class Log (models.Model):
     origin = models.ForeignKey('LogOrigin', on_delete=models.CASCADE, name='origin', verbose_name="origen", help_text="origen del log", null=False, blank=False)
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora del log", null=False, blank=False, default=timezone.now)
-    details = models.CharField(name='details', verbose_name="detalles", help_text="detalles del log", null=False, blank=True, max_length=100)
+    details = models.TextField(name='details', verbose_name="detalles", help_text="detalles del log", null=False, blank=False)
     log_type = models.ForeignKey('LogType', on_delete=models.CASCADE, name='log_type', verbose_name="tipo de log", help_text="tipo de log", null=False, blank=False, default=1)
     
     def save(self, *args, **kwargs):
