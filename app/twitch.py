@@ -74,15 +74,10 @@ class TwitchApi:
             )
             return None
         
-        models.Log.objects.create (
-            origin=self.log_origin,
-            details=f"Starting sending streams to node.js api: {len(current_streams)}"
-        )
-        
         # debug streams found
         models.Log.objects.create (
             origin=self.log_origin,
-            details=f"Streams found: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}"
+            details=f"Starting sending streams to node.js api: {','.join(list(map(lambda stream: stream.user.user_name, current_streams)))}"
         )
 
         # Update streamer tokens
@@ -97,9 +92,6 @@ class TwitchApi:
                 "user_name": stream.user.user_name,
                 "stream_id": stream.id,
             })
-
-        if not streams_data:
-            return None
 
         # Send data to node.js api for start readding comments, and catch errors
         try:
