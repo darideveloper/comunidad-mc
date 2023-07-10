@@ -376,7 +376,6 @@ class TwitchApi:
                 streamer, 
                 1, 
                 "viwer asistió a stream", 
-                prefix=str(self.log_origin), 
                 stream=stream,
                 log_origin_name='Calculate Points'
             )
