@@ -20,7 +20,11 @@ prefix = "Script"
 twitch = TwitchApi (prefix)
 
 # Get streams
-streams = models.Stream.objects.filter (id=2723)
+streams = models.Stream.objects.filter (id__in=[3299, 3323])
+
+# Delete streams points
+points = models.GeneralPoint.objects.filter (stream__in=streams)
+points.delete ()
 
 # Calculate points
 twitch.calculate_points(streams)
