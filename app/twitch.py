@@ -352,7 +352,6 @@ class TwitchApi:
         models.Log.objects.create (
             origin=self.log_origin,
             details=f"User token updated: {user}",
-            log_type=log_type
         )
         return True
 
