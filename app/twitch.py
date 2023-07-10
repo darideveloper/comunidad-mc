@@ -88,7 +88,7 @@ class TwitchApi:
 
         # Update streamer tokens
         for stream in current_streams:
-            self.update_token (stream.user)
+            self.update_token (stream.user, raise_error=True)
 
         streams_data = {"streams": []}
         for stream in current_streams:
@@ -310,7 +310,6 @@ class TwitchApi:
             models.Log.objects.create (
                 origin=self.log_origin,
                 details=f"Error updating user refresh_token: ({res.status_code}) {refresh_token}",
-                log_type=self.log_type_error
             )
             return ""
 
@@ -320,12 +319,11 @@ class TwitchApi:
             models.Log.objects.create (
                 origin=self.log_origin,
                 details=f"Error updating user refresh_token: ({res.status_code}) {refresh_token}",
-                log_type=self.log_type_error
             )
 
         return access_token
 
-    def update_token(self, user: models.User):
+    def update_token(self, user: models.User, raise_error:bool=False):
         """ Update user token and save in database
 
         Args:
@@ -334,6 +332,10 @@ class TwitchApi:
         Returns: 
             bool: True if token updated, False if error
         """
+        
+        log_type = models.LogType.objects.get(name="info")
+        if raise_error:
+            log_type = self.log_type_error
 
         # Get new access token using refresh token
         new_access_token = self.get_new_user_token(user.refresh_token)
@@ -341,7 +343,7 @@ class TwitchApi:
             models.Log.objects.create (
                 origin=self.log_origin,
                 details=f"Error generating new token for user: {user}",
-                log_type=self.log_type_error
+                log_type=log_type
             )
             return False
 
@@ -351,6 +353,7 @@ class TwitchApi:
         models.Log.objects.create (
             origin=self.log_origin,
             details=f"User token updated: {user}",
+            log_type=log_type
         )
         return True
 
@@ -541,7 +544,7 @@ class TwitchApi:
         print (user)
 
         # Refresh token
-        token_updated = self.update_token(user)
+        token_updated = self.update_token(user, raise_error=True)
 
         if not token_updated:
             return False

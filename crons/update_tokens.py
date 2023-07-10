@@ -18,6 +18,7 @@ from app.twitch import TwitchApi
 
 log_origin_name = "Update Tokens"
 log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+log_type_error = models.LogType.objects.get (name="error")
 try:
     twitch = TwitchApi (log_origin_name)
 
@@ -75,7 +76,8 @@ try:
     for error in errors:
         models.Log.objects.create (
             origin=log_origin,
-            details=error
+            details=error,
+            log_type=log_type_error,
         )
 
 except Exception as e:
