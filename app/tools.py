@@ -3,11 +3,11 @@ import pytz
 from . import models
 from . import tools
 import requests as req
-from .logs import logger
 from django.conf import settings 
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import datetime, timedelta
+from app import models as app_models
 
 # Get enviroment variables
 HOST = os.environ.get("HOST")
@@ -294,7 +294,6 @@ def get_user_streams (user:models.User, user_time_zone:pytz.timezone):
         touple: user_streams (model Objects), user_streams_data (array)
     """
     
-    logger.debug (f"Getting next streams of the user {user}")
     start_week = timezone.datetime.today()
     if start_week.weekday() != 6:
         start_week = start_week - timedelta(start_week.weekday())
@@ -353,18 +352,21 @@ def is_stream_cancelable (stream):
         return False
 
 def set_negative_point (user:models.User, amount:int, reason:str, 
-                        prefix:str="", stream:models.Stream=None,):
+                        stream:models.Stream=None, log_origin_name:str=""):
     """ Set negative point to user if it is possible
 
     Args:
         user (models.User): user to set points
         amount (int): number of negative points to set
         reason (str): info_point text
-        prefix (str, optional): prefix for logs. Defaults to "".
+        stream (models.Stream, optional): stream object. Defaults to None.
+        log_origin_name (str, optional): name of the log origin. Defaults to "".
         
     Returns:
         bool: True if point was set, False if not
     """
+    
+    log_origin = app_models.LogOrigin.objects.get (name=log_origin_name)
     
     amount = abs(amount)
     
@@ -376,7 +378,11 @@ def set_negative_point (user:models.User, amount:int, reason:str,
     if amount <= 0:
         return False
     
-    logger.info (f"{prefix} Adding {amount} negative points to {user} for: {reason}")
+    
+    app_models.Log.objects.create (
+        origin=log_origin,
+        details=f"Adding {amount} negative points to {user} for: {reason}",
+    )
     
     # Get info point
     info_point = models.InfoPoint.objects.get (info=reason)

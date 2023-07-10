@@ -4,8 +4,6 @@ import requests
 # Add parent folder to path
 import os
 import sys
-import random
-from django.utils import timezone
 parent_folder = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(parent_folder)
 
@@ -15,11 +13,14 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
-from app.logs import logger
 
 twitch = TwitchApi ("Script")
 
 users = models.User.objects.all()
+
+log_origin = models.LogOrigin.objects.get (name="Script")
+log_type_error = models.LogType.objects.get (name="error")
+
 
 error_users = []
 for user in users:
@@ -43,9 +44,16 @@ for user in users:
         # Auto update user token
         if "message" in json_data:
             message = json_data["message"]
-            logger.info (f"user {user}: {message}")
+            models.Log.objects.create (
+                origin=log_origin,
+                details=f"user {user}: {message}",
+            )
             if message == "Invalid OAuth token":
                 twitch.update_token (user)
                 continue
             else:
-                logger.error (f"user {user}: {message}")
+                models.Log.objects.create (
+                    origin=log_origin,
+                    details=f"user {user}: {message}",
+                    log_type=log_type_error,
+                )

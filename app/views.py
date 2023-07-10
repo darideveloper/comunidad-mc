@@ -5,17 +5,15 @@ import datetime
 from . import tools
 from . import models
 from . import decorators
-from .logs import logger
 from .twitch import TwitchApi
 from django.conf import settings 
 from dotenv import load_dotenv
-from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count, Sum, Q
 from django.template.loader import render_to_string
-from django.views.generic import ListView
 
 # Get credentials
 load_dotenv()
@@ -25,6 +23,11 @@ INFO = os.environ.get("INFO")
 
 # Twitch instance
 twitch = TwitchApi ("Views App")
+
+# Logs
+log_origin_name = "Views App"
+log_origin = models.LogOrigin.objects.get (name=log_origin_name)
+log_type_error = models.LogType.objects.get (name="error")
 
 # Create your views here.
 def login(request):
@@ -80,12 +83,20 @@ def login(request):
         else:
             # Araise error when user data is not valid
             error = True
-            logger.error("Error al obtener datos de usuario")
+            models.Log.objects.create (
+                origin = log_origin,
+                details = f"Error al obtener datos de usuario: {user_id}, {user_email}, {user_picture}, {user_name}",
+                log_type = log_type_error,   
+            )
 
     else:
         # Araise error where there it nor a login code
         error = True
-        logger.error("Error al obtener codigo de login")
+        models.Log.objects.create (
+            origin = log_origin,
+            details = "Error al obtener codigo de login",
+            log_type = log_type_error,   
+        )
 
     if error:
         # Save login error in session
@@ -651,7 +662,6 @@ def support(request):
     next_stream_date_timezone = None
     if not streams:
         # Get date ranges
-        logger.debug ("Getting hour of the next stream")
         now = timezone.now()
         start_datetime = datetime.datetime(
             now.year, now.month, now.day, now.hour, 0, 0, tzinfo=timezone.utc)
@@ -979,7 +989,7 @@ def cancel_stream (request, id):
                 negative_vip.delete()
         else:      
             # Discount points to user
-            tools.set_negative_point (user, 50, "penalización por cancelar stream", stream)
+            tools.set_negative_point (user, 50, "penalización por cancelar stream", stream, log_origin_name)
             
             # Add a negative extra stream
             models.StreamExtra(user=user, amount=-1).save()

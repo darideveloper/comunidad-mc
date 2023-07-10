@@ -4,7 +4,6 @@ import json
 import requests
 import datetime
 from . import models
-from .logs import logger
 from dotenv import load_dotenv
 from django.conf import settings
 from django.db.models import Sum
@@ -379,7 +378,8 @@ class TwitchApi:
                 1, 
                 "viwer asistió a stream", 
                 prefix=str(self.log_origin), 
-                stream=stream
+                stream=stream,
+                log_origin_name='Calculate Points'
             )
 
         # Set tripple point if stream is vip or if triple time
