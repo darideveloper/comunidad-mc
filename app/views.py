@@ -306,8 +306,8 @@ def points(request):
         date = datetime_user.strftime("%d/%m/%Y")
         time = datetime_user.strftime("%I %p")
         channel = ""
-        if point.stream:
-            channel = point.stream.user.user_name
+        if point.stream and point.info:
+            channel = f"{point.info} ({point.stream.user.user_name})"
         
         points_data.append ({
             "date": date,
