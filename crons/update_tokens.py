@@ -5,7 +5,6 @@ import requests
 import os
 import sys
 from time import sleep
-from django.utils import timezone
 parent_folder = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(parent_folder)
 
@@ -15,6 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comunidad_mc.settings')
 django.setup()
 from app import models
 from app.twitch import TwitchApi
+from django.core.mail import send_mail
 
 log_origin_name = "Update Tokens"
 log_origin = models.LogOrigin.objects.get (name=log_origin_name)
@@ -58,7 +58,11 @@ try:
             sleep (10)
             
         if error:
-            errors.append (f"user {user}: {error}")
+            errors.append ({
+                "message": f"user {user}: {error}",
+                "email": user.email,
+                "name": user.user_name
+            })
             counters["error"] += 1
         else:
             counters["ok"] += 1
@@ -74,11 +78,30 @@ try:
     )
     
     for error in errors:
+        
+        # Log invalid tokens
         models.Log.objects.create (
             origin=log_origin,
-            details=error,
-            log_type=log_type_error,
+            details=error.message,
         )
+        
+        # Submit email to each user
+        body = f"Hola, {error.name}"
+        body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
+        body += "\nPara evitar que tu cuenta sea inhabilitada, ingresa a la pagina de Comunidad MC y actualiza tus datos desde la página de perfil:"
+        body += "\nhttps://comunidadmc.com/profile/"
+        body += "\n\nSi es la primera vez que recibes este mensaje, no es necesario crear un ticket de soporte."
+        body += "\n\nAtentamente, Dari Dev, administrador de Comunidad MC"
+        
+        
+        send_mail(
+            "Aviso de baja actividad en tu cuenta de ComunidadMC",
+            body,
+            "darideveloper@gmail.com",
+            [error.email],
+            fail_silently=False,
+        ) 
+        
 
 except Exception as e:
     log_type_error = models.LogType.objects.get (name="error")
@@ -87,3 +110,4 @@ except Exception as e:
         details=f"Uhknown error: {e}",
         log_type=log_type_error,
     )
+    
