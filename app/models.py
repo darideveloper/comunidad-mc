@@ -2,7 +2,7 @@ import pytz
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User as UserAuth
-from django import forms
+from django.core.mail import send_mail
 
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
@@ -269,7 +269,21 @@ class Log (models.Model):
     log_type = models.ForeignKey('LogType', on_delete=models.CASCADE, name='log_type', verbose_name="tipo de log", help_text="tipo de log", null=False, blank=False, default=1)
     
     def save(self, *args, **kwargs):
+        
+        # Show log in console
         print (f"Log {self.log_type}: {self.origin} ({self.datetime}): {self.details}")
+        
+        # Submit error emails
+        if self.log_type.id == 2:
+            
+            send_mail(
+                f"Error Comunidad MC ({self.origin})",
+                 f"origin: {self.origin}\ndatetime: {self.datetime}\ndetails: {self.details}\nlog_type: {self.log_type}",
+                "darideveloper@gmail.com",
+                ["darideveloper@gmail.com"],
+                fail_silently=True,
+            )
+
         super(Log, self).save(*args, **kwargs)
     
     def __str__ (self):
