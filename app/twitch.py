@@ -407,69 +407,65 @@ class TwitchApi:
             details=f"Added {amount} general points to user: {user} in stream: {stream}",
         )
         
-        # Add daily point
-        now = timezone.now()
-        start_time = now.replace(minute=0, second=0) - datetime.timedelta(minutes=30)
-        daily_points_hour = models.DailyPoint.objects.filter(
-            general_point__user=user, 
-            general_point__stream__datetime__range=[start_time, now]
+        # Detect when user alreadfy have a daily point in this hour
+        stream_time = stream.datetime
+        all_streams_time = models.Stream.objects.filter(
+            datetime=stream_time
+        )
+        streams_daily_points = models.DailyPoint.objects.filter(
+            general_point__user=user,
+            general_point__stream__in=all_streams_time
         )
         
-        if daily_points_hour and not force:
-            id = daily_points_hour.first().general_point.id
+        if streams_daily_points.count() > 0 and not force:
+            id = streams_daily_points.first().general_point.id
             models.Log.objects.create (
                 origin=self.log_origin,
                 details=f"User {user} already have a daily point in this hour: {id}",
             )
-        else:
+            return None
+        
+        # Validate if the user have less than the max number of daily points
+        daily_points = models.DailyPoint.objects.filter(
+            general_point__user=user
+        )
+        daily_points_positive = daily_points.filter(
+            general_point__amount__gte=1
+        )
+        current_daily_points = daily_points_positive.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
+        if not current_daily_points:
+            current_daily_points = 0
 
-            # Validate if the user have less than the max number of daily points
-            daily_points = models.DailyPoint.objects.filter(
-                general_point__user=user
+        if current_daily_points < self.max_daily_points:
+
+            # Save daily point
+            models.DailyPoint.objects.create ( # debug
+                general_point=general_point
             )
-            daily_points_positive = daily_points.filter(
-                general_point__amount__gte=1
+            
+            models.Log.objects.create (
+                origin=self.log_origin,
+                details=f"Added {amount} deily points to user: {user} in stream: {stream}",
             )
-            current_daily_points = daily_points_positive.aggregate(Sum('general_point__amount'))['general_point__amount__sum']
-            if not current_daily_points:
-                current_daily_points = 0
 
-            if current_daily_points < self.max_daily_points:
+            # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
+            current_tops = models.TopDailyPoint.objects.all().count()
+            current_points = current_daily_points + 1
+            if current_tops < 10 and current_points == 10:
 
-                # Validate if already exists daily and weekly point
-                current_daily_point = models.DailyPoint.objects.filter(
-                    general_point=general_point
+                # Add user to Ranking of daily points if there isnt in table
+                user_in_top = models.TopDailyPoint.objects.filter(
+                    user=user
                 ).count()
-
-                # Save daily point
-                if current_daily_point == 0:
-                    models.DailyPoint.objects.create ( # debug
-                        general_point=general_point
+                
+                if not user_in_top:
+                    models.TopDailyPoint.objects.create( # debug
+                        position=current_tops+1, user=user
                     )
-                    
                     models.Log.objects.create (
                         origin=self.log_origin,
-                        details=f"Added daily to user: {user}",
+                        details=f"User {user} already have 10 points. Added to Ranking of daily points",
                     )
-
-                # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
-                current_tops = models.TopDailyPoint.objects.all().count()
-                current_points = current_daily_points + 1
-                if current_tops < 10 and current_points == 10:
-
-                    # Add user to Ranking of daily points if there isnt in table
-                    user_in_top = models.TopDailyPoint.objects.filter(
-                        user=user
-                    ).count()
-                    
-                    if not user_in_top:
-                        models.TopDailyPoint.objects.create( # debug
-                            position=current_tops+1, user=user
-                        )
-                        models.Log.objects.create (
-                            origin=self.log_origin,
-                            details=f"User {user} already have 10 points. Added to Ranking of daily points",
-                        )
 
     def is_user_live(self, user: models.User):
         """ Return if user is live or not
