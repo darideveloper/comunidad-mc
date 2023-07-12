@@ -52,8 +52,7 @@
                 </svg>
             </button>
             <div class="menu-wrapper">
-                {% if current_page != "404" %}
-                    {% if user_active %}
+                {% if current_page != "404" and user_active and current_page != 'landing' %}
                     <ul class="menu">
                         <button class="btn menu close">
                             <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"
@@ -76,7 +75,6 @@
                         <li><a href="{{twitch_link}}">Iniciar</a></li>
                         <!-- Render main header button only if user its logged -->
                     </ul>
-                    {% endif %}
                 {% endif %}
             </div>
         </nav>
