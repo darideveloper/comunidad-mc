@@ -741,5 +741,14 @@ main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card span
     width: calc(90% - 40px);
   }
 }
+@media screen and (max-width: 425px) {
+  main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card {
+    padding: 18px 12px;
+    border-radius: 0;
+  }
+  main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card .profile {
+    display: none;
+  }
+}
 
 /*# sourceMappingURL=ranking.css.map */
