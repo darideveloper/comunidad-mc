@@ -82,7 +82,7 @@ try:
         # Log invalid tokens
         models.Log.objects.create (
             origin=log_origin,
-            details=error.message,
+            details=error["message"],
         )
         
         # Submit email to each user
