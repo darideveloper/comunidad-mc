@@ -135,6 +135,7 @@ def landing(request):
         "current_page": "landing",
         "user_active": user_active,
         "cta_text": cta_text,
+        "hide_menu": True,
     })
 
 @decorators.validate_login
@@ -162,6 +163,7 @@ def whatsapp (request):
     return render(request, 'app/whatsapp.html', {
         "current_page": "whatsapp",
         "user_active": False,
+        "hide_menu": True,
     })
 
 @decorators.validate_login
@@ -254,7 +256,7 @@ def register(request):
         "country": "México",
         "time_zone": "America/Mexico_City",
         "error": error,
-        # "timezones": timezones
+        "hide_menu": True,
     })
 
 def error404(request, exception):
@@ -345,9 +347,7 @@ def points(request):
         
         # Decress punits counter
         current_points -= point.amount
-        
-    print (points_data)
-        
+                
     # Render page
     return render(request, 'app/points.html', {
         # General context
@@ -355,6 +355,7 @@ def points(request):
         "message": message,
         "current_page": "points",
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "profile_image": profile_image,
@@ -593,6 +594,7 @@ def schedule(request):
         "error": error,
         "current_page": "schedule",
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "profile_image": profile_image,
@@ -729,6 +731,7 @@ def support(request):
         "current_page": "support",
         "error": error,
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "profile_image": profile_image,
@@ -774,6 +777,7 @@ def ranking(request):
         "name": user.user_name,
         "message": message,
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "current_page": "ranking",
@@ -846,6 +850,7 @@ def profile(request):
         "error": error,
         "current_page": "profile",
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "current_page": "profile",
@@ -914,6 +919,7 @@ def wallet(request):
         "message": message,
         "current_page": "wallet",
         "user_active": True,
+        "hide_menu": False,
         
         # User profile context
         "profile_image": user.picture,
@@ -981,6 +987,7 @@ def calendar (request):
         # General context
         "current_page": "calendar",
         "user_active": True,
+        "hide_menu": False,
                 
         # Specific context
         "streams": streams_data,

@@ -39,7 +39,7 @@
 
 <body>
     <header id="header" class="full-width">
-        <nav class="regular-width {% if current_page == 'landing' %}landing{% endif %}">
+        <nav class="regular-width {% if hide_menu %}disabled{% endif %}">
             <a href="{% url 'landing' %}" class="logo">
                 <img src="{% static 'app/imgs/logo_clean.png' %}" alt="Comunidad MC">
             </a>
@@ -52,7 +52,7 @@
                 </svg>
             </button>
             <div class="menu-wrapper">
-                {% if current_page != "404" and user_active and current_page != 'landing' %}
+                {% if current_page != "404" and user_active and not hide_menu %}
                     <ul class="menu">
                         <button class="btn menu close">
                             <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"

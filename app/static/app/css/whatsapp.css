@@ -167,10 +167,10 @@
   transition-duration: 0.3s;
 }
 @media screen and (max-width: 1000px) {
-  #header nav:not(.landing) .btn.menu {
+  #header nav:not(.disabled) .btn.menu {
     display: inline-block;
   }
-  #header nav:not(.landing) .menu-wrapper {
+  #header nav:not(.disabled) .menu-wrapper {
     position: fixed;
     top: 0;
     right: -200px;
@@ -180,14 +180,14 @@
     transition-duration: 0.3s;
     z-index: 2;
   }
-  #header nav:not(.landing) .menu-wrapper.open {
+  #header nav:not(.disabled) .menu-wrapper.open {
     right: 0;
   }
-  #header nav:not(.landing) .menu-wrapper ul.menu {
+  #header nav:not(.disabled) .menu-wrapper ul.menu {
     flex-direction: column;
     justify-content: flex-start;
   }
-  #header nav:not(.landing) .menu-wrapper ul.menu li a {
+  #header nav:not(.disabled) .menu-wrapper ul.menu li a {
     padding: 15px 0;
   }
 }
