@@ -306,8 +306,31 @@ def points(request):
         date = datetime_user.strftime("%d/%m/%Y")
         time = datetime_user.strftime("%I %p")
         channel = ""
+        
+        # Detail info of negative points 
+        details = point.details
+        if not details and point.amount < 0:      
+            
+            print (point.info)      
+            
+            # Fix details for "viwer asistió a stream"
+            if point.info.info == "viwer asistió a stream":
+                details = f"Puntos restados por asistencia de {abs(point.amount)} viwers en tu stream" 
+            else:
+                details = point.info
+            
+        # Point title
+        title = point.info.info        
+        if title in ["faltó tiempo de visualización", "faltaron comentarios"]:
+            title = "Punto no obtenido"
+        elif title in ["reclamación de puntos sin evidencia", "penalización por cancelar stream", "penalización por no abrir stream a tiempo"]:
+            title = "Penalización"
+        elif title in ["viwer asistió a stream"]:
+            title = "Asistencia de viwers a stream"
+            
+        # stream name
         if point.stream and point.info:
-            channel = f"{point.info} ({point.stream.user.user_name})"
+            channel = f"{point.stream.user.user_name}"
         
         points_data.append ({
             "date": date,
@@ -315,12 +338,15 @@ def points(request):
             "my_points": current_points,
             "points": point.amount, 
             "chanel": channel,
-            "details": point.details,
+            "details": details,
             "user_active": True,
+            "title": title,
         })
         
         # Decress punits counter
         current_points -= point.amount
+        
+    print (points_data)
         
     # Render page
     return render(request, 'app/points.html', {

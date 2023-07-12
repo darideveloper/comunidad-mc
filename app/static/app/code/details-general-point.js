@@ -7,6 +7,7 @@ buttons.forEach(button => {
   button.addEventListener('click', () => {
     // Get details from button attributes
     const details = button.getAttribute('data-details')
-    show_details_point (details)
+    const title = button.getAttribute('data-title')
+    show_details_point (title, details)
   })
 })
