@@ -622,7 +622,7 @@ main.points .content .points-table table tr {
   display: table;
   table-layout: fixed;
   width: 100%;
-  min-width: 380px;
+  min-width: 500px;
 }
 main.points .content .points-table table tr:nth-child(even) {
   background-color: #17181D;
