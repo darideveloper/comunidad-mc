@@ -791,27 +791,12 @@ main.support > .content .streams .message span {
     margin-left: 0px;
   }
 }
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 460px) {
   main.support > .content .streams .streams-cards .stream-card {
-    height: auto;
-    border-radius: 10px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(1) {
-    margin-top: 50px;
-  }
-  main.support > .content .streams .streams-cards .stream-card:nth-child(2) {
-    margin-top: 170px;
-  }
-  main.support > .content .streams .streams-cards .stream-card p {
-    margin: 15px;
-  }
-  main.support > .content .streams .streams-cards .stream-card img {
-    top: -92px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  main.support > .content .streams .message-card img {
     width: 100%;
+  }
+  main.support > .content .streams .streams-cards .stream-card .name {
+    margin-left: 10%;
   }
 }
 @media screen and (max-width: 380px) {
@@ -828,6 +813,9 @@ main.support > .content .streams .message span {
   }
   main.support > .content .streams .streams-cards {
     margin-top: 30px;
+  }
+  main.support > .content .streams .streams-cards .stream-card .name {
+    margin-left: 15%;
   }
 }
 

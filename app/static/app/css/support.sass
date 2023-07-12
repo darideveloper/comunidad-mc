@@ -193,30 +193,34 @@ main.support > .content
             .streams-cards
                 @include streams-cards-vertical
 
-    @media screen and (max-width: 450px)
+    @media screen and (max-width: 460px)
         .streams
             .streams-cards
                 .stream-card
-                    height: auto
-                    border-radius: 10px
-
-                    &:nth-child(1)
-                        margin-top: 50px
-
-                    &:nth-child(2)
-                        margin-top: 170px
-
-                    p
-                        margin: 15px
-
-                    img
-                        top: -92px
-                        left: 50%
-                        transform: translateX(-50%)
-
-            .message-card
-                img
                     width: 100%
+
+                    .name
+                        margin-left: 10%
+    //                 height: auto
+    //                 border-radius: 10px
+
+    //                 &:nth-child(1)
+    //                     margin-top: 50px
+
+    //                 &:nth-child(2)
+    //                     margin-top: 170px
+
+    //                 p
+    //                     margin: 15px
+
+    //                 img
+    //                     top: -92px
+    //                     left: 50%
+    //                     transform: translateX(-50%)
+
+    //         .message-card
+    //             img
+    //                 width: 100%
 
     @media screen and (max-width: 380px)
         .streams
@@ -234,6 +238,9 @@ main.support > .content
 
             .streams-cards
                 margin-top: 30px
+
+                .stream-card .name
+                    margin-left: 15%
 
 @keyframes border
     0%
