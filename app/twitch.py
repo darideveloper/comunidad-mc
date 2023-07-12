@@ -407,12 +407,12 @@ class TwitchApi:
             details=f"Added {amount} general points to user: {user} in stream: {stream}",
         )
         
-        # Validate if user already have a daily point in this hour
-        start_time = timezone.now().replace(minute=0, second=0) - datetime.timedelta(minutes=1)
-        end_time = timezone.now().replace(minute=59, second=59)
+        # Add daily point
+        now = timezone.now()
+        start_time = now.replace(minute=0, second=0) - datetime.timedelta(minutes=30)
         daily_points_hour = models.DailyPoint.objects.filter(
             general_point__user=user, 
-            general_point__stream__datetime__range=[start_time, end_time]
+            general_point__stream__datetime__range=[start_time, now]
         )
         
         if daily_points_hour and not force:
