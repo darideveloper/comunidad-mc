@@ -86,7 +86,7 @@ try:
         )
         
         # Submit email to each user
-        body = f"Hola, {error.name}"
+        body = f"Hola, {error['name']}"
         body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
         body += "\nPara evitar que tu cuenta sea inhabilitada, ingresa a la pagina de Comunidad MC y actualiza tus datos desde la página de perfil:"
         body += "\nhttps://comunidadmc.com/profile/"
@@ -98,7 +98,7 @@ try:
             "Aviso de baja actividad en tu cuenta de ComunidadMC",
             body,
             "darideveloper@gmail.com",
-            [error.email],
+            [error["email"]],
             fail_silently=False,
         ) 
         
