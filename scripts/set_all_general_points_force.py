@@ -1,8 +1,10 @@
 # Set specific general and today points to all users, in specific stream
 
 # UPDATE THIS:
-SREAMS_IDS = [3299, 3323]
+SREAMS_IDS = [3473]
 POINTS = 1
+DAILY_POINT = False
+WEEKLY_POINT = True 
 
 # Add parent folder to path
 import os
@@ -38,9 +40,15 @@ for stream in streams:
             user=user,
         ).delete ()
         
+        message = "adding {POINTS} general"
+        if DAILY_POINT:
+            message += " and daiy"
+        if WEEKLY_POINT:
+            message += " and weekly"
+        message += " points to user {user.user_name} in {stream}"
         models.Log.objects.create (
             origin=models.LogOrigin.objects.get (name="Script"),
-            details=f"Adding {POINTS} points to {user.user_name} in {stream}",
+            details=message,
         )
         
         general_point = models.GeneralPoint (
@@ -51,6 +59,14 @@ for stream in streams:
         )
         general_point.save ()
         
-        models.DailyPoint.objects.create (
-            general_point=general_point
-        )
+        if DAILY_POINT: 
+            models.DailyPoint.objects.create (
+                general_point=general_point
+            )
+            print (f"Added {POINTS} daily points to {user.user_name}")
+            
+        if WEEKLY_POINT:
+            models.WeeklyPoint.objects.create (
+                general_point=general_point
+            )
+            print (f"Added {POINTS} weekly points to {user.user_name}")
