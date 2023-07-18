@@ -16,13 +16,13 @@ from dotenv import load_dotenv
 load_dotenv ()
 
 logs_origin = models.LogOrigin.objects.get (name="Restart Node")
+HEROKU_TOKEN = os.getenv("HEROKU_TOKEN")
 try:
-    HEROKU_TOKEN = os.getenv("HEROKU_TOKEN")
     import requests
 
     headers = {
         "Accept": "application/vnd.heroku+json; version=3",
-        "Authorization": "Bearer {HEROKU_TOKEN}"
+        "Authorization": f"Bearer {HEROKU_TOKEN}"
     }
 
     res = requests.delete ("https://api.heroku.com/apps/twitch-chat-reader/dynos", headers=headers)
@@ -39,11 +39,11 @@ try:
         models.Log.objects.create (
             origin=logs_origin,
             log_type=models.LogType.objects.get (name="error"),
-            details=f"Restarting node error: {res_json}"
+            details=f"Restarting node error with token {HEROKU_TOKEN}: {res_json}"
         )
 except Exception as e:
     models.Log.objects.create (
         origin=logs_origin,
         log_type=models.LogType.objects.get (name="error"),
-        details=f"Restarting node unknown error: {e}"
+        details=f"Restarting node unknown error with token {HEROKU_TOKEN}: {e}"
     )
