@@ -661,7 +661,7 @@ class TwitchApi:
                 if (time_between < self.min_time_comments):
                     
                     # Add cero point
-                    details = f"El tiempo entre el primer y último comentario fue de {time_between} minutos."
+                    details = f"El tiempo entre el primer y último comentario fue de {time_between} minutos. "
                     details += "Debes ver el stream por más tiempo y espaciar mas tus comentarios para ganar puntos"
                     models.Log.objects.create (
                         origin=self.log_origin,
