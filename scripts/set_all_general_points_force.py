@@ -1,7 +1,7 @@
 # Set specific general and today points to all users, in specific stream
 
 # UPDATE THIS:
-SREAMS_IDS = [3473]
+SREAMS_IDS = [3807]
 POINTS = 1
 DAILY_POINT = False
 WEEKLY_POINT = True 
@@ -40,12 +40,12 @@ for stream in streams:
             user=user,
         ).delete ()
         
-        message = "adding {POINTS} general"
+        message = f"adding {POINTS} general"
         if DAILY_POINT:
             message += " and daiy"
         if WEEKLY_POINT:
             message += " and weekly"
-        message += " points to user {user.user_name} in {stream}"
+        message += f" points to user {user.user_name} in {stream}"
         models.Log.objects.create (
             origin=models.LogOrigin.objects.get (name="Script"),
             details=message,
