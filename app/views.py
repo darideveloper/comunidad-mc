@@ -383,6 +383,11 @@ def schedule(request):
     has_vips = tools.get_vips_num (user) > 0
     has_frees = tools.get_frees_num (user) > 0
     
+    # Get today week day
+    now = timezone.now().astimezone(user_time_zone)
+    today_week = now.weekday()
+    today_week_name = tools.WEEK_DAYS[today_week]
+    
     # Validate if stream can be saved, in post 
     if request.method == "POST":
         
@@ -424,6 +429,13 @@ def schedule(request):
             request.session["error"] = "Lo sentimos. Esa fecha y hora ya está agendada."
             return redirect("/schedule")
         
+        # Validate if the date time is before now
+        current_hour = now.replace(minute=0, second=0, microsecond=0)
+        selected_hour = selected_datetime.replace(minute=0, second=0, microsecond=0)
+        if selected_datetime == current_hour:
+            request.session["error"] = "Lo sentimos. Ya inició la hora, no puedes agendar."
+            return redirect("/schedule")
+                
         # Vips validation
         if form_vip:
         
@@ -467,11 +479,6 @@ def schedule(request):
     
     # Format streams date times
     streams_date_times = list(map(lambda stream: {"date": stream["date"], "hour": stream["hour"]}, streams))
-    
-    # Get today week day
-    now = timezone.now().astimezone(user_time_zone)
-    today_week = now.weekday()
-    today_week_name = tools.WEEK_DAYS[today_week]
     
     # Validate the open hour of the current user
     ranking_open = True
