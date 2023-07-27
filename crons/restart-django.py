@@ -1,4 +1,4 @@
-""" Stop dynos (and auto restart) from heroku of project "twitch-chat-reader"""
+""" Stop dynos (and auto restart) from heroku current project """
 
 # Add parent folder to path
 import os
@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 load_dotenv ()
 
-logs_origin = models.LogOrigin.objects.get (name="Restart Node")
+logs_origin = models.LogOrigin.objects.get (name="Restart Django")
 HEROKU_TOKEN = os.getenv("HEROKU_TOKEN")
 try:
     import requests
@@ -25,7 +25,7 @@ try:
         "Authorization": f"Bearer {HEROKU_TOKEN}"
     }
 
-    res = requests.delete ("https://api.heroku.com/apps/twitch-chat-reader/dynos", headers=headers)
+    res = requests.delete ("https://api.heroku.com/apps/comunidadmc/dynos", headers=headers)
     res_json = res.json()
 
 
@@ -33,17 +33,17 @@ try:
         models.Log.objects.create (
             origin=logs_origin,
             log_type=models.LogType.objects.get (name="info"),
-            details=f"Restarting node"
+            details=f"Restarting django"
         )
     else: 
         models.Log.objects.create (
             origin=logs_origin,
             log_type=models.LogType.objects.get (name="error"),
-            details=f"Restarting node error with token {HEROKU_TOKEN}: {res_json}"
+            details=f"Restarting django error with token {HEROKU_TOKEN}: {res_json}"
         )
 except Exception as e:
     models.Log.objects.create (
         origin=logs_origin,
         log_type=models.LogType.objects.get (name="error"),
-        details=f"Restarting node unknown error with token {HEROKU_TOKEN}: {e}"
+        details=f"Restarting django unknown error with token {HEROKU_TOKEN}: {e}"
     )
