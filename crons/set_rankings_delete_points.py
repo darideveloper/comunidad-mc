@@ -123,16 +123,22 @@ try:
             details=f"Bits added to first, second and third users ({first_user}, {second_user}, {third_user}))"
         )
         
-        # Add a free and a extra to first user
-        models.StreamFree (user=first_user).save ()
-        models.Log.objects.create ( 
-            origin=log_origin,
-            details=f"free added to first user {first_user}"
-        )
+        
+        # Add vip and extra stream to fiset user
+        models.StreamVip (user=first_user).save ()
         models.StreamExtra (user=first_user).save ()
         models.Log.objects.create ( 
             origin=log_origin,
-            details=f"extra added to first user {first_user}"
+            details=f"vip and free added to first user {first_user}"
+        )
+        
+        
+        # Add a free and a extra to second user
+        models.StreamFree (user=second_user).save ()
+        models.StreamExtra (user=second_user).save ()
+        models.Log.objects.create ( 
+            origin=log_origin,
+            details=f"extra and free added to second user {second_user}"
         )
         
         # backuop weekly points
