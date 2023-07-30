@@ -448,25 +448,49 @@ class TwitchApi:
                 details=f"Added {amount} deily points to user: {user} in stream: {stream}",
             )
 
-            # Check if there are less than 10 users in the Ranking of daily points and if user already have 10 points
-            current_tops = models.TopDailyPoint.objects.all().count()
+            # Add user to daily ranking
+            current_tops = models.TopDailyPoint.objects.all().order_by("-amount")
+            current_top_users = list(map(lambda top: top.user, current_tops))
             current_points = current_daily_points + 1
-            if current_tops < 10 and current_points == 10:
-
-                # Add user to Ranking of daily points if there isnt in table
-                user_in_top = models.TopDailyPoint.objects.filter(
-                    user=user
-                ).count()
-                
-                if not user_in_top:
-                    models.TopDailyPoint.objects.create( # debug
-                        position=current_tops+1, user=user
-                    )
+            user_in_top = user in current_top_users
+                            
+            # Update user already in table
+            if user_in_top:
+                user_top_daily_point = models.TopDailyPoint.objects.get(user=user)
+                if user_top_daily_point.amount != current_points:
+                    user_top_daily_point.amount = current_points
+                    user_top_daily_point.save()
+                    
                     models.Log.objects.create (
                         origin=self.log_origin,
-                        details=f"User {user} already have 10 points. Added to Ranking of daily points",
+                        details=f"Updated user {user} in top daily points, with amount {current_points}",
                     )
-
+            else:
+                last_top = current_tops.last()
+                last_top_points = last_top.amount if last_top else None
+                
+                new_space_free = False
+                
+                # Delete last top
+                if last_top_points and current_points > last_top_points:
+                    last_top.delete()
+                    new_space_free = True
+                    
+                # Detect free space in top
+                if len(current_top_users) < 10 or new_space_free:
+     
+                    # Add user to top
+                    models.TopDailyPoint.objects.create(
+                        user=user,
+                        amount=current_points
+                    )
+                    
+                    models.Log.objects.create (
+                        origin=self.log_origin,
+                        details=f"Added user {user} to top daily points, with amount {current_points}",
+                    )
+                    
+                    
     def is_user_live(self, user: models.User):
         """ Return if user is live or not
 
