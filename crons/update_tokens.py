@@ -61,7 +61,8 @@ try:
             errors.append ({
                 "message": f"user {user}: {error}",
                 "email": user.email,
-                "name": user.user_name
+                "name": user.user_name,
+                "send_mail": user.send_mail
             })
             counters["error"] += 1
         else:
@@ -78,6 +79,14 @@ try:
     )
     
     for error in errors:
+        
+        if not error["send_mail"]:
+            # Log mail skipped
+            models.Log.objects.create (
+                origin=log_origin,
+                details=f'Email skipped for user. {error["message"]}',
+            )
+            continue        
         
         # Log invalid tokens
         models.Log.objects.create (
