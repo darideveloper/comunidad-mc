@@ -186,7 +186,8 @@ def get_general_points_last_week (user:models.User):
     """
     
     # Calculate general points of the current week
-    general_points_week = models.GeneralPoint.objects.filter(user=user, datetime__week=timezone.now().isocalendar()[1])
+    week = timezone.now().isocalendar()[1]
+    general_points_week = models.GeneralPoint.objects.filter(user=user, amount__gte=1, datetime__week=week)
     general_points_week_num = general_points_week.aggregate(Sum('amount'))['amount__sum']
     
     if not general_points_week_num:
