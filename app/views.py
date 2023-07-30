@@ -768,7 +768,17 @@ def ranking(request):
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
     # Get top 10 users from TopDailyPoint
-    ranking_today = [[register.position, register.user.user_name] for register in models.TopDailyPoint.objects.all()]
+    top_daily_points = list(models.TopDailyPoint.objects.all().order_by("-amount"))
+    position = 1
+    ranking_today = []
+    for rank in top_daily_points:
+        ranking_today.append ({
+            "position": position,
+            "user": rank.user.user_name,
+            "amount": rank.amount,
+        })
+        position += 1
+    
     
     # Get top 10 users from general points
     points_history = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()[:10]

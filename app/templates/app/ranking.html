@@ -11,11 +11,11 @@
         <div class="decorator"></div>
       </div>
       <ul>
-        {% for user in ranking_today %}
+        {% for rank in ranking_today %}
           <li>
-            <span class="position">{{user.0}}</span>
-            <span class="name">{{user.1}}</span>
-            <span class="points">10/10</span>
+            <span class="position">{{rank.position}}</span>
+            <span class="name">{{rank.user}}</span>
+            <span class="points">{{rank.amount}}/10</span>
           </li>
         {% endfor %}
       </ul>   
