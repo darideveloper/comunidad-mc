@@ -211,9 +211,8 @@ class AdminBit (admin.ModelAdmin):
 @admin.register (models.TopDailyPoint)
 class AdminTopDailyPoint (admin.ModelAdmin):
     
-    list_display = ('position', 'user', 'datetime')
-    ordering = ('position', 'user', 'datetime')
-    list_filter = ('datetime', 'user')
+    list_display = ('user', 'amount', 'datetime')
+    ordering = ('-amount', 'datetime', 'user')
     search_fields = ('user__user_name',)
     list_per_page = 20
     

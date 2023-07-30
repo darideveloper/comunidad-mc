@@ -204,12 +204,12 @@ class PointsHistory (models.Model):
         verbose_name_plural = "Puntos historial"
         
 class TopDailyPoint (models.Model):
-    position = models.IntegerField(name='position', verbose_name="posición", help_text="posición del usuario en el top diario", null=False, blank=False, default=10)
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho conseguido 10 puntos diarios", null=False, blank=False)
     datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora en que el usuario consiguió los 10 puntos diarios", null=False, blank=False, default=timezone.now)
+    amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de puntos diarios", null=False, blank=False, default=10)
     
     def __str__(self):
-        return f"{self.position} {self.user}"
+        return f"{self.user} ({self.amount})"
     
     class Meta:
         verbose_name = "Top"
