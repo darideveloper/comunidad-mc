@@ -907,43 +907,40 @@ def wallet(request):
         bits_app = models.Bit (user=user, amount=-bits_num, details="Bits reclamados", stream=stream)
         bits_app.save ()
         
-        # TODO: CATCH GET ERROR
         # Get donations bot
-        donatins_bot = cheer_models.User.objects.get (name="ComunidadMC")
-        
-        # Validate if bot is active
-        if not donatins_bot.is_active:
-            # Log error
+        donatins_bot = cheer_models.User.objects.filter (name="ComunidadMC")
+        if donatins_bot and donatins_bot[0].is_active:
+            
+            # register donation
+            donation_datetime = stream.datetime.astimezone(pytz.timezone("America/Mexico_City"))
+            rand_min = random.randint(10, 40)
+            donation_datetime = donation_datetime.replace(minute=rand_min)
+            cheer_models.Donation.objects.create(
+                user=donatins_bot[0],
+                stream_chat_link=f"https://www.twitch.tv/popout/{user.user_name}/chat?popout=",
+                datetime=donation_datetime,
+                amount=bits_num,
+                message=random.choice([
+                    "", 
+                    "Buen stream", 
+                    "Eres el mejor", 
+                    "Gracias por el stream", 
+                    "Sigue así", 
+                    "Sorry por la demora", 
+                    "Aquí están los bits",
+                    "Un pequeño aporte",
+                    "No es mucho, pero es lo que tengo, suerte crack",
+                    "Me encanta tu contenido",
+                    "Me encantan tus streams",
+                ]),
+                bits_app=bits_app,
+            )
+        else:
             models.Log.objects.create (
                 origin=log_origin,
-                details="Auto donations bot no active",
+                details="Auto donations bot not found or inactive",
                 log_type=log_type_error,
             )
-        
-        # register donation
-        donation_datetime = stream.datetime.astimezone(pytz.timezone("America/Mexico_City"))
-        rand_min = random.randint(10, 40)
-        donation_datetime = donation_datetime.replace(minute=rand_min)
-        cheer_models.Donation.objects.create(
-            user=donatins_bot,
-            stream_chat_link=f"https://www.twitch.tv/popout/{user.user_name}/chat?popout=",
-            datetime=donation_datetime,
-            amount=bits_num,
-            message=random.choice([
-                "", 
-                "Buen stream", 
-                "Eres el mejor", 
-                "Gracias por el stream", 
-                "Sigue así", 
-                "Sorry por la demora", 
-                "Aquí están los bits",
-                "Un pequeño aporte",
-                "No es mucho, pero es lo que tengo, suerte crack",
-                "Me encanta tu contenido",
-                "Me encantan tus streams",
-            ]),
-            bits_app=bits_app,
-        )
         
         # Update bits of the user
         bits, bits_num = tools.get_bits (user)    
