@@ -4,6 +4,11 @@ from . import models
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from app import models as app_models
+
+logs_origin = app_models.LogOrigin.objects.get(name="BotCheers")
+logs_type_info = app_models.LogType.objects.get(name="info")
+logs_type_error = app_models.LogType.objects.get(name="error")
 
 @decorators.validate_token
 def get_donations(request):
@@ -92,10 +97,18 @@ def upodate_donation(request, id: int):
 
     donation = models.Donation.objects.filter(id=id)
     if donation:
+         
+        # Update donation status
         donation = donation[0]
         donation.done = True
         donation.save()
-
+        
+        # Validate claimed bits
+        bits_app = donation.bits_app
+        if bits_app:
+            bits_app.is_bits_done = True
+            bits_app.save ()
+            
         return HttpResponse("Donation updated")
 
     else:

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User as UserAuth
 from django.utils import timezone
+from app import models as app_models
 
 def get_default_cookies ():
     return {"sample": "sample"}
@@ -101,6 +102,7 @@ class User (models.Model):
         verbose_name_plural = "Bots"
 
 class Donation(models.Model):
+    
     id = models.AutoField(
         primary_key=True,
         verbose_name='ID'
@@ -110,8 +112,6 @@ class Donation(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Usuario',
         help_text='Usuario que ha realizado la donación',
-        null=True,
-        blank=True
     )
     stream_chat_link = models.URLField(
         verbose_name='Enlace al chat del stream',
@@ -137,6 +137,13 @@ class Donation(models.Model):
         max_length=100,
         verbose_name='Mensaje',
         help_text='Mensaje de la donación'
+    )
+    bits_app = models.ForeignKey(
+        app_models.Bit,
+        on_delete=models.SET_NULL,
+        verbose_name='Bits reclamados',
+        null=True,
+        blank=True,        
     )
     done = models.BooleanField(
         default=False,

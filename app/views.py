@@ -904,8 +904,10 @@ def wallet(request):
         stream.save ()
         
         # Add register for claim bits
-        models.Bit (user=user, amount=-bits_num, details="Bits reclamados", stream=stream).save()
+        bits_app = models.Bit (user=user, amount=-bits_num, details="Bits reclamados", stream=stream)
+        bits_app.save ()
         
+        # TODO: CATCH GET ERROR
         # Get donations bot
         donatins_bot = cheer_models.User.objects.get (name="ComunidadMC")
         
@@ -940,6 +942,7 @@ def wallet(request):
                 "Me encanta tu contenido",
                 "Me encantan tus streams",
             ]),
+            bits_app=bits_app,
         )
         
         # Update bits of the user

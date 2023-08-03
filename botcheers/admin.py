@@ -60,6 +60,7 @@ class AdminUser (admin.ModelAdmin):
 @admin.register (models.Donation)
 class AdminDonation (admin.ModelAdmin):
     
+    raw_id_fields = ('bits_app',)    
     list_display = ('id', 'user',  'stream_chat_link', 'datetime', 'amount', 'message', 'done')
     list_filter = ('done', 'user', 'user__user_auth')
     ordering = ('-id', 'user', 'stream_chat_link', 'datetime', 'amount', 'message', 'done')
