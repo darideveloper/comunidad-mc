@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from . import models
 from app import models as app_models
 from . import decorators
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from app.twitch import TwitchApi
@@ -15,6 +14,10 @@ load_dotenv()
 
 # Load enviroment variables
 DEBUG = os.getenv("DEBUG") == "True"
+
+# Logs
+log_origin = app_models.LogOrigin.objects.get(name="Script BotViews")
+log_type_error = app_models.LogType.objects.get(name="error")
 
 def get_json_model(model: django.db.models, get_objects=True) -> str:
     """ Serializes a model to json
@@ -159,4 +162,23 @@ def update_cookies(request, name):
     return JsonResponse({
         "status": "ok",
         "message": "Cookies updated" 
+    })
+    
+@decorators.validate_token
+@csrf_exempt
+def log_error (request):
+    
+    # Get json data
+    json_data = json.loads(request.body)
+    error = json_data["error"]
+    
+    app_models.Log.objects.create(
+        origin=log_origin,
+        log_type=log_type_error,
+        details=error   
+    )
+    
+    return JsonResponse({
+        "status": "ok",
+        "message": "error saved" 
     })

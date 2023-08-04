@@ -10,4 +10,5 @@ urlpatterns = [
     path('disable-user/<name>/', views.disable_user, name='disable_user'),
     path('update-cookies/<name>/', views.update_cookies, name='get_user'),
     path('proxy/', views.get_proxy, name='proxy'),
+    path('log-error/', views.log_error, name='log_error'),
 ]
