@@ -1,6 +1,7 @@
 import os
 import pytz
 import json
+import random
 import requests
 import datetime
 from . import models
@@ -615,6 +616,10 @@ class TwitchApi:
         ) 
         
         users = models.User.objects.all()    
+        
+        # Randomize users
+        users = list(users)
+        random.shuffle(users)
         
         for stream in current_streams:
             
