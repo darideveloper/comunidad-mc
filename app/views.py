@@ -768,8 +768,9 @@ def ranking(request):
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points (user)
     
-    # Get top 10 users from TopDailyPoint
-    top_daily_points = list(models.TopDailyPoint.objects.all().order_by("-amount"))
+    # Get the top 10 users from TopDailyPoint, ordered by amout and date
+    top_daily_points = models.TopDailyPoint.objects.all().order_by("-amount", "datetime")
+    
     position = 1
     ranking_today = []
     for rank in top_daily_points:

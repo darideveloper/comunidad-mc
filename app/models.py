@@ -205,7 +205,7 @@ class PointsHistory (models.Model):
         
 class TopDailyPoint (models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha hecho conseguido 10 puntos diarios", null=False, blank=False)
-    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora en que el usuario consiguió los 10 puntos diarios", null=False, blank=False, default=timezone.now)
+    datetime = models.DateTimeField(name='datetime', verbose_name="fecha y hora", help_text="fecha y hora en que el usuario consiguió los 10 puntos diarios", auto_now=True)
     amount = models.IntegerField(name='amount', verbose_name="cantidad", help_text="cantidad de puntos diarios", null=False, blank=False, default=10)
     
     def __str__(self):
