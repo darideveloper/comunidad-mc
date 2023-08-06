@@ -111,7 +111,7 @@ try:
             )
         
         # Add bits to first, second and third users in points table
-        points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num").reverse()
+        points_history_all = models.PointsHistory.objects.all().order_by("general_points_week_num", "general_points_num").reverse()
         first_user = points_history_all[0].user
         second_user = points_history_all[1].user
         third_user = points_history_all[2].user
