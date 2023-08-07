@@ -49,7 +49,7 @@ def login(request):
         user_id, user_email, user_picture, user_name = twitch.get_user_info(user_token)
 
         # Validate user data
-        if user_id and user_email and user_picture and user_name:
+        if user_id and user_picture and user_name:
 
             # Validate if user exist in database
             new_user = models.User.objects.filter(id=user_id).first()
@@ -84,11 +84,12 @@ def login(request):
         else:
             # Araise error when user data is not valid
             error = True
-            models.Log.objects.create (
-                origin = log_origin,
-                details = f"Error al obtener datos de usuario: {user_id}, {user_email}, {user_picture}, {user_name}",
-                log_type = log_type_error,   
-            )
+            if user_id:
+                models.Log.objects.create (
+                    origin = log_origin,
+                    details = f" datos de usuario: {user_id}, {user_email}, {user_picture}, {user_name}",
+                    log_type = log_type_error,   
+                )
 
     else:
         # Araise error where there it nor a login code
@@ -101,7 +102,7 @@ def login(request):
 
     if error:
         # Save login error in session
-        request.session["error"] = "Error al iniciar sesión con twitch. Intente de nuevo mas tarde."
+        request.session["error"] = "Error al iniciar sesión con twitch. Intente de nuevo mas tarde. Si el problema persiste, contacte a soporte."
 
     # Redirect to home page
     return redirect('home')

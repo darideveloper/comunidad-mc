@@ -24,7 +24,7 @@ class Ranking (models.Model):
 
 class User (models.Model):
     id = models.IntegerField(primary_key=True, name='id', verbose_name="id", help_text="id de twitch", null=False, blank=False, editable=False)
-    email = models.EmailField(name='email', verbose_name="email", help_text="email de twitch", null=False, blank=True)
+    email = models.EmailField(name='email', verbose_name="email", help_text="email de twitch", null=True, blank=True)
     picture = models.CharField(name='picture', verbose_name="foto", help_text="foto de perfil de twitch", null=False, blank=True, max_length=200)
     user_name = models.CharField(name='user_name', verbose_name="usuario", help_text="nombre de usuario de twitch", null=False, blank=True, max_length=100)
     access_token = models.CharField(name='access_token', verbose_name="access token", help_text="access token generado por twitch", null=False, blank=False, max_length=50)
