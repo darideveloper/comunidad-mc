@@ -276,8 +276,10 @@ class Log (models.Model):
         # Show log in console
         print (f"Log {self.log_type}: {self.origin} ({self.datetime}): {self.details}")
         
+        exclude_details = ["Invalid OAuth token"]
+        
         # Submit error emails
-        if self.log_type.id == 2:
+        if self.log_type.id == 2 and self.details not in exclude_details:
             
             send_mail(
                 f"Error Comunidad MC ({self.origin})",
