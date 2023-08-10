@@ -271,5 +271,5 @@ class AdminLogType (admin.ModelAdmin):
 class AdminLogOrigin (admin.ModelAdmin):
     
     list_display = ('id', 'name',)
-    ordering = ('id', 'name',)
+    ordering = ('name', 'id')
     list_per_page = 50
