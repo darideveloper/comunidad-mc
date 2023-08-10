@@ -42,6 +42,8 @@ class User (models.Model):
     first_stream_done = models.BooleanField(name='first_stream_done', verbose_name="primer stream", help_text="indica si el usuario ha realizado su primer stream", default=False)
     referred_user_from = models.ForeignKey('User', on_delete=models.SET_NULL, name='referred_user_from', verbose_name="usuario referido de", help_text="usuario que lo referido", null=True, blank=True)
     send_mail = models.BooleanField(name='send_mail', verbose_name="enviar email", help_text="indica si el usuario quiere recibir emails", default=True)
+    last_update_token = models.DateTimeField(name='last_update_token', verbose_name="última actualización de token", help_text="fecha de última actualización de token", default=timezone.now)
+    update_tries = models.IntegerField(name='update_tries', verbose_name="intentos de actualización", help_text="cantidad de intentos de actualización de token", null=False, blank=False, default=0)
     
     def __str__(self):
         return f"{self.user_name}"
