@@ -86,7 +86,7 @@ try:
         
                 
         # Submit email to user
-        body = f"Hola, {error['name']}"
+        body = f"Hola, {user.user_name}"
         body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
         body += "\nPara evitar que tu cuenta sea inhabilitada, realiza lo siguiente:"
         body += "\n\n1. Ve a Comunidad MC"
