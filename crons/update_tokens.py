@@ -71,18 +71,20 @@ try:
         # Auto update user token
         if "message" in json_data:
             message = json_data["message"]
-            error = message
+            error = f"Token update requiered for user {user.user_name} ({message})"
+            
+            # Log invalid tokens
+            models.Log.objects.create (
+                origin=log_origin,
+                details=error,
+            )
+            
+            # Update token
             twitch.update_token (user)
             
         sleep (10)
     
     if error:
-        # Log invalid tokens
-        models.Log.objects.create (
-            origin=log_origin,
-            details=error,
-            log_type=log_type_error,
-        )
         
         if user.send_mail:        
                 
@@ -104,6 +106,12 @@ try:
                 [user.email],
                 fail_silently=False,
             ) 
+            
+            # Log mail
+            models.Log.objects.create (
+                origin=log_origin,
+                details=f"Email sent to user {user.user_name}",
+            )
             
         user.update_tries += 1
         
