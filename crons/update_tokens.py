@@ -84,26 +84,27 @@ try:
             log_type=log_type_error,
         )
         
+        if user.send_mail:        
                 
-        # Submit email to user
-        body = f"Hola, {user.user_name}"
-        body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
-        body += "\nPara evitar que tu cuenta sea inhabilitada, realiza lo siguiente:"
-        body += "\n\n1. Ve a Comunidad MC"
-        body += "\n2. Cierra sesión"
-        body += "\n3. Inicia sesión nuevamente, con tu misma cuenta de twitch"
-        body += "\n4. Actualiza tus datos desde la página de perfil."
-        body += "\n\nSi es la primera vez que recibes este mensaje, *no es necesario crear un ticket de soporte*."
-        body += "\n\nAtentamente, Dari Dev, administrador de Comunidad MC"
-        
-        send_mail(
-            "Aviso de baja actividad en tu cuenta de ComunidadMC",
-            body,
-            "darideveloper@gmail.com",
-            [user.email],
-            fail_silently=False,
-        ) 
-        
+            # Submit email to user
+            body = f"Hola, {user.user_name}"
+            body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
+            body += "\nPara evitar que tu cuenta sea inhabilitada, realiza lo siguiente:"
+            body += "\n\n1. Ve a Comunidad MC"
+            body += "\n2. Cierra sesión"
+            body += "\n3. Inicia sesión nuevamente, con tu misma cuenta de twitch"
+            body += "\n4. Actualiza tus datos desde la página de perfil."
+            body += "\n\nSi es la primera vez que recibes este mensaje, *no es necesario crear un ticket de soporte*."
+            body += "\n\nAtentamente, Dari Dev, administrador de Comunidad MC"
+            
+            send_mail(
+                "Aviso de baja actividad en tu cuenta de ComunidadMC",
+                body,
+                "darideveloper@gmail.com",
+                [user.email],
+                fail_silently=False,
+            ) 
+            
         user.update_tries += 1
         
         # Deactivate user if has 3 tries
