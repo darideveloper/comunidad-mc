@@ -34,7 +34,6 @@ streamers = [stream.user for stream in streams]
 
 # Get current datetime od the time zone
 now = timezone.now()
-print (f"Current datetime: {now}")
 
 try:
     twitch = TwitchApi (log_origin_name)

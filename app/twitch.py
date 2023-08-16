@@ -552,8 +552,6 @@ class TwitchApi:
             user (models.User): user object
         """
         
-        print (user)
-
         # Refresh token
         token_updated = self.update_token(user, raise_error=True)
 
@@ -564,7 +562,6 @@ class TwitchApi:
 
         # Get user data
         user_id, user_email, user_picture, user_name = self.get_user_info(token)
-        print (user_id, user_email, user_picture, user_name)
 
         # Save new data
         user.id = user_id

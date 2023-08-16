@@ -314,9 +314,7 @@ def points(request):
         # Detail info of negative points 
         details = point.details
         if not details and point.amount < 0:      
-            
-            print (point.info)      
-            
+                        
             # Fix details for "viwer asistió a stream"
             if point.info.info == "viwer asistió a stream":
                 details = f"Puntos restados por asistencia de {abs(point.amount)} viwers en tu stream" 
@@ -1061,13 +1059,13 @@ def cancel_stream (request, id):
     if not stream:
         request.session["error"] = error
         return redirect('schedule')
-    
+        
     # Get current user
     user, *other = tools.get_cookies_data(request)
-
+    
     # Validate if stream is cancelable
     is_cancellable = tools.is_stream_cancelable(stream)
-
+    
     # Validtae if the user is the owner of the stream, for delete it
     if stream.user == user:
         
@@ -1078,7 +1076,7 @@ def cancel_stream (request, id):
                 negative_vip.delete()
         else:      
             # Discount points to user
-            tools.set_negative_point (user, 50, "penalización por cancelar stream", stream, log_origin_name)
+            tools.set_negative_point (user, 50, "penalización por cancelar stream", None, log_origin_name)
             
             # Add a negative extra stream
             models.StreamExtra(user=user, amount=-1).save()
