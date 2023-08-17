@@ -48,7 +48,7 @@ class TwitchApi:
         # Get current streams
         current_streams = models.Stream.objects.filter(
             datetime__range=[start_hour, end_hour]
-        ).all().order_by('user__user_name')
+        ).filter(user__is_active=True).order_by('user__user_name')
 
         if not current_streams:
             return []
