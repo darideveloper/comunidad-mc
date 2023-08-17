@@ -61,12 +61,6 @@ try:
         
         # Delete points history for global ranking
         models.PointsHistory.objects.all().delete()
-        
-        # Delete extra streams
-        models.StreamExtra.objects.all().delete()
-        
-        # Delete vips
-        models.StreamVip.objects.all().delete()
             
         # Get and loop all users to update ranking
         users = models.User.objects.all()
