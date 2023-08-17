@@ -140,7 +140,7 @@ class Donation(models.Model):
     )
     bits_app = models.ForeignKey(
         app_models.Bit,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         verbose_name='Bits reclamados',
         null=True,
         blank=True,        
