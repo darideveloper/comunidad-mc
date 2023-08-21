@@ -129,6 +129,7 @@ def get_users(request):
         users_formatted.append ({
             "username": user.name,
             "password": user.password,
+            "is_active": user.is_active,
         })
         
     return JsonResponse({
