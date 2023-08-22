@@ -28,15 +28,14 @@ log_type_error = models.LogType.objects.get (name="error")
 log_type_info = models.LogType.objects.get (name="info")
 
 # Get current streams
-twitch_api = TwitchApi (log_origin_name)
-streams = twitch_api.get_current_streams()
+twitch = TwitchApi (log_origin_name)
+streams = twitch.get_current_streams()
 streamers = [stream.user for stream in streams]
 
 # Get current datetime od the time zone
 now = timezone.now()
 
 try:
-    twitch = TwitchApi (log_origin_name)
 
     user = None
     while True: 
@@ -47,8 +46,7 @@ try:
         # Skip streamers
         if not user in streamers:
             break  
-            
-            
+               
     # Loop for update token if is invalid
     error = ""
     for _ in range (2):
