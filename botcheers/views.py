@@ -6,9 +6,9 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from app import models as app_models
 
-logs_origin = app_models.LogOrigin.objects.get_or_create(name="BotCheers")
-logs_type_info = app_models.LogType.objects.get_or_create(name="info")
-logs_type_error = app_models.LogType.objects.get_or_create(name="error")
+logs_origin = app_models.LogOrigin.objects.get_or_create(name="BotCheers")[0]
+logs_type_info = app_models.LogType.objects.get_or_create(name="info")[0]
+logs_type_error = app_models.LogType.objects.get_or_create(name="error")[0]
 
 @decorators.validate_token
 def get_donations(request):

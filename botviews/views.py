@@ -16,8 +16,8 @@ load_dotenv()
 DEBUG = os.getenv("DEBUG") == "True"
 
 # Logs
-log_origin = app_models.LogOrigin.objects.get_or_create(name="Script BotViews")
-log_type_error = app_models.LogType.objects.get_or_create(name="error")
+log_origin = app_models.LogOrigin.objects.get_or_create(name="Script BotViews")[0]
+log_type_error = app_models.LogType.objects.get_or_create(name="error")[0]
 
 def get_json_model(model: django.db.models, get_objects=True) -> str:
     """ Serializes a model to json

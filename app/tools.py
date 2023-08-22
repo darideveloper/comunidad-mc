@@ -367,7 +367,7 @@ def set_negative_point (user:models.User, amount:int, reason:str,
         bool: True if point was set, False if not
     """
     
-    log_origin = app_models.LogOrigin.objects.get_or_create (name=log_origin_name)
+    log_origin = app_models.LogOrigin.objects.get_or_create (name=log_origin_name)[0]
     
     amount = abs(amount)
     
