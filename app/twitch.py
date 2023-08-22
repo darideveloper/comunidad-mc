@@ -24,9 +24,9 @@ class TwitchApi:
         self.max_daily_points = int(os.getenv("MAX_DAILY_POINTS"))
         self.wait_minutes_points = int(os.getenv("WAIT_MINUTES_POINTS"))
         
-        # Logs
-        self.log_origin = models.LogOrigin.objects.get(name=log_origin_name)
-        self.log_type_error = models.LogType.objects.get(name="error")
+        # Get logs data or create them
+        self.log_origin = models.LogOrigin.objects.get_or_create(name=log_origin_name)
+        self.log_type_error = models.LogType.objects.get_or_create(name="error")
 
     def get_current_streams(self, back_hours:int=0):
         """ Get the current live streams from databse

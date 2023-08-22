@@ -6,11 +6,10 @@ from django.contrib.auth.models import User as UserAuth, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 
-
 class TestModels (TestCase):
 
     def setUp(self):
-
+        
         # Test data
         self.user_name = "test_user"
         self.user_cookies = [{"test": "test"}]
@@ -315,10 +314,10 @@ class TestViews (TestCase):
         response = self.client.get(f"{self.endpoint_proxy}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
-             "proxy": {
+            "proxy": {
                 "host": self.proxy.host,
                 "port": self.proxy.port,
-             }
+            }
         })
         
     def test_no_proxy (self):
@@ -331,10 +330,10 @@ class TestViews (TestCase):
         response = self.client.get(f"{self.endpoint_proxy}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
-             "proxy": {
+            "proxy": {
                 "host": "",
                 "port": "",
-             }
+            }
         })
 
        
@@ -345,12 +344,33 @@ class TestViews (TestCase):
         response = self.client.get(f"{self.endpoint_users}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
-             "users": [
-                 {
+            "users": [
+                {
                     "username": self.user_name,
                     "password": self.user_password,
-                 }
-             ]
+                    "is_active": True,
+                }
+            ]
+        })
+        
+    def test_get_users_inactive (self):
+        """ Test getting users with endpoint
+        """
+        
+        user = models.User.objects.filter(name=self.user_name)[0]
+        user.is_active = False
+        user.save ()
+        
+        response = self.client.get(f"{self.endpoint_users}?token={self.token_value}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "users": [
+                {
+                    "username": self.user_name,
+                    "password": self.user_password,
+                    "is_active": False,
+                }
+            ]
         })
         
     def test_update_cookies_invalid_user (self):

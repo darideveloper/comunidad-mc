@@ -1,13 +1,11 @@
 import json
-from django.utils import timezone
 from botviews import models
 from django.test import TestCase
-from django.contrib.auth.models import User as UserAuth
-
+    
 class TestViews (TestCase):
 
     def setUp(self):
-
+        
         self.user_name = "test_user"
         self.user_password = "test_password"
 
@@ -72,14 +70,12 @@ class TestViews (TestCase):
         
         response = self.client.get(f"{self.endpoint_users}?token={self.token_value}")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-             "users": [
-                 {
-                    "username": self.user_name,
-                    "password": self.user_password,
-                 }
-             ]
-        })
+        
+        fields = response.json()[0]["fields"]
+        self.assertEqual(fields["name"], self.user.name)
+        self.assertEqual(fields["password"], self.user.password)
+        self.assertEqual(fields["cookies"], self.user.cookies)
+        self.assertEqual(fields["is_active"], self.user.is_active)
         
     def test_update_cookies_invalid_user (self):
         """ Test try to update user who no exist
