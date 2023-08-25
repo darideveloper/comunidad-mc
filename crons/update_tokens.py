@@ -87,8 +87,10 @@ try:
                 
             # Submit email to user
             body = f"Hola, {user.user_name}"
-            body = "\nSe ha detectado poca actividad en tu cuenta de Comunidad MC, vinculada a deste correo"
-            body += "\nPara evitar que tu cuenta sea inhabilitada, realiza lo siguiente:"
+            body = "\nSe ha desvinculado tu cuenta de Twitch de Comunidad MC, relacionada a deste correo"
+            body = "\n¿Por qué sucedió esto?"
+            body = "\nPuede ser por baja actividad en nuestra plataforma, configuraciones que hayas realizado en tu cuenta de Twitch, actualizaciones de Twitch o por un error en nuestro sistema."
+            body += "\n\nPara evitar que tu cuenta sea inhabilitada, o reibas penalizaaciones realiza lo siguiente:"
             body += "\n\n1. Ve a Comunidad MC"
             body += "\n2. Cierra sesión"
             body += "\n3. Inicia sesión nuevamente, con tu misma cuenta de twitch"
@@ -97,7 +99,7 @@ try:
             body += "\n\nAtentamente, Dari Dev, administrador de Comunidad MC"
             
             send_mail(
-                "Aviso de baja actividad en tu cuenta de ComunidadMC",
+                "Aviso de desvinculación de cuenta de ComunidadMC",
                 body,
                 "darideveloper@gmail.com",
                 [user.email],
