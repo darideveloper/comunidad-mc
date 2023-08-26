@@ -65,7 +65,7 @@ export function show_details_point (title, details) {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isDenied) {
-          window.open("https://discord.gg/2rjN8nmr", '_blank');
+          window.open("https://discord.gg/yCAGQ8wQ55", '_blank');
         }
       })
     }
