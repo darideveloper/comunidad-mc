@@ -1074,12 +1074,13 @@ def cancel_stream (request, id):
             negative_vip = models.StreamVip.objects.filter(user=user, amount=-1).first()
             if negative_vip:
                 negative_vip.delete()
+                
         else:      
             # Discount points to user
             tools.set_negative_point (user, 50, "penalización por cancelar stream", None, log_origin_name)
             
-            # Add a negative extra stream
-            models.StreamExtra(user=user, amount=-1).save()
+            # # Add a negative extra stream
+            # models.StreamExtra(user=user, amount=-1).save()
         
         # Delete stream
         stream.delete()
