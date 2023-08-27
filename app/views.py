@@ -1075,6 +1075,11 @@ def cancel_stream (request, id):
             if negative_vip:
                 negative_vip.delete()
                 
+            # Remove negative free
+            negative_free = models.StreamFree.objects.filter(user=user, amount=-1).first()
+            if negative_free:
+                negative_free.delete()
+        
         else:      
             # Discount points to user
             tools.set_negative_point (user, 50, "penalización por cancelar stream", None, log_origin_name)
