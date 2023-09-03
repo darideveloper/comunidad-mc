@@ -690,6 +690,18 @@ main.ranking .content .ranking-table .top-cards .top-card-wrapper .top-card span
   right: 0;
   transform: rotate(10deg);
 }
+main.ranking .content .ranking-table .info {
+  font-size: 0.8rem;
+  margin-top: 30px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+main.ranking .content .ranking-table .info span {
+  color: #cfd5dc;
+  font-weight: bold;
+  text-decoration: underline;
+}
 @media screen and (max-width: 1150px) {
   main.ranking .content .ranking-table .top-cards .second-third-wrapper {
     flex-direction: column;
