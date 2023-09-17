@@ -40,22 +40,6 @@ try:
     # Get current week day
     today = timezone.now().weekday()
 
-    # Convert each daily point to weekly point
-    models.Log.objects.create (
-        origin=log_origin,
-        details="Converting dailly points to weekly points"
-    )
-
-    daily_points = models.DailyPoint.objects.all()
-    for daily_point in daily_points:
-        general_point = daily_point.general_point
-        models.WeeklyPoint(general_point=general_point).save()
-        
-    models.Log.objects.create (
-        origin=log_origin,
-        details="Done. Daily points converted to weekly points"
-    )
-
     # validate week date
     if today == RESTART_POINTS_WEEK_DAY:    
         
@@ -63,7 +47,7 @@ try:
         models.PointsHistory.objects.all().delete()
             
         # Get and loop all users to update ranking
-        users = models.User.objects.all()
+        users = models.User.objects.filter (is_active=True)
         for user in users:
             
             # Get user week points
@@ -101,7 +85,7 @@ try:
             # Show status
             models.Log.objects.create ( 
                 origin=log_origin,
-                details="Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}"
+                details=f"Ranking updated: user: {user}, week points: {weekly_points_num}, ranking: {user.ranking.name}"
             )
         
         # Add bits to first, second and third users in points table
@@ -117,7 +101,6 @@ try:
             details=f"Bits added to first, second and third users ({first_user}, {second_user}, {third_user}))"
         )
         
-        
         # Add vip and extra stream to fiset user
         models.StreamVip (user=first_user).save ()
         models.StreamExtra (user=first_user).save ()
@@ -125,7 +108,6 @@ try:
             origin=log_origin,
             details=f"vip and free added to first user {first_user}"
         )
-        
         
         # Add a free and a extra to second user
         models.StreamFree (user=second_user).save ()

@@ -443,13 +443,18 @@ class TwitchApi:
         if current_daily_points < self.max_daily_points:
 
             # Save daily point
-            models.DailyPoint.objects.create ( # debug
+            models.DailyPoint.objects.create ( 
                 general_point=general_point
             )
             
+            # Save weekly point
+            models.WeeklyPoint.objects.create (
+                general_point=general_point
+            )
+                                               
             models.Log.objects.create (
                 origin=self.log_origin,
-                details=f"Added {amount} deily points to user: {user} in stream: {stream}",
+                details=f"Added {amount} daily and weekly point to user: {user} in stream: {stream}",
             )
 
             # Add user to daily ranking

@@ -1,9 +1,9 @@
 # Set specific general and today points to all users, in specific stream
 
 # UPDATE THIS:
-SREAMS_IDS = [4918]
+SREAMS_IDS = [5099]
 POINTS = 1
-DAILY_POINT = True
+DAILY_POINT = False
 WEEKLY_POINT = False 
 
 # Add parent folder to path
