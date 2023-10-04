@@ -285,7 +285,7 @@ class Log (models.Model):
                 f"Error Comunidad MC ({self.origin})",
                  f"origin: {self.origin}\ndatetime: {self.datetime}\ndetails: {self.details}\nlog_type: {self.log_type}",
                 "darideveloper@gmail.com",
-                ["darideveloper@gmail.com"],
+                ["dylanyoanmc@gmail.com"],
                 fail_silently=True,
             )
 
