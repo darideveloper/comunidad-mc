@@ -643,105 +643,114 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   margin-top: 50px;
 }
 
-.my-streams-shedule-form-wrapper {
+.schedule-content {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 50px;
 }
-.my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+.schedule-content .my-streams, .schedule-content .shedule-form, .schedule-content .times {
   background-color: #17181D;
   color: #cfd5dc;
   padding-bottom: 20px;
 }
-.my-streams-shedule-form-wrapper .my-streams {
+.schedule-content .times-my-streams {
   width: calc(100% - 600px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
 }
-.my-streams-shedule-form-wrapper .my-streams table {
+.schedule-content .my-streams, .schedule-content .times {
+  width: 100%;
+  padding-top: 3px;
+}
+.schedule-content .my-streams table, .schedule-content .times table {
   width: 100%;
   position: relative;
 }
-.my-streams-shedule-form-wrapper .my-streams table td, .my-streams-shedule-form-wrapper .my-streams table th {
+.schedule-content .my-streams table td, .schedule-content .my-streams table th, .schedule-content .times table td, .schedule-content .times table th {
   text-align: center;
   padding: 10px 0;
 }
-.my-streams-shedule-form-wrapper .my-streams table td img.vip, .my-streams-shedule-form-wrapper .my-streams table th img.vip {
+.schedule-content .my-streams table td img.vip, .schedule-content .my-streams table th img.vip, .schedule-content .times table td img.vip, .schedule-content .times table th img.vip {
   width: 20px;
   opacity: 0.5;
 }
-.my-streams-shedule-form-wrapper .shedule-form {
+.schedule-content .shedule-form {
   width: 550px;
 }
-.my-streams-shedule-form-wrapper .shedule-form form {
+.schedule-content .shedule-form form {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .select-wrapper {
+.schedule-content .shedule-form form .select-wrapper {
   background-color: #0e1119;
   border-radius: 10px;
   padding: 20px 0;
   max-height: 235px;
   overflow-y: scroll;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .date, .my-streams-shedule-form-wrapper .shedule-form form .time, .my-streams-shedule-form-wrapper .shedule-form form .confirmation {
+.schedule-content .shedule-form form .date, .schedule-content .shedule-form form .time, .schedule-content .shedule-form form .confirmation {
   text-align: center;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .confirmation {
+.schedule-content .shedule-form form .confirmation {
   width: 150px;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .confirmation p span {
+.schedule-content .shedule-form form .confirmation p span {
   display: block;
   margin: 10px 0;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .confirmation p span.time-zone {
+.schedule-content .shedule-form form .confirmation p span.time-zone {
   font-size: 0.8rem;
 }
-.my-streams-shedule-form-wrapper .shedule-form form .confirmation .btn {
+.schedule-content .shedule-form form .confirmation .btn {
   margin-top: 20px;
   font-size: 1.2rem;
 }
-.my-streams-shedule-form-wrapper .shedule-form .no-form {
+.schedule-content .shedule-form .no-form {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-.my-streams-shedule-form-wrapper .shedule-form .no-form p {
+.schedule-content .shedule-form .no-form p {
   margin-top: 20px;
   text-align: center;
   width: 90%;
   font-size: 1.2rem;
 }
-.my-streams-shedule-form-wrapper .shedule-form .no-form img {
+.schedule-content .shedule-form .no-form img {
   width: 60%;
 }
 
 @media screen and (max-width: 1100px) {
-  .my-streams-shedule-form-wrapper {
+  .schedule-content {
     flex-direction: column;
   }
-  .my-streams-shedule-form-wrapper .my-streams {
+  .schedule-content .times-my-streams {
     width: 60%;
     margin-bottom: 50px;
   }
-  .my-streams-shedule-form-wrapper .shedule-form {
+  .schedule-content .shedule-form {
     width: 60%;
   }
-  .my-streams-shedule-form-wrapper .shedule-form form {
+  .schedule-content .shedule-form form {
     justify-content: center;
     gap: 15px;
   }
 }
 @media screen and (max-width: 960px) {
-  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+  .schedule-content .times-my-streams, .schedule-content .shedule-form {
     width: 80%;
   }
 }
 @media screen and (max-width: 750px) {
-  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+  .schedule-content .times-my-streams, .schedule-content .shedule-form {
     width: 100%;
   }
 }
@@ -751,24 +760,24 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
   }
 }
 @media screen and (max-width: 580px) {
-  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+  .schedule-content .times-my-streams, .schedule-content .shedule-form {
     width: 60%;
   }
-  .my-streams-shedule-form-wrapper .my-streams table th {
+  .schedule-content .times-my-streams table th {
     display: none;
   }
-  .my-streams-shedule-form-wrapper .my-streams table tr {
+  .schedule-content .times-my-streams table tr {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 10px;
   }
-  .my-streams-shedule-form-wrapper .shedule-form form {
+  .schedule-content .shedule-form form {
     flex-direction: column;
   }
 }
 @media screen and (max-width: 420px) {
-  .my-streams-shedule-form-wrapper .my-streams, .my-streams-shedule-form-wrapper .shedule-form {
+  .schedule-content .times-my-streams, .schedule-content .shedule-form {
     width: 80%;
   }
 }

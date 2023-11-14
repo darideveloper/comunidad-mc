@@ -6,45 +6,76 @@
   <div class="profile-card-wrapper">
     {% include 'app/components/profile_card.html' %}
   </div>
-  <div class="my-streams-shedule-form-wrapper">
-    <div class="my-streams">
-      
-      <div class="title-card">
-        <h2>MIS STREAMS</h2>
-        <div class="decorator"></div>
-      </div>
-      
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>FECHA</th>
-            <th>HORA</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for stream in streams %}
-          <tr>
-            <td>
-              {% if stream.is_vip %}
-                <img class="vip" src="{% static 'app/imgs/icon_oro.png' %}" alt="icono stream vip" title="Stream VIP">
-              {% endif %}
-              {% if stream.is_free %}
-                <img class="vip" src="{% static 'app/imgs/icon_plata.png' %}" alt="icono stream free" title="Stream Free">
-              {% endif %}
-            </td>
-            <td>{{stream.date_formatted}}</td>
-            <td>{{stream.time_24}} HRS</td>
-            <td>
-              <button data-stream="{{stream.id}}" class="btn cancel form green {{stream.is_cancellable}}">Cancelar</button>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div class="schedule-content">
 
+    <div class="times-my-streams">  
+      <div class="my-streams">
+  
+        <div class="title-card">
+          <h2>MIS STREAMS</h2>
+          <div class="decorator"></div>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>FECHA</th>
+              <th>HORA</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for stream in streams %}
+            <tr>
+              <td>
+                {% if stream.is_vip %}
+                  <img class="vip" src="{% static 'app/imgs/icon_oro.png' %}" alt="icono stream vip" title="Stream VIP">
+                {% endif %}
+                {% if stream.is_free %}
+                  <img class="vip" src="{% static 'app/imgs/icon_plata.png' %}" alt="icono stream free" title="Stream Free">
+                {% endif %}
+              </td>
+              <td>{{stream.date_formatted}}</td>
+              <td>{{stream.time_24}} HRS</td>
+              <td>
+                <button data-stream="{{stream.id}}" class="btn cancel form green {{stream.is_cancellable}}">Cancelar</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+  
+      </div>
+
+      <div class="times">
+        <div class="title-card">
+          <h2>HORARIOS Y STREAMS</h2>
+          <div class="decorator"></div>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>RANKING</th>
+              <th>NUM DE STREAMS</th>
+              <th>HORA</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ranking in rankings_data %}
+            <tr>
+              <td>{{ranking.name}}</td>
+              <td>{{ranking.max_streams}}</td>
+              <td>{{ranking.open_hour}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+
+
     <div class="shedule-form">
 
       <div class="title-card">
