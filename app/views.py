@@ -391,6 +391,7 @@ def schedule(request):
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points(user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
+    print(user_time_zone)
 
     # Get if the user has vips and frees
     has_vips = tools.get_vips_num(user) > 0
@@ -629,6 +630,29 @@ def schedule(request):
                                ranking.name not in ["admin", "platino"],
                                ranking_data))
 
+    # Cobvert ranking times to user timezone
+    randing_data_formated = []
+    for ranking in ranking_data:
+
+        open_hour = ranking.open_hour
+        ranking_name = ranking.name
+        max_streams = ranking.max_streams
+
+        # Convert open hour (time) to datetime
+        open_hour_datetime = datetime.datetime.combine(
+            now.date(), open_hour).astimezone(user_time_zone)
+        
+        # Save hour as string in format 00:00
+        open_hour = open_hour_datetime.strftime("%H:%M")
+        
+        # Return data to ranking
+        randing_data_formated.append ({
+            "open_hour": open_hour,
+            "name": ranking_name,
+            "max_streams": max_streams,
+        })
+        
+
     # Render page
     return render(request, 'app/schedule.html', {
         # General context
@@ -658,7 +682,7 @@ def schedule(request):
         "has_vips": has_vips,
         "has_frees": has_frees,
         "visible_schedule_panel": visible_schedule_panel,
-        "rankings_data": ranking_data,
+        "rankings_data": randing_data_formated,
     })
 
 
