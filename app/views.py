@@ -574,7 +574,10 @@ def schedule(request):
 
         # Disable hour by days
         disabled_hours_days = {
-            # "viernes": 19,
+            "lunes": 22,
+            "martes": 22,
+            "miercoles": 22,
+            "jueves": 22,
         }
 
         # Calculate free hours for streams
