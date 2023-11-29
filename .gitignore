@@ -12,7 +12,6 @@ db.*
 /staticfiles
 .env
 *.pdf
-*.css.map
 proxies.txt
 sql
 .vscode/settings.json
