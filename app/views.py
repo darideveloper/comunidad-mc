@@ -980,7 +980,7 @@ def wallet(request):
         bits_app.save()
 
         # Get donations bot
-        donatins_bot = cheer_models.User.objects.filter(name="ComunidadMC")
+        donatins_bot = cheer_models.User.objects.filter(name="Comunidad_MC")
         if donatins_bot and donatins_bot[0].is_active:
 
             # register donation
