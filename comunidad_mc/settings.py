@@ -23,11 +23,13 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG") == "True"
 
 # Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST=os.environ.get("EMAIL_HOST")
 EMAIL_PORT=os.environ.get("EMAIL_PORT")
 EMAIL_HOST_USER=os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD=os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_SSL=os.environ.get("EMAIL_USE_SSL") == "True"
+DEBUG_EMAIL_TO=os.environ.get("DEBUG_EMAIL_TO")
 
 # Application definition
 

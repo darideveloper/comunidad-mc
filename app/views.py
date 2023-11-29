@@ -21,6 +21,7 @@ load_dotenv()
 HOST = os.environ.get("HOST")
 SCHEDULE_DAY = int(os.environ.get("SCHEDULE_DAY"))
 INFO = os.environ.get("INFO")
+WITHDRAW_ENABLED = os.environ.get("WITHDRAW_ENABLED") == "True"
 
 # Twitch instance
 twitch = TwitchApi("Views App")
@@ -1057,7 +1058,7 @@ def wallet(request):
         "streams": streams,
         "history": bits_history,
         "bits_icon": bits_icon,
-        "withdraw_enabled": False,
+        "withdraw_enabled": WITHDRAW_ENABLED,
     })
 
 

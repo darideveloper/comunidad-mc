@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User as UserAuth
 from django.core.mail import send_mail
+from comunidad_mc.settings import EMAIL_HOST_USER, DEBUG_EMAIL_TO
 
 class Ranking (models.Model):
     id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del ranking", null=False, blank=False, editable=False)
@@ -283,10 +284,10 @@ class Log (models.Model):
             
             send_mail(
                 f"Error Comunidad MC ({self.origin})",
-                 f"origin: {self.origin}\ndatetime: {self.datetime}\ndetails: {self.details}\nlog_type: {self.log_type}",
-                "darideveloper@gmail.com",
-                ["dylanyoanmc@gmail.com"],
-                fail_silently=True,
+                f"origin: {self.origin}\ndatetime: {self.datetime}\ndetails: {self.details}\nlog_type: {self.log_type}",
+                EMAIL_HOST_USER,
+                [DEBUG_EMAIL_TO],
+                fail_silently=False,
             )
 
         super(Log, self).save(*args, **kwargs)
