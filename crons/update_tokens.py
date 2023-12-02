@@ -98,20 +98,27 @@ try:
             body += "\n\nSi es la primera vez que recibes este mensaje, *no es necesario crear un ticket de soporte*."
             body += "\n\nAtentamente, Dari Dev, administrador de Comunidad MC"
             
-            send_mail(
-                "Aviso de desvinculación de cuenta de ComunidadMC",
-                body,
-                "darideveloper@gmail.com",
-                [user.email],
-                fail_silently=False,
-            ) 
-            
-            # Log mail
-            models.Log.objects.create (
-                origin=log_origin,
-                details=f"Email sent to user {user.user_name}",
-            )
-            
+            # Try to send email and save final status
+            try:
+                send_mail(
+                    "Aviso de desvinculación de cuenta de ComunidadMC",
+                    body,
+                    "darideveloper@gmail.com",
+                    [user.email],
+                    fail_silently=False,
+                ) 
+            except:
+                models.Log.objects.create (
+                    origin=log_origin,
+                    details=f"Error sending email to user {user.user_name}",
+                    log_type=log_type_error,
+                )
+            else:
+                models.Log.objects.create (
+                    origin=log_origin,
+                    details=f"Email sent to user {user.user_name}",
+                )
+
         user.update_tries += 1
         
         # Deactivate user if has 3 tries
@@ -132,7 +139,6 @@ try:
         
 
 except Exception as e:
-    log_type_error = models.LogType.objects.get (name="error")
     models.Log.objects.create (
         origin=log_origin,
         details=f"Uhknown error: {e}",
