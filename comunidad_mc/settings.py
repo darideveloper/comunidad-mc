@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware', # common middleware before
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -161,4 +161,4 @@ if not DEBUG:
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 7 * 24 * 60 * 60 # 7 days
 
-APPEND_SLASH = True
+APPEND_SLASH = True # redirect to slash url if not found

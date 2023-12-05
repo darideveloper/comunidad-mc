@@ -272,13 +272,12 @@ def register(request):
 
 def error404(request, exception):
     # Render template 404.html
-    rendered = render_to_string('app/404.html', {
+    return render(request, 'app/404.html', {
         # General context
         "name": "",
         "current_page": "404",
         "user_active": False,
-    })
-    return HttpResponse(rendered)
+    }, status=404)
 
 
 def logout(request):
