@@ -111,7 +111,6 @@ try:
                 models.Log.objects.create (
                     origin=log_origin,
                     details=f"Error sending email to user {user.user_name}",
-                    log_type=log_type_error,
                 )
             else:
                 models.Log.objects.create (
