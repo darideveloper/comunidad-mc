@@ -482,7 +482,7 @@ def schedule(request):
                 negative_free = models.StreamFree(user=user, amount=-1)
                 negative_free.save()
 
-                # Get if the user has vips (again)
+                # Get if the user has frees (again)
                 has_frees = tools.get_frees_num(user) > 0
             else:
                 request.session["error"] = "Lo sentimos. Ya no cuentas con streams FREE"
