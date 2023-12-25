@@ -391,7 +391,6 @@ def schedule(request):
     profile_image = user.picture
     *other, general_points_num, weekly_points_num, daily_points_num = tools.get_user_points(user)
     user_time_zone = pytz.timezone(user.time_zone.time_zone)
-    print(user_time_zone)
 
     # Get if the user has vips and frees
     has_vips = tools.get_vips_num(user) > 0
@@ -429,17 +428,22 @@ def schedule(request):
 
         # Validte if regular user have available streams
         max_streams = user.ranking.max_streams
-        streams_extra = models.StreamExtra.objects.filter(user=user).all()
-        if streams_extra.count() > 0:
-            streams_extra_num = streams_extra.aggregate(Sum('amount'))[
-                'amount__sum']
-            max_streams += streams_extra_num
-
         available_stream = max_streams - user_streams_num > 0
+        using_extra = False
         if not available_stream or available_points < min_points_save_stream:
-            # Save error ass cookie
-            request.session["error"] = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
-            return redirect("/schedule")
+            
+            # Validate if the user has extra streams
+            streams_extra = models.StreamExtra.objects.filter(user=user).all()            
+            streams_extra_num = streams_extra.aggregate(Sum('amount'))['amount__sum']
+            
+            if not streams_extra_num or streams_extra_num == 0:
+
+                # Save error ass cookie
+                request.session["error"] = f"Lo sentimos. No cuentas con ranking o puntos suficientes para agendar mas streams."
+                return redirect("/schedule")
+            
+            else:
+                using_extra = True
 
         # Validate if the date and time are free
         streams_match = models.Stream.objects.filter(
@@ -452,7 +456,7 @@ def schedule(request):
         current_hour = now.replace(minute=0, second=0, microsecond=0)
         selected_hour = selected_datetime.replace(
             minute=0, second=0, microsecond=0)
-        if selected_datetime == current_hour:
+        if selected_hour == current_hour:
             request.session["error"] = "Lo sentimos. Ya inició la hora, no puedes agendar."
             return redirect("/schedule")
 
@@ -481,14 +485,23 @@ def schedule(request):
                 # Get if the user has vips (again)
                 has_frees = tools.get_frees_num(user) > 0
             else:
-                request.session["error"] = "Lo sentimos. Ya no cuentas con streams VIP"
+                request.session["error"] = "Lo sentimos. Ya no cuentas con streams FREE"
                 return redirect("/schedule")
+            
+         # Remove 1 extra strem, adding 1 negative
+        if using_extra:
+            negative_extra = models.StreamExtra (user=user, amount=-1)
+            negative_extra.save()
 
         # Schedule stream
         is_vip = True if form_vip else False
         is_free = True if form_free else False
         new_stream = models.Stream(
-            user=user, datetime=selected_datetime, is_vip=is_vip, is_free=is_free)
+            user=user, 
+            datetime=selected_datetime,
+            is_vip=is_vip, 
+            is_free=is_free
+        )
         new_stream.save()
         request.session["message"] = "Stream agendado!"
 
