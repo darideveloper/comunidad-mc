@@ -306,3 +306,23 @@ class LogOrigin (models.Model):
 
     def __str__ (self):
         return f"{self.name}"
+
+class ScheduleStreams(models.Model):
+    id = models.AutoField(primary_key=True, name='id', verbose_name="id", help_text="id del stream programado", null=False, blank=False, editable=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, name='user', verbose_name="usuario", help_text="usuario que ha agendado el stream", null=False, blank=False)
+    start_date = models.DateField(name='start_date', verbose_name="fecha y hora de inicio", help_text="fecha y hora de inicio de stream agendados", null=False, blank=False)
+    end_date = models.DateField(name='end_date', verbose_name="fecha y hora de fin", help_text="fecha y hora de fin de streams agendados", null=False, blank=False)
+    monday = models.BooleanField(name='monday', verbose_name="lunes", help_text="indica si el stream está agendado para los lunes", default=True)
+    tuesday = models.BooleanField(name='tuesday', verbose_name="martes", help_text="indica si el stream está agendado para los martes", default=True)
+    wednesday = models.BooleanField(name='wednesday', verbose_name="miércoles", help_text="indica si el stream está agendado para los miércoles", default=True)
+    thursday = models.BooleanField(name='thursday', verbose_name="jueves", help_text="indica si el stream está agendado para los jueves", default=True)
+    friday = models.BooleanField(name='friday', verbose_name="viernes", help_text="indica si el stream está agendado para los viernes", default=True)
+    saturday = models.BooleanField(name='saturday', verbose_name="sábado", help_text="indica si el stream está agendado para los sábados", default=True)
+    time = models.TimeField(name='time', verbose_name="hora", help_text="hora de inicio de stream agendados", null=False, blank=False)
+    
+    def __str__ (self):
+        return f"{self.start_date} - {self.end_date}"
+    
+    class Meta:
+        verbose_name = "Stream programado"
+        verbose_name_plural = "Streams programados"

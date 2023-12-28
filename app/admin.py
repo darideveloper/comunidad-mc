@@ -273,3 +273,12 @@ class AdminLogOrigin (admin.ModelAdmin):
     list_display = ('id', 'name',)
     ordering = ('name', 'id')
     list_per_page = 50
+    
+@admin.register (models.ScheduleStreams)
+class AdminScheduleStreams (admin.ModelAdmin):
+    
+    list_display = ('id', 'user', 'start_date', 'end_date', 'time')
+    ordering = ('-id', 'user', 'start_date', 'end_date', 'time')
+    list_filter = ('user', 'start_date', 'end_date', 'time', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday')
+    search_fields = ('stream__user__user_name',)
+    list_per_page = 50
