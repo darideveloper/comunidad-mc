@@ -1,6 +1,6 @@
-import pytz
 from django.db import models
 from django.utils import timezone
+from datetime import datetime, timedelta
 from django.contrib.auth.models import User as UserAuth
 from django.core.mail import send_mail
 from comunidad_mc.settings import EMAIL_HOST_USER, DEBUG_EMAIL_TO
@@ -319,6 +319,36 @@ class ScheduleStreams(models.Model):
     friday = models.BooleanField(name='friday', verbose_name="viernes", help_text="indica si el stream está agendado para los viernes", default=True)
     saturday = models.BooleanField(name='saturday', verbose_name="sábado", help_text="indica si el stream está agendado para los sábados", default=True)
     time = models.TimeField(name='time', verbose_name="hora", help_text="hora de inicio de stream agendados", null=False, blank=False)
+    
+    def save(self, *args, **kwargs):
+        # Remove minutes and seconds from time
+        self.time = self.time.replace(minute=0, second=0)
+        
+        # Save schedule streams
+        available_weekdays = []
+        if self.monday:
+            available_weekdays.append(0)
+        if self.tuesday:
+            available_weekdays.append(1)
+        if self.wednesday:
+            available_weekdays.append(2)
+        if self.thursday:
+            available_weekdays.append(3)
+        if self.friday:
+            available_weekdays.append(4)
+        if self.saturday:
+            available_weekdays.append(5)
+        
+        for daya in range((self.end_date - self.start_date).days + 1):
+            date = self.start_date + timedelta(days=daya)
+            if date.weekday() in available_weekdays:
+                Stream.objects.create(
+                    user=self.user,
+                    datetime=timezone.make_aware(datetime.combine(date, self.time), timezone.get_current_timezone()),
+                )
+        
+        # Default save
+        super(ScheduleStreams, self).save(*args, **kwargs)
     
     def __str__ (self):
         return f"{self.start_date} - {self.end_date}"
