@@ -282,3 +282,4 @@ class AdminScheduleStreams (admin.ModelAdmin):
     list_filter = ('user', 'start_date', 'end_date', 'time', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday')
     search_fields = ('stream__user__user_name',)
     list_per_page = 50
+    readonly_fields = ('user', 'start_date', 'end_date', 'time', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday')
