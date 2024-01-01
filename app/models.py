@@ -403,8 +403,8 @@ class ScheduleStreams(models.Model):
         if self.saturday:
             available_weekdays.append(5)
         
-        for daya in range((self.end_date - self.start_date).days + 1):
-            date = self.start_date + timedelta(days=daya)
+        for days in range((self.end_date - self.start_date).days + 1):
+            date = self.start_date + timedelta(days=days)
             if date.weekday() in available_weekdays:
                 Stream.objects.create(
                     user=self.user,
