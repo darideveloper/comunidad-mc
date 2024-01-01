@@ -295,11 +295,16 @@ def get_user_streams (user:models.User, user_time_zone:pytz.timezone):
         touple: user_streams (model Objects), user_streams_data (array)
     """
     
+    # Get last sunday and next 14 days
     start_week = timezone.datetime.today()
     if start_week.weekday() != 6:
         start_week = start_week - timedelta(start_week.weekday())
     end_week = start_week + timedelta(14)
         
+    # Set minutes
+    start_week = start_week.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_week = end_week.replace(hour=23, minute=59, second=59, microsecond=0)
+
     # Get current streams
     user_streams = models.Stream.objects.filter(
         datetime__range=[start_week, end_week], user=user).all().order_by("datetime")
