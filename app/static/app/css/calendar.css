@@ -493,5 +493,3 @@ main.calendar {
 main.calendar .fc-timeGridDay-view tbody[role=rowgroup] > tr[role=presentation]:first-child, main.calendar .fc-timeGridDay-view tbody[role=rowgroup] > tr[role=presentation]:nth-child(2) {
   display: none;
 }
-
-/*# sourceMappingURL=calendar.css.map */
