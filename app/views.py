@@ -566,8 +566,8 @@ def schedule(request):
                 "date_text": date_text
             })
 
-        # Calculate and format hours
-        disabled_hours = [0, 1, 2, 3, 4, 5, 6, 19, 20]
+        # Disable specific hours every day
+        disabled_hours = [0, 1, 2, 3, 4, 5, 6]
 
         # Convert disable hours to user time zon
         system_time_zone = pytz.timezone(settings.TIME_ZONE)
@@ -587,10 +587,10 @@ def schedule(request):
 
         # Disable hour by days
         disabled_hours_days = {
-            "lunes": 22,
-            "martes": 22,
-            "miercoles": 22,
-            "jueves": 22,
+            # "lunes": 22,
+            # "martes": 22,
+            # "miercoles": 22,
+            # "jueves": 22,
         }
 
         # Calculate free hours for streams
