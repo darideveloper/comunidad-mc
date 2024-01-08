@@ -295,8 +295,11 @@ def get_user_streams (user:models.User, user_time_zone:pytz.timezone):
         touple: user_streams (model Objects), user_streams_data (array)
     """
     
+    # Get today as mexico time zone
+    time_zone = pytz.timezone("America/Mexico_City")
+    start_week = timezone.datetime.today().astimezone(time_zone)
+    
     # Get last sunday and next 14 days
-    start_week = timezone.datetime.today()
     if start_week.weekday() != 6:
         start_week = start_week - timedelta(start_week.weekday())
     end_week = start_week + timedelta(14)
