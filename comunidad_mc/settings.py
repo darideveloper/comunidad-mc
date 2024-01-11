@@ -193,7 +193,7 @@ JAZZMIN_SETTINGS = {
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 
-    "search_model": ["app.User", "app.Stream", "app.Comment"],
+    "search_model": ["app.User", "app.Comment", "app.GeneralPoint"],
 
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
     "user_avatar": None,
