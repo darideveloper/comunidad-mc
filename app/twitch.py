@@ -381,7 +381,7 @@ class TwitchApi:
         if (stream.is_vip or is_triple_time) and not force:
             # Add 2 points to user
             info = models.InfoPoint.objects.get(info="ver stream (puntos extra)")
-            models.GeneralPoint.objects.create( # debug
+            models.GeneralPoint.objects.create(
                 user=user,
                 stream=stream,
                 amount=2,

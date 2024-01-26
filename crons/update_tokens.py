@@ -17,6 +17,7 @@ from app import models
 from app.twitch import TwitchApi
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.conf import settings
 
 load_dotenv()
 
@@ -87,9 +88,9 @@ try:
                 
             # Submit email to user
             body = f"Hola, {user.user_name}"
-            body = "\nSe ha desvinculado tu cuenta de Twitch de Comunidad MC, relacionada a deste correo"
-            body = "\n¿Por qué sucedió esto?"
-            body = "\nPuede ser por baja actividad en nuestra plataforma, configuraciones que hayas realizado en tu cuenta de Twitch, actualizaciones de Twitch o por un error en nuestro sistema."
+            body += "\nSe ha desvinculado tu cuenta de Twitch de Comunidad MC, relacionada a deste correo"
+            body += "\n¿Por qué sucedió esto?"
+            body += "\nPuede ser por baja actividad en nuestra plataforma, configuraciones que hayas realizado en tu cuenta de Twitch, actualizaciones de Twitch o por un error en nuestro sistema."
             body += "\n\nPara evitar que tu cuenta sea inhabilitada, o reibas penalizaaciones realiza lo siguiente:"
             body += "\n\n1. Ve a Comunidad MC"
             body += "\n2. Cierra sesión"
@@ -103,7 +104,7 @@ try:
                 send_mail(
                     "Aviso de desvinculación de cuenta de ComunidadMC",
                     body,
-                    "darideveloper@gmail.com",
+                    settings.EMAIL_HOST_USER,
                     [user.email],
                     fail_silently=False,
                 ) 
