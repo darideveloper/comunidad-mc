@@ -409,15 +409,19 @@ def schedule(request):
         user_streams_num = len(streams)
 
         # Get stream data
-        form_date = request.POST.get("date", "")
-        form_hour = request.POST.get("hour", "")
-        form_vip = request.POST.get("vip", "")
-        form_free = request.POST.get("free", "")
+        form_date = request.POST.get("date", "").strip()
+        form_hour = request.POST.get("hour", "").strip()
+        form_vip = request.POST.get("vip", "").strip()
+        form_free = request.POST.get("free", "").strip()
 
         # Convert to datetime
-        selected_datetime = datetime.datetime.strptime(
-            form_date + " " + form_hour+":00", "%Y-%m-%d %H:%M")
-        selected_datetime = user_time_zone.localize(selected_datetime)
+        try:
+            selected_datetime = datetime.datetime.strptime(
+                form_date + " " + form_hour+":00", "%Y-%m-%d %H:%M")
+            selected_datetime = user_time_zone.localize(selected_datetime)
+        except:
+            request.session["error"] = "Error al guardar stream. Intente mas tarde."
+            return redirect("/schedule")
 
         min_points_save_stream = int(models.Settings.objects.get(
             name="min_points_save_stream").value)
