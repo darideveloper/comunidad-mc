@@ -571,7 +571,7 @@ def schedule(request):
             })
 
         # Disable specific hours every day
-        disabled_hours = [0, 1, 2, 3, 4, 5, 6]
+        disabled_hours = [0, 1, 2, 3, 4]
 
         # Convert disable hours to user time zon
         system_time_zone = pytz.timezone(settings.TIME_ZONE)
