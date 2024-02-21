@@ -656,12 +656,12 @@ class TwitchApi:
                     general_point=general_point,                    
                 )
 
-                # Add bits to streamer
-                models.Bit.objects.create(
-                    user=referred_user_from, 
-                    amount=100, 
-                    details=f"Referido {streamer}"
-                )
+                # # Add bits to streamer
+                # models.Bit.objects.create(
+                #     user=referred_user_from, 
+                #     amount=100, 
+                #     details=f"Referido {streamer}"
+                # )
                 
                 models.Log.objects.create (
                     origin=self.log_origin,
